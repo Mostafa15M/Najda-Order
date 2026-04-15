@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nagda Order Pro | نجدة أوردر</title>
+    <title>Nagda Order | نجدة أوردر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,10 +14,23 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text-main); line-height: 1.6; padding-bottom: 90px; }
         
-        header { padding: 30px 20px 20px; background: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%); }
-        .logo-box h1 { font-weight: 900; font-size: 2rem; cursor: pointer; }
+        header { padding: 30px 20px 20px; background: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%); text-align: right; }
+        .logo-box h1 { font-weight: 900; font-size: 2.2rem; cursor: pointer; letter-spacing: -1px; }
         .logo-box h1 span { color: var(--primary); }
-        .logo-box p { color: var(--text-dim); font-size: 0.8rem; }
+        .logo-box p { color: var(--text-dim); font-size: 0.85rem; font-weight: 600; }
+
+        /* زرار التوصيل العلوي */
+        .special-order-hero {
+            background: linear-gradient(135deg, var(--primary), #8b5cf6);
+            margin: 10px 20px 25px; padding: 20px; border-radius: 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            cursor: pointer; transition: 0.3s;
+        }
+        .special-order-hero:active { transform: scale(0.97); }
+        .special-text h3 { font-size: 1.1rem; font-weight: 900; color: #fff; }
+        .special-text p { font-size: 0.75rem; color: rgba(255,255,255,0.8); }
+        .special-icon { background: rgba(255,255,255,0.2); padding: 10px; border-radius: 15px; font-size: 1.2rem; }
 
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(22, 27, 43, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--glass-border); z-index: 1000; }
         .nav-item { color: var(--text-dim); cursor: pointer; text-align: center; flex: 1; transition: 0.3s; position: relative; }
@@ -28,27 +41,28 @@
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0 25px; scrollbar-width: none; }
+        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 5px 0 25px; scrollbar-width: none; }
         .pill { padding: 8px 24px; background: var(--surface); border-radius: 100px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s; }
         .pill.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 15px; }
         .p-card { background: var(--surface); border-radius: 24px; overflow: hidden; border: 1px solid var(--glass-border); }
-        .p-card img { width: 100%; height: 150px; object-fit: cover; }
+        .p-card img { width: 100%; height: 140px; object-fit: cover; background: #000; }
         .p-card-content { padding: 15px; text-align: center; }
+        .p-card-content h4 { font-size: 0.95rem; font-weight: 800; }
+        
         .btn { width: 100%; padding: 12px; border-radius: 15px; border: none; font-weight: 900; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: #fff; }
         .btn-outline { background: none; border: 1px solid var(--glass-border); color: var(--text-dim); }
 
         .admin-section { background: var(--surface); padding: 20px; border-radius: 25px; border: 1px solid var(--primary); margin-bottom: 25px; }
         input, select, textarea { width: 100%; padding: 14px; border-radius: 12px; background: #080a12; border: 1px solid var(--glass-border); color: #fff; margin-bottom: 10px; outline: none; font-size: 0.9rem; }
-        label { display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px; }
 
-        .modal-wrap { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-wrap { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
         .modal-body { background: var(--surface); width: 100%; max-width: 380px; border-radius: 30px; padding: 30px; border: 1px solid var(--primary); }
 
         .cart-item { background: var(--surface); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
-        .del-btn { color: var(--accent); font-weight: 900; cursor: pointer; padding: 5px; }
+        .del-btn { color: var(--accent); font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -56,9 +70,17 @@
     <header>
         <div class="logo-box" onmousedown="adminStart()" ontouchstart="adminStart()" onmouseup="adminEnd()" ontouchend="adminEnd()">
             <h1>نجدة<span>.</span>ORDER</h1>
-            <p>مشاوير وطلبات شبين القناطر • مصطفى حجازي</p>
+            <p>طلبك يوصلك في أسرع وقت</p>
         </div>
     </header>
+
+    <div class="special-order-hero" onclick="openSpecial()">
+        <div class="special-text">
+            <h3>توصيل مستلزمات شخصية</h3>
+            <p>مشاوير، توصيل أمانات، أو أي غرض خاص</p>
+        </div>
+        <div class="special-icon">📦</div>
+    </div>
 
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="nav('shop', this)"><span>🏠 المتجر</span></div>
@@ -68,47 +90,36 @@
 
     <div id="shopPage" class="page active">
         <div class="cats-bar" id="catsBar"></div>
-        
-        <div style="background: linear-gradient(90deg, #6366f1, #a855f7); padding: 20px; border-radius: 20px; margin-bottom: 25px; text-align: center; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);">
-            <h3 style="font-weight: 900; color:#fff;">🚚 توصيل مستلزمات شخصية</h3>
-            <p style="font-size: 0.8rem; margin-bottom: 15px; color:rgba(255,255,255,0.8);">لو محتاج توصل حاجة من مكان لمكان في شبين</p>
-            <button class="btn" style="background: #fff; color: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.1);" onclick="openSpecial()">اطلب مشوار الآن</button>
-        </div>
-
         <div class="grid" id="shopGrid"></div>
     </div>
 
     <div id="cartPage" class="page">
-        <h2 style="margin-bottom:20px; font-weight: 900;">قائمة طلباتك 🛒</h2>
+        <h2 style="margin-bottom:20px; font-weight: 900;">طلباتك المختارة 🛒</h2>
         <div id="cartList"></div>
         <div id="checkoutForm" style="display:none; margin-top:20px;">
-            <label>بيانات التواصل</label>
             <input type="text" id="uName" placeholder="الاسم بالكامل">
             <input type="tel" id="uPhone" placeholder="رقم الهاتف">
-            <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
-            <button class="btn btn-primary" style="background:#25d366; padding:18px; font-size:1.1rem;" onclick="sendWhatsApp()">إرسال الطلب للواتساب ✅</button>
+            <input type="text" id="uAddr" placeholder="عنوان التوصيل">
+            <button class="btn btn-primary" style="background:#25d366; padding:18px;" onclick="sendWhatsApp()">إرسال للواتساب ✅</button>
         </div>
     </div>
 
     <div id="adminPage" class="page">
-        <h2 style="margin-bottom:20px;">لوحة الإدارة ⚙️</h2>
+        <h2>لوحة التحكم ⚙️</h2>
         <div class="admin-section">
-            <h4 style="margin-bottom:10px;">إدارة الأقسام</h4>
+            <h4>إدارة الأقسام</h4>
             <div style="display: flex; gap: 5px;">
-                <input type="text" id="newCatName" placeholder="اسم القسم الجديد">
+                <input type="text" id="newCatName" placeholder="اسم القسم">
                 <button class="btn btn-primary" style="width: 80px;" onclick="addCategory()">إضافة</button>
             </div>
             <div id="adminCatsList" style="margin-top:10px; display:flex; flex-wrap:wrap; gap:5px;"></div>
         </div>
         <div class="admin-section">
-            <h4 style="margin-bottom:10px;">إضافة منتج جديد</h4>
-            <label>اسم المنتج</label>
-            <input type="text" id="pTitle" placeholder="طماطم، كريب، الخ..">
-            <label>صورة المنتج</label>
+            <h4>إضافة منتج</h4>
+            <input type="text" id="pTitle" placeholder="اسم المنتج">
             <input type="file" accept="image/*" onchange="imgProcess(this)">
-            <label>اختر القسم</label>
             <select id="pCatSelect"></select>
-            <button class="btn btn-primary" onclick="saveProduct()">نشر المنتج</button>
+            <button class="btn btn-primary" onclick="saveProduct()">نشر</button>
         </div>
         <div id="adminProductList"></div>
     </div>
@@ -117,27 +128,29 @@
         <div class="modal-body">
             <h3 id="mTitle" style="color:var(--primary); margin-bottom:20px; font-weight: 900;"></h3>
             <div id="stdFields">
-                <label>عاوز تجيبه منين؟ (اختياري)</label>
-                <input type="text" id="mSource" placeholder="مثلاً: ماركت الأمانة">
-                <label>الكمية</label>
+                <input type="text" id="mSource" placeholder="المكان المفضل (اختياري)">
                 <input type="number" id="mQty" value="1" min="1">
             </div>
             <div id="spcFields" style="display:none;">
-                <label>تفاصيل الحاجة اللي هتوصلها</label>
-                <textarea id="mDesc" placeholder="مثلاً: مفاتيح، شنطة هدوم، أكل.." style="height: 80px;"></textarea>
-                <label>مكان الاستلام</label>
-                <input type="text" id="mFrom" placeholder="هنيجي ناخدها منين؟">
-                <label>مكان التوصيل</label>
-                <input type="text" id="mTo" placeholder="هنوصلها لمين وفين؟">
+                <textarea id="mDesc" placeholder="اكتب تفاصيل اللي محتاج توصله.." style="height: 80px;"></textarea>
+                <input type="text" id="mFrom" placeholder="نستلم منين؟">
+                <input type="text" id="mTo" placeholder="نسلم فين؟">
             </div>
-            <button class="btn btn-primary" onclick="confirmAdd()">تأكيد الإضافة للسلة</button>
-            <button class="btn btn-outline" style="margin-top:10px;" onclick="closeModal()">إلغاء</button>
+            <button class="btn btn-primary" onclick="confirmAdd()">تأكيد الطلب</button>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="closeModal()">رجوع</button>
         </div>
     </div>
 
     <script>
-        let products = JSON.parse(localStorage.getItem('n_p_v1')) || [];
-        let cats = JSON.parse(localStorage.getItem('n_c_v1')) || ['خضار وفواكه', 'بقالة', 'مطاعم'];
+        // داتا تجريبية (Demo)
+        const demoProducts = [
+            { id: 1, title: 'طماطم بلدي', cat: 'خضروات', img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400' },
+            { id: 2, title: 'خيار صوبر', cat: 'خضروات', img: 'https://images.unsplash.com/photo-1449333255529-6696cc8121f9?w=400' },
+            { id: 3, title: 'كريب سوبر شاورما', cat: 'مطاعم', img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?w=400' }
+        ];
+
+        let products = JSON.parse(localStorage.getItem('n_p_v2')) || (localStorage.getItem('n_p_v2') ? [] : demoProducts);
+        let cats = JSON.parse(localStorage.getItem('n_c_v2')) || ['الكل', 'خضروات', 'مطاعم', 'بقالة'];
         let cart = [];
         let tempImg = "";
         let selectedItem = "";
@@ -154,9 +167,8 @@
             if(id === 'admin') renderAdmin();
         }
 
-        // لوحة الإدارة السرية
         function adminStart() { adminTimer = setTimeout(() => {
-            if(prompt("رمز دخول الإدارة:") === "135790") {
+            if(prompt("كود الإدارة:") === "135790") {
                 document.getElementById('admTab').style.display = 'block';
                 nav('admin', document.getElementById('admTab'));
             }
@@ -170,26 +182,25 @@
 
         function addCategory() {
             const val = document.getElementById('newCatName').value;
-            if(val) { cats.push(val); localStorage.setItem('n_c_v1', JSON.stringify(cats)); renderAdmin(); document.getElementById('newCatName').value=''; }
+            if(val) { cats.push(val); localStorage.setItem('n_c_v2', JSON.stringify(cats)); renderAdmin(); }
         }
 
         function saveProduct() {
             const t = document.getElementById('pTitle').value;
             const c = document.getElementById('pCatSelect').value;
-            if(!t || !tempImg) return alert("اكمل بيانات المنتج");
+            if(!t || !tempImg) return alert("اكمل البيانات");
             products.push({ id: Date.now(), title: t, cat: c, img: tempImg });
-            localStorage.setItem('n_p_v1', JSON.stringify(products));
-            renderAdmin(); alert("تم الإضافة بنجاح");
+            localStorage.setItem('n_p_v2', JSON.stringify(products));
+            renderAdmin(); renderShop();
         }
 
         function renderShop(f = 'الكل') {
             const bar = document.getElementById('catsBar');
-            bar.innerHTML = `<div class="pill ${f==='الكل'?'active':''}" onclick="renderShop('الكل')">الكل</div>`;
-            cats.forEach(c => bar.innerHTML += `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`);
+            bar.innerHTML = cats.map(c => `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`).join('');
 
             const grid = document.getElementById('shopGrid'); grid.innerHTML = "";
             products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
-                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-content"><h4>${p.title}</h4><button class="btn btn-primary" style="margin-top:10px; font-size:0.8rem;" onclick="openModal('${p.title}')">أضف للسلة</button></div></div>`;
+                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-content"><h4>${p.title}</h4><button class="btn btn-primary" style="margin-top:10px; font-size:0.8rem;" onclick="openModal('${p.title}')">طلب</button></div></div>`;
             });
         }
 
@@ -231,12 +242,12 @@
 
         function renderCart() {
             const list = document.getElementById('cartList');
-            if(!cart.length) { list.innerHTML = "<p style='text-align:center; padding:50px; color:var(--text-dim);'>السلة فارغة</p>"; document.getElementById('checkoutForm').style.display='none'; return; }
+            if(!cart.length) { list.innerHTML = "<p style='text-align:center; padding:50px;'>السلة فارغة</p>"; document.getElementById('checkoutForm').style.display='none'; return; }
             document.getElementById('checkoutForm').style.display='block';
             list.innerHTML = cart.map((i, idx) => `
                 <div class="cart-item">
                     <div>
-                    ${i.type==='مشوار'? `<b>🚀 مشوار: ${i.desc}</b><br><small>من: ${i.from} ⬅️ إلى: ${i.to}</small>` : `<b>📦 ${i.name}</b><br><small>الكمية: ${i.qty} | من: ${i.source}</small>`}
+                    ${i.type==='مشوار'? `<b>🚀 مشوار: ${i.desc}</b><br><small>من: ${i.from} | إلى: ${i.to}</small>` : `<b>📦 ${i.name}</b><br><small>الكمية: ${i.qty} | من: ${i.source}</small>`}
                     </div>
                     <div class="del-btn" onclick="cart.splice(${idx},1); renderCart(); updateBadge();">حذف</div>
                 </div>
@@ -245,17 +256,17 @@
 
         function renderAdmin() {
             document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-            document.getElementById('adminCatsList').innerHTML = cats.map((c, idx) => `<span class="pill" style="font-size:0.7rem;" onclick="if(confirm('حذف القسم؟')){cats.splice(${idx},1); localStorage.setItem('n_c_v1',JSON.stringify(cats)); renderAdmin();}">${c} ×</span>`).join('');
-            document.getElementById('adminProductList').innerHTML = `<h4 style="margin:15px 0;">المنتجات الحالية:</h4>` + products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--glass-border); padding:10px; border-radius:10px; margin-bottom:5px;"><img src="${p.img}" width="40" height="40" style="border-radius:5px;"> <span>${p.title}</span> <span style="color:red; cursor:pointer;" onclick="products.splice(${idx},1); localStorage.setItem('n_p_v1',JSON.stringify(products)); renderAdmin();">مسح</span></div>`).join('');
+            document.getElementById('adminCatsList').innerHTML = cats.map((c, idx) => `<span class="pill" onclick="if(confirm('مسح؟')){cats.splice(${idx},1); localStorage.setItem('n_c_v2',JSON.stringify(cats)); renderAdmin();}">${c} ×</span>`).join('');
+            document.getElementById('adminProductList').innerHTML = products.map((p, idx) => `<div style="display:flex; justify-content:space-between; margin-top:5px; background:#000; padding:10px;"><span>${p.title}</span><span style="color:red" onclick="products.splice(${idx},1); localStorage.setItem('n_p_v2',JSON.stringify(products)); renderAdmin();">مسح</span></div>`).join('');
         }
 
         function sendWhatsApp() {
             const n = document.getElementById('uName').value;
             const p = document.getElementById('uPhone').value;
             const a = document.getElementById('uAddr').value;
-            if(!n || !p || !a) return alert("اكمل بيانات التواصل");
+            if(!n || !p || !a) return alert("اكمل بياناتك");
 
-            let msg = `*طلب نجدة أوردر ⚡*%0A━━━━━━━━━━━━━━%0A`;
+            let msg = `*طلب جديد (نجدة أوردر) ⚡*%0A━━━━━━━━━━━━━━%0A`;
             cart.forEach(i => {
                 if(i.type === 'مشوار') msg += `• *مشوار:* ${i.desc}%0A   - من: ${i.from}%0A   - إلى: ${i.to}%0A`;
                 else msg += `• *${i.name}* (الكمية: ${i.qty})%0A   - من: ${i.source}%0A`;
