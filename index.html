@@ -3,327 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nagda Order | نجدة أوردر</title>
+    <title>Nagda Order Pro | نجدة أوردر</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0f1a;
-            --surface: #161b2b;
-            --primary: #6366f1;
-            --secondary: #0ea5e9;
-            --accent: #f43f5e;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --success-color: #22c55e;
+            --bg: #0b0f1a; --surface: #161b2b; --primary: #6366f1;
+            --secondary: #0ea5e9; --accent: #f43f5e; --text-main: #f8fafc;
+            --text-dim: #94a3b8; --glass-border: rgba(255, 255, 255, 0.08);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text-main); line-height: 1.6; padding-bottom: 90px; }
         
-        body { background: var(--bg); color: var(--text-main); line-height: 1.6; overflow-x: hidden; padding-bottom: 90px; }
-
-        /* --- Header --- */
         header { padding: 30px 20px 20px; background: linear-gradient(180deg, rgba(99, 102, 241, 0.15) 0%, transparent 100%); }
-        .logo-box h1 { font-weight: 900; font-size: 2rem; letter-spacing: -1px; }
-        .logo-box h1 span { color: var(--primary); text-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
-        .logo-box p { color: var(--text-dim); font-size: 0.85rem; font-weight: 700; margin-top: -5px; }
+        .logo-box h1 { font-weight: 900; font-size: 2rem; cursor: pointer; }
+        .logo-box h1 span { color: var(--primary); }
+        .logo-box p { color: var(--text-dim); font-size: 0.8rem; }
 
-        /* --- Navigation --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: rgba(22, 27, 43, 0.9);
-            backdrop-filter: blur(20px); display: flex; justify-content: space-around;
-            padding: 12px 0; border-top: 1px solid var(--glass-border); z-index: 1000;
-        }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(22, 27, 43, 0.95); backdrop-filter: blur(20px); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--glass-border); z-index: 1000; }
         .nav-item { color: var(--text-dim); cursor: pointer; text-align: center; flex: 1; transition: 0.3s; position: relative; }
         .nav-item.active { color: var(--primary); }
-        .nav-item .icon { font-size: 1.4rem; display: block; }
-        .nav-item span { font-size: 0.75rem; font-weight: 700; }
-        .badge { position: absolute; top: -5px; right: 25%; background: var(--accent); color: #fff; font-size: 0.65rem; padding: 2px 7px; border-radius: 50px; font-weight: 900; border: 2px solid var(--surface); }
+        .badge { position: absolute; top: -5px; right: 25%; background: var(--accent); color: #fff; font-size: 0.65rem; padding: 2px 7px; border-radius: 50px; border: 2px solid var(--surface); }
 
-        /* --- Pages --- */
-        .page { display: none; padding: 0 20px; animation: slideUp 0.4s ease-out; }
+        .page { display: none; padding: 0 20px; animation: slideUp 0.4s ease; }
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- Shop Styling --- */
         .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0 25px; scrollbar-width: none; }
-        .cats-bar::-webkit-scrollbar { display: none; }
         .pill { padding: 8px 24px; background: var(--surface); border-radius: 100px; font-size: 0.85rem; font-weight: 700; white-space: nowrap; cursor: pointer; border: 1px solid var(--glass-border); transition: 0.3s; }
-        .pill.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3); }
+        .pill.active { background: var(--primary); border-color: var(--primary); box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3); }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .p-card { background: var(--surface); border-radius: 24px; overflow: hidden; border: 1px solid var(--glass-border); transition: 0.3s; }
-        .p-card img { width: 100%; height: 160px; object-fit: cover; background: #111; }
+        .p-card { background: var(--surface); border-radius: 24px; overflow: hidden; border: 1px solid var(--glass-border); }
+        .p-card img { width: 100%; height: 150px; object-fit: cover; }
         .p-card-content { padding: 15px; text-align: center; }
-        .p-card-content h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 5px; }
-        .unit-tag { font-size: 0.7rem; color: var(--secondary); background: rgba(14, 165, 233, 0.1); padding: 3px 10px; border-radius: 8px; font-weight: 700; }
-        .add-btn { width: 100%; padding: 12px; margin-top: 15px; border-radius: 16px; border: none; background: var(--primary); color: #fff; font-weight: 900; cursor: pointer; }
+        .btn { width: 100%; padding: 12px; border-radius: 15px; border: none; font-weight: 900; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-outline { background: none; border: 1px solid var(--glass-border); color: var(--text-dim); }
 
-        /* --- Admin Panel --- */
-        .admin-form { background: var(--surface); padding: 25px; border-radius: 30px; border: 1px solid var(--primary); margin-bottom: 30px; }
-        .field { margin-bottom: 15px; }
-        .field label { display: block; font-size: 0.8rem; color: var(--text-dim); margin-bottom: 6px; }
-        input, select { width: 100%; padding: 14px; border-radius: 15px; background: #080a12; border: 1px solid var(--glass-border); color: #fff; outline: none; }
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .admin-table th { color: var(--text-dim); font-size: 0.8rem; text-align: center; padding: 10px; border-bottom: 1px solid var(--glass-border); }
-        .admin-table td { padding: 15px 10px; border-bottom: 1px solid var(--glass-border); text-align: center; font-size: 0.85rem; }
-        .delete-icon { color: var(--accent); cursor: pointer; font-weight: bold; }
+        .admin-section { background: var(--surface); padding: 20px; border-radius: 25px; border: 1px solid var(--primary); margin-bottom: 25px; }
+        input, select, textarea { width: 100%; padding: 14px; border-radius: 12px; background: #080a12; border: 1px solid var(--glass-border); color: #fff; margin-bottom: 10px; outline: none; font-size: 0.9rem; }
+        label { display: block; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px; }
 
-        /* --- Cart Styling --- */
-        .cart-row { background: var(--surface); padding: 20px; border-radius: 24px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border); }
-        .cart-row h4 { font-weight: 800; font-size: 1.1rem; }
-        .cart-row p { font-size: 0.8rem; color: var(--text-dim); }
-        .whatsapp-send { width: 100%; padding: 20px; border-radius: 20px; border: none; background: #25d366; color: #fff; font-weight: 900; font-size: 1.1rem; cursor: pointer; margin-top: 30px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.2); }
+        .modal-wrap { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-body { background: var(--surface); width: 100%; max-width: 380px; border-radius: 30px; padding: 30px; border: 1px solid var(--primary); }
 
-        /* --- Modal --- */
-        .modal-wrap { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(10px); z-index: 5000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-body { background: var(--surface); width: 100%; max-width: 380px; border-radius: 35px; padding: 35px; border: 1px solid var(--primary); text-align: center; }
-
-        @media (max-width: 450px) { .grid { grid-template-columns: 1fr 1fr; gap: 12px; } }
+        .cart-item { background: var(--surface); padding: 15px; border-radius: 15px; margin-bottom: 10px; border: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
+        .del-btn { color: var(--accent); font-weight: 900; cursor: pointer; padding: 5px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-box" id="logoArea" onmousedown="startAdminLock()" onmouseup="endAdminLock()" ontouchstart="startAdminLock()" ontouchend="endAdminLock()">
+        <div class="logo-box" onmousedown="adminStart()" ontouchstart="adminStart()" onmouseup="adminEnd()" ontouchend="adminEnd()">
             <h1>نجدة<span>.</span>ORDER</h1>
-            <p>أسرع دليفري في شبين القناطر • مصطفى حجازي</p>
+            <p>مشاوير وطلبات شبين القناطر • مصطفى حجازي</p>
         </div>
     </header>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="goPage('shop', this)">
-            <span class="icon">🏠</span><span>المتجر</span>
-        </div>
-        <div class="nav-item" onclick="goPage('cart', this)">
-            <span class="icon">🛒</span><span>السلة</span>
-            <div id="cartCount" class="badge" style="display:none">0</div>
-        </div>
-        <div id="adminTab" class="nav-item" style="display:none" onclick="goPage('admin', this)">
-            <span class="icon">⚙️</span><span>الإدارة</span>
-        </div>
+        <div class="nav-item active" onclick="nav('shop', this)"><span>🏠 المتجر</span></div>
+        <div class="nav-item" onclick="nav('cart', this)"><span>🛒 السلة</span><div id="badge" class="badge" style="display:none">0</div></div>
+        <div id="admTab" class="nav-item" style="display:none" onclick="nav('admin', this)"><span>⚙️ الإدارة</span></div>
     </nav>
 
     <div id="shopPage" class="page active">
-        <div class="cats-bar">
-            <div class="pill active" onclick="filterData('الكل', this)">الكل</div>
-            <div class="pill" onclick="filterData('خضار وفواكه', this)">🥦 خضار وفاكهة</div>
-            <div class="pill" onclick="filterData('بقالة', this)">🏪 بقالة</div>
-            <div class="pill" onclick="filterData('مطاعم', this)">🍔 مطاعم</div>
+        <div class="cats-bar" id="catsBar"></div>
+        
+        <div style="background: linear-gradient(90deg, #6366f1, #a855f7); padding: 20px; border-radius: 20px; margin-bottom: 25px; text-align: center; box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);">
+            <h3 style="font-weight: 900; color:#fff;">🚚 توصيل مستلزمات شخصية</h3>
+            <p style="font-size: 0.8rem; margin-bottom: 15px; color:rgba(255,255,255,0.8);">لو محتاج توصل حاجة من مكان لمكان في شبين</p>
+            <button class="btn" style="background: #fff; color: #000; box-shadow: 0 5px 10px rgba(0,0,0,0.1);" onclick="openSpecial()">اطلب مشوار الآن</button>
         </div>
+
         <div class="grid" id="shopGrid"></div>
     </div>
 
     <div id="cartPage" class="page">
-        <h2 style="margin-bottom:20px; font-weight:900;">طلباتك المختارة 🛍️</h2>
-        <div id="cartContainer"></div>
-        <div id="checkoutArea" style="display:none; margin-top:30px;">
-            <div class="field"><input type="text" id="userName" placeholder="الاسم بالكامل"></div>
-            <div class="field"><input type="text" id="userAddr" placeholder="العنوان بالتفصيل في شبين"></div>
-            <button class="whatsapp-send" onclick="finishOrder()">إرسال الطلب للواتساب ✅</button>
+        <h2 style="margin-bottom:20px; font-weight: 900;">قائمة طلباتك 🛒</h2>
+        <div id="cartList"></div>
+        <div id="checkoutForm" style="display:none; margin-top:20px;">
+            <label>بيانات التواصل</label>
+            <input type="text" id="uName" placeholder="الاسم بالكامل">
+            <input type="tel" id="uPhone" placeholder="رقم الهاتف">
+            <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
+            <button class="btn btn-primary" style="background:#25d366; padding:18px; font-size:1.1rem;" onclick="sendWhatsApp()">إرسال الطلب للواتساب ✅</button>
         </div>
     </div>
 
     <div id="adminPage" class="page">
-        <h2 style="margin-bottom:20px; color:var(--primary); font-weight:900;">لوحة التحكم 🛠️</h2>
-        <div class="admin-form">
-            <div class="field"><label>اسم المنتج</label><input type="text" id="admName"></div>
-            <div class="field"><label>الصورة</label><input type="file" id="admImg" accept="image/*" onchange="handleImg(this)"></div>
-            <div class="field">
-                <label>القسم</label>
-                <select id="admCat">
-                    <option value="خضار وفواكه">خضار وفواكه</option>
-                    <option value="بقالة">بقالة</option>
-                    <option value="مطاعم">مطاعم</option>
-                </select>
+        <h2 style="margin-bottom:20px;">لوحة الإدارة ⚙️</h2>
+        <div class="admin-section">
+            <h4 style="margin-bottom:10px;">إدارة الأقسام</h4>
+            <div style="display: flex; gap: 5px;">
+                <input type="text" id="newCatName" placeholder="اسم القسم الجديد">
+                <button class="btn btn-primary" style="width: 80px;" onclick="addCategory()">إضافة</button>
             </div>
-            <div class="field">
-                <label>الوحدة</label>
-                <select id="admUnit">
-                    <option value="بالكيلو">بالكيلو</option>
-                    <option value="بالقطعة">بالقطعة</option>
-                    <option value="بالعلبة">بالعلبة</option>
-                </select>
-            </div>
-            <button class="add-btn" onclick="saveItem()">نشر المنتج في المتجر</button>
+            <div id="adminCatsList" style="margin-top:10px; display:flex; flex-wrap:wrap; gap:5px;"></div>
         </div>
-        <table class="admin-table">
-            <thead><tr><th>صورة</th><th>المنتج</th><th>حذف</th></tr></thead>
-            <tbody id="adminGrid"></tbody>
-        </table>
-        <button onclick="location.reload()" style="width:100%; background:none; border:1px solid #333; color:var(--text-dim); margin-top:30px; padding:10px; border-radius:15px;">تسجيل خروج</button>
+        <div class="admin-section">
+            <h4 style="margin-bottom:10px;">إضافة منتج جديد</h4>
+            <label>اسم المنتج</label>
+            <input type="text" id="pTitle" placeholder="طماطم، كريب، الخ..">
+            <label>صورة المنتج</label>
+            <input type="file" accept="image/*" onchange="imgProcess(this)">
+            <label>اختر القسم</label>
+            <select id="pCatSelect"></select>
+            <button class="btn btn-primary" onclick="saveProduct()">نشر المنتج</button>
+        </div>
+        <div id="adminProductList"></div>
     </div>
 
-    <div class="modal-wrap" id="itemModal">
+    <div class="modal-wrap" id="modal">
         <div class="modal-body">
-            <h3 id="modalName" style="color:var(--primary); font-weight:900; font-size:1.4rem;"></h3>
-            <div class="field" style="margin-top:25px;">
-                <label>المكان المفضل (اختياري)</label>
-                <input type="text" id="optPlace" placeholder="مثلاً: ماركت الفلاني">
+            <h3 id="mTitle" style="color:var(--primary); margin-bottom:20px; font-weight: 900;"></h3>
+            <div id="stdFields">
+                <label>عاوز تجيبه منين؟ (اختياري)</label>
+                <input type="text" id="mSource" placeholder="مثلاً: ماركت الأمانة">
+                <label>الكمية</label>
+                <input type="number" id="mQty" value="1" min="1">
             </div>
-            <div class="field">
-                <label>الكمية المطلوبة</label>
-                <input type="number" id="optCount" value="1" min="1">
+            <div id="spcFields" style="display:none;">
+                <label>تفاصيل الحاجة اللي هتوصلها</label>
+                <textarea id="mDesc" placeholder="مثلاً: مفاتيح، شنطة هدوم، أكل.." style="height: 80px;"></textarea>
+                <label>مكان الاستلام</label>
+                <input type="text" id="mFrom" placeholder="هنيجي ناخدها منين؟">
+                <label>مكان التوصيل</label>
+                <input type="text" id="mTo" placeholder="هنوصلها لمين وفين؟">
             </div>
-            <button class="add-btn" onclick="confirmCart()">تأكيد الإضافة</button>
-            <button onclick="closeModal()" style="background:none; border:none; color:var(--text-dim); margin-top:15px; cursor:pointer; font-weight:700;">رجوع</button>
+            <button class="btn btn-primary" onclick="confirmAdd()">تأكيد الإضافة للسلة</button>
+            <button class="btn btn-outline" style="margin-top:10px;" onclick="closeModal()">إلغاء</button>
         </div>
     </div>
 
     <script>
-        // داتا التخزين
-        let products = JSON.parse(localStorage.getItem('nagda_final_db')) || [];
-        let cartItems = [];
-        let currentImgBase64 = "";
+        let products = JSON.parse(localStorage.getItem('n_p_v1')) || [];
+        let cats = JSON.parse(localStorage.getItem('n_c_v1')) || ['خضار وفواكه', 'بقالة', 'مطاعم'];
+        let cart = [];
+        let tempImg = "";
         let selectedItem = "";
+        let isSpecialOrder = false;
         let adminTimer;
 
-        // نظام الصفحات
-        function goPage(id, el) {
+        function nav(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id + 'Page').classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             if(el) el.classList.add('active');
             if(id === 'shop') renderShop();
             if(id === 'cart') renderCart();
             if(id === 'admin') renderAdmin();
         }
 
-        // قفل الأدمن السرّي
-        function startAdminLock() { adminTimer = setTimeout(() => {
-            const code = prompt("كود الدخول للوحة:");
-            if(code === "135790") {
-                document.getElementById('adminTab').style.display = 'block';
-                goPage('admin', document.getElementById('adminTab'));
+        // لوحة الإدارة السرية
+        function adminStart() { adminTimer = setTimeout(() => {
+            if(prompt("رمز دخول الإدارة:") === "135790") {
+                document.getElementById('admTab').style.display = 'block';
+                nav('admin', document.getElementById('admTab'));
             }
         }, 2000); }
-        function endAdminLock() { clearTimeout(adminTimer); }
+        function adminEnd() { clearTimeout(adminTimer); }
 
-        // تحويل الصور
-        function handleImg(el) {
-            const reader = new FileReader();
-            reader.onload = (e) => currentImgBase64 = e.target.result;
-            reader.readAsDataURL(el.files[0]);
+        function imgProcess(el) {
+            const r = new FileReader(); r.onload = (e) => tempImg = e.target.result;
+            r.readAsDataURL(el.files[0]);
         }
 
-        // حفظ وحذف
-        function saveItem() {
-            const name = document.getElementById('admName').value;
-            const cat = document.getElementById('admCat').value;
-            const unit = document.getElementById('admUnit').value;
-            if(!name || !currentImgBase64) return alert("اكمل البيانات");
-            products.push({ id: Date.now(), name, cat, unit, img: currentImgBase64 });
-            localStorage.setItem('nagda_final_db', JSON.stringify(products));
-            renderAdmin();
-            document.getElementById('admName').value = "";
+        function addCategory() {
+            const val = document.getElementById('newCatName').value;
+            if(val) { cats.push(val); localStorage.setItem('n_c_v1', JSON.stringify(cats)); renderAdmin(); document.getElementById('newCatName').value=''; }
         }
 
-        function delItem(id) {
-            if(confirm("مسح المنتج نهائياً؟")) {
-                products = products.filter(p => p.id !== id);
-                localStorage.setItem('nagda_final_db', JSON.stringify(products));
-                renderAdmin();
-            }
+        function saveProduct() {
+            const t = document.getElementById('pTitle').value;
+            const c = document.getElementById('pCatSelect').value;
+            if(!t || !tempImg) return alert("اكمل بيانات المنتج");
+            products.push({ id: Date.now(), title: t, cat: c, img: tempImg });
+            localStorage.setItem('n_p_v1', JSON.stringify(products));
+            renderAdmin(); alert("تم الإضافة بنجاح");
         }
 
-        // عرض المتجر
         function renderShop(f = 'الكل') {
-            const grid = document.getElementById('shopGrid');
-            grid.innerHTML = products.length === 0 ? "<p style='grid-column:1/-1; text-align:center; padding:100px 0; color:#555'>لا توجد منتجات حالياً</p>" : "";
-            products.forEach(p => {
-                if(f === 'الكل' || p.cat === f) {
-                    grid.innerHTML += `
-                        <div class="p-card">
-                            <img src="${p.img}">
-                            <div class="p-card-content">
-                                <h3>${p.name}</h3>
-                                <span class="unit-tag">${p.unit}</span>
-                                <button class="add-btn" onclick="openModal('${p.name}')">أضف للسلة</button>
-                            </div>
-                        </div>`;
-                }
+            const bar = document.getElementById('catsBar');
+            bar.innerHTML = `<div class="pill ${f==='الكل'?'active':''}" onclick="renderShop('الكل')">الكل</div>`;
+            cats.forEach(c => bar.innerHTML += `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`);
+
+            const grid = document.getElementById('shopGrid'); grid.innerHTML = "";
+            products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
+                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-content"><h4>${p.title}</h4><button class="btn btn-primary" style="margin-top:10px; font-size:0.8rem;" onclick="openModal('${p.title}')">أضف للسلة</button></div></div>`;
             });
         }
 
-        function filterData(c, el) {
-            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            renderShop(c);
+        function openModal(title) {
+            isSpecialOrder = false; selectedItem = title;
+            document.getElementById('mTitle').innerText = title;
+            document.getElementById('stdFields').style.display = 'block';
+            document.getElementById('spcFields').style.display = 'none';
+            document.getElementById('modal').style.display = 'flex';
         }
 
-        // سلة المشتريات
-        function openModal(name) {
-            selectedItem = name;
-            document.getElementById('modalName').innerText = name;
-            document.getElementById('itemModal').style.display = 'flex';
-        }
-        function closeModal() { document.getElementById('itemModal').style.display = 'none'; }
-
-        function confirmCart() {
-            const place = document.getElementById('optPlace').value || "حسب المتوفر";
-            const qty = document.getElementById('optCount').value;
-            cartItems.push({ name: selectedItem, place, qty });
-            closeModal();
-            updateCartBadge();
-            if(navigator.vibrate) navigator.vibrate(50);
+        function openSpecial() {
+            isSpecialOrder = true;
+            document.getElementById('mTitle').innerText = "توصيل مستلزمات";
+            document.getElementById('stdFields').style.display = 'none';
+            document.getElementById('spcFields').style.display = 'block';
+            document.getElementById('modal').style.display = 'flex';
         }
 
-        function updateCartBadge() {
-            const b = document.getElementById('cartCount');
-            if(cartItems.length > 0) { b.innerText = cartItems.length; b.style.display = 'block'; }
-            else { b.style.display = 'none'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+
+        function confirmAdd() {
+            if(isSpecialOrder) {
+                const desc = document.getElementById('mDesc').value;
+                const f = document.getElementById('mFrom').value;
+                const t = document.getElementById('mTo').value;
+                if(!desc || !f || !t) return alert("اكمل بيانات المشوار");
+                cart.push({ type: 'مشوار', desc, from: f, to: t });
+            } else {
+                cart.push({ type: 'منتج', name: selectedItem, source: document.getElementById('mSource').value || "أي مكان", qty: document.getElementById('mQty').value });
+            }
+            closeModal(); updateBadge();
+        }
+
+        function updateBadge() {
+            const b = document.getElementById('badge');
+            b.innerText = cart.length; b.style.display = cart.length ? 'block' : 'none';
         }
 
         function renderCart() {
-            const cont = document.getElementById('cartContainer');
-            const area = document.getElementById('checkoutArea');
-            if(cartItems.length === 0) {
-                cont.innerHTML = "<div style='text-align:center; padding:100px 0;'><span style='font-size:3rem;'>🛒</span><p style='color:#555'>السلة فاضية.. مستنيين طلبك!</p></div>";
-                area.style.display = 'none';
-                return;
-            }
-            area.style.display = 'block';
-            cont.innerHTML = cartItems.map((i, idx) => `
-                <div class="cart-row">
+            const list = document.getElementById('cartList');
+            if(!cart.length) { list.innerHTML = "<p style='text-align:center; padding:50px; color:var(--text-dim);'>السلة فارغة</p>"; document.getElementById('checkoutForm').style.display='none'; return; }
+            document.getElementById('checkoutForm').style.display='block';
+            list.innerHTML = cart.map((i, idx) => `
+                <div class="cart-item">
                     <div>
-                        <h4>${i.name}</h4>
-                        <p>الكمية: ${i.qty} • المكان: ${i.place}</p>
+                    ${i.type==='مشوار'? `<b>🚀 مشوار: ${i.desc}</b><br><small>من: ${i.from} ⬅️ إلى: ${i.to}</small>` : `<b>📦 ${i.name}</b><br><small>الكمية: ${i.qty} | من: ${i.source}</small>`}
                     </div>
-                    <span class="delete-icon" onclick="removeCart(${idx})">مسح</span>
+                    <div class="del-btn" onclick="cart.splice(${idx},1); renderCart(); updateBadge();">حذف</div>
                 </div>
             `).join('');
         }
 
-        function removeCart(idx) {
-            cartItems.splice(idx, 1);
-            renderCart();
-            updateCartBadge();
-        }
-
         function renderAdmin() {
-            const list = document.getElementById('adminGrid');
-            list.innerHTML = products.map(p => `
-                <tr>
-                    <td><img src="${p.img}" style="width:40px; height:40px; border-radius:8px; object-fit:cover;"></td>
-                    <td>${p.name}</td>
-                    <td class="delete-icon" onclick="delItem(${p.id})">مسح</td>
-                </tr>
-            `).join('');
+            document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+            document.getElementById('adminCatsList').innerHTML = cats.map((c, idx) => `<span class="pill" style="font-size:0.7rem;" onclick="if(confirm('حذف القسم؟')){cats.splice(${idx},1); localStorage.setItem('n_c_v1',JSON.stringify(cats)); renderAdmin();}">${c} ×</span>`).join('');
+            document.getElementById('adminProductList').innerHTML = `<h4 style="margin:15px 0;">المنتجات الحالية:</h4>` + products.map((p, idx) => `<div style="display:flex; justify-content:space-between; align-items:center; background:var(--glass-border); padding:10px; border-radius:10px; margin-bottom:5px;"><img src="${p.img}" width="40" height="40" style="border-radius:5px;"> <span>${p.title}</span> <span style="color:red; cursor:pointer;" onclick="products.splice(${idx},1); localStorage.setItem('n_p_v1',JSON.stringify(products)); renderAdmin();">مسح</span></div>`).join('');
         }
 
-        function finishOrder() {
-            const name = document.getElementById('userName').value;
-            const addr = document.getElementById('userAddr').value;
-            if(!name || !addr) return alert("فضلاً، ادخل الاسم والعنوان لنتمكن من توصيل طلبك");
-            
-            let text = `*طلب دليفري جديد (نجدة أوردر) ⚡*%0A━━━━━━━━━━━━━━%0A`;
-            cartItems.forEach(i => { text += `• *${i.name}* (الكمية: ${i.qty})%0A   (المكان: ${i.place})%0A`; });
-            text += `━━━━━━━━━━━━━━%0A👤 *الاسم:* ${name}%0A📍 *العنوان:* ${addr}`;
-            
-            window.open(`https://wa.me/201140293628?text=${text}`);
+        function sendWhatsApp() {
+            const n = document.getElementById('uName').value;
+            const p = document.getElementById('uPhone').value;
+            const a = document.getElementById('uAddr').value;
+            if(!n || !p || !a) return alert("اكمل بيانات التواصل");
+
+            let msg = `*طلب نجدة أوردر ⚡*%0A━━━━━━━━━━━━━━%0A`;
+            cart.forEach(i => {
+                if(i.type === 'مشوار') msg += `• *مشوار:* ${i.desc}%0A   - من: ${i.from}%0A   - إلى: ${i.to}%0A`;
+                else msg += `• *${i.name}* (الكمية: ${i.qty})%0A   - من: ${i.source}%0A`;
+            });
+            msg += `━━━━━━━━━━━━━━%0A👤 *الاسم:* ${n}%0A📞 *الهاتف:* ${p}%0A📍 *العنوان:* ${a}`;
+            window.open(`https://wa.me/201140293628?text=${msg}`);
         }
 
-        // تشغيل أولي
         renderShop();
     </script>
 </body>
