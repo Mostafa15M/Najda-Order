@@ -13,13 +13,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); padding-bottom: 120px; overflow-x: hidden; }
 
-        /* خلفية متحركة خفيفة */
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 242, 255, 0.05), transparent);
-            z-index: -1;
-        }
-
         header { padding: 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .dev-tag { font-size: 0.7rem; letter-spacing: 2px; color: var(--accent); font-weight: 700; opacity: 0.8; }
@@ -27,26 +20,23 @@
         .hero-action { 
             margin: 20px; padding: 25px; border-radius: 20px; 
             background: linear-gradient(45deg, #1e1b4b, #312e81);
-            border-left: 5px solid var(--accent); position: relative; cursor: pointer;
-            transition: 0.3s;
+            border-left: 5px solid var(--accent); cursor: pointer;
         }
-        .hero-action:active { transform: scale(0.97); }
 
         .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 20px; scrollbar-width: none; }
         .pill { 
             padding: 8px 25px; background: var(--card); border-radius: 50px; 
             font-size: 0.85rem; font-weight: 700; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);
         }
-        .pill.active { background: var(--accent); color: #000; border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .pill.active { background: var(--accent); color: #000; box-shadow: 0 0 15px var(--accent); }
 
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; position: relative; transition: 0.3s; }
-        .p-card img { width: 100%; height: 150px; object-fit: cover; filter: brightness(0.8); }
+        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; position: relative; }
+        .p-card img { width: 100%; height: 150px; object-fit: cover; }
         .p-card-info { padding: 12px; text-align: center; }
         .btn-main { 
             width: 100%; padding: 12px; border-radius: 12px; border: none; 
-            font-weight: 900; cursor: pointer; transition: 0.3s;
-            background: var(--accent); color: #000;
+            font-weight: 900; cursor: pointer; background: var(--accent); color: #000;
         }
 
         .bottom-nav { 
@@ -78,11 +68,8 @@
             border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none;
         }
 
-        .qty-display { font-size: 2.5rem; font-weight: 900; color: var(--accent); text-align: center; margin: 15px 0; }
-        input[type=range] { -webkit-appearance: none; height: 6px; background: #333; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 25px; height: 25px; background: var(--accent); border-radius: 50%; }
-
-        .footer-credit { text-align: center; color: var(--dim); font-size: 0.7rem; margin-top: 20px; opacity: 0.5; }
+        .admin-box { background: #1f2937; padding: 20px; border-radius: 20px; margin-bottom: 25px; border: 1px dashed var(--accent); }
+        .admin-item { background: #000; padding: 10px; margin-top: 8px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
@@ -91,14 +78,14 @@
         <div class="logo">
             <p class="dev-tag">DESIGNED BY</p>
             <h1>نجدة<span>.</span>ORDER</h1>
-            <p style="color:var(--accent); font-weight: 900; font-size: 0.8rem;">MOSTAFA HEGAZY</p>
+            <p style="color:var(--accent); font-weight: 900;">MOSTAFA HEGAZY</p>
         </div>
     </header>
 
     <div id="shopPage" class="page">
-        <div class="hero-action" onclick="openSpecial()">
+        <div class="hero-action" onclick="openSpecial()" style="margin:20px;">
             <h3 style="color:#fff">مشوار نجدة الخاص ⚡</h3>
-            <p style="color:var(--dim); font-size: 0.8rem;">وصل أماناتك، مفاتيحك، أو أي طرد لأي مكان</p>
+            <p style="color:var(--dim); font-size: 0.8rem;">وصل أماناتك لأي مكان</p>
         </div>
         <div class="cats-bar" id="catsBar"></div>
         <div class="grid" id="shopGrid"></div>
@@ -108,31 +95,42 @@
         <h2 style="margin-bottom:20px;">سلة طلباتك 🛒</h2>
         <div id="cartList"></div>
         <div id="checkoutForm" style="display:none; margin-top:20px;">
-            <input type="text" id="uName" placeholder="اسمك">
+            <input type="text" id="uName" placeholder="الاسم">
             <input type="tel" id="uPhone" placeholder="رقم الهاتف">
-            <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
-            <button class="btn-main" style="padding:18px; background:var(--accent);" onclick="completeOrder()">إرسال واتساب وانهاء الطلب ✅</button>
+            <input type="text" id="uAddr" placeholder="العنوان">
+            <button class="btn-main" style="padding:18px;" onclick="completeOrder()">تأكيد الطلب وانهاء السلة ✅</button>
         </div>
     </div>
 
     <div id="adminPage" class="page" style="display:none; padding:20px;">
-        <h2 style="color:var(--accent)">لوحة التحكم ⚙️</h2>
-        <div style="background:var(--card); padding:20px; border-radius:20px; margin:20px 0;">
+        <h2 style="color:var(--accent); margin-bottom:20px;">لوحة الإدارة الكاملة ⚙️</h2>
+        
+        <div class="admin-box">
+            <h4>📁 إدارة الأقسام</h4><br>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="newCatName" placeholder="اسم القسم الجديد">
+                <button class="btn-main" style="width:80px;" onclick="addCategory()">إضافة</button>
+            </div>
+            <div id="adminCatsList"></div>
+        </div>
+
+        <div class="admin-box">
+            <h4>🍔 إضافة منتج جديد</h4><br>
             <input type="text" id="pTitle" placeholder="اسم المنتج">
             <input type="file" accept="image/*" onchange="imgProcess(this)">
             <select id="pUnit"><option value="كيلو">كيلو</option><option value="قطعة">قطعة</option></select>
+            <select id="pCatSelect"></select>
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
                 <input type="checkbox" id="pAllowPrice" style="width:20px; height:20px;">
-                <label>تفعيل خيار "اطلب بالسعر"</label>
+                <label>تفعيل الطلب بالسعر</label>
             </div>
-            <select id="pCatSelect"></select>
-            <button class="btn-main" onclick="saveProduct()">إضافة المنتج للسوق</button>
+            <button class="btn-main" onclick="saveProduct()">حفظ المنتج</button>
         </div>
         <div id="adminProductList"></div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" id="btnShop" onclick="nav('shop')">🏠 السوق</div>
+        <div class="nav-item active" id="btnShop" onclick="nav('shop')">🏠 المتجر</div>
         <div class="nav-item" id="btnCart" onclick="nav('cart')">🛒 السلة <div id="badge" class="badge" style="display:none">0</div></div>
         <div class="nav-item" id="btnAdmin" style="display:none" onclick="nav('admin')">⚙️ الإدارة</div>
     </nav>
@@ -140,43 +138,30 @@
     <div class="modal" id="modal">
         <div class="modal-content">
             <h2 id="mTitle" style="color:var(--accent); margin-bottom:15px;"></h2>
-            
             <div id="stdFields">
-                <div class="qty-display" id="qtyText">0.25 كيلو</div>
-                <input type="range" id="qtySlider" min="0.25" max="10" step="0.25" value="0.25" oninput="handleSlider(this.value)">
-                
-                <div id="priceSection" style="display:none; margin-top:20px;">
-                    <p style="font-size:0.8rem; color:var(--dim); margin-bottom:5px;">أو اطلب بمبلغ محدد:</p>
-                    <input type="text" id="manualQty" placeholder="مثلاً: بـ 50 جنيه">
+                <div style="text-align:center; font-size:2rem; color:var(--accent); font-weight:900;" id="qtyText">0.25 كيلو</div>
+                <input type="range" id="qtySlider" min="0.25" max="10" step="0.25" oninput="handleSlider(this.value)">
+                <div id="priceSection" style="display:none; margin-top:15px;">
+                    <input type="text" id="manualQty" placeholder="أو اطلب بمبلغ محدد (مثلاً بـ 50 ج)">
                 </div>
-                <input type="text" id="mSource" placeholder="مكان معين نجيب منه؟ (اختياري)" style="margin-top:20px;">
+                <input type="text" id="mSource" placeholder="من مكان محدد؟" style="margin-top:15px;">
             </div>
-
             <div id="spcFields" style="display:none;">
-                <textarea id="mDesc" placeholder="اكتب طلبك بالتفصيل هنا.."></textarea>
-                <input type="text" id="mFrom" placeholder="نستلم منين؟">
-                <input type="text" id="mTo" placeholder="نسلم فين؟">
+                <textarea id="mDesc" placeholder="اكتب طلبك.."></textarea>
+                <input type="text" id="mFrom" placeholder="منين؟">
+                <input type="text" id="mTo" placeholder="لفين؟">
             </div>
-
-            <button class="btn-main" style="padding:15px; margin-top:10px;" onclick="confirmAdd()">إضافة للسلة</button>
+            <button class="btn-main" onclick="confirmAdd()">إضافة للسلة</button>
             <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--dim); margin-top:15px;">إلغاء</button>
         </div>
     </div>
 
-    <p class="footer-credit">Developed by: Mostafa Hegazy & Mostafa Abdel-Moneim</p>
-
     <script>
-        const demoData = [
-            { id: 1, title: 'طماطم بلدي', cat: 'خضروات', unit: 'كيلو', allowPrice: true, img: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400' },
-            { id: 2, title: 'كريب زنجر', cat: 'مطاعم', unit: 'قطعة', allowPrice: false, img: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?w=400' }
-        ];
-
-        let products = JSON.parse(localStorage.getItem('n_final_p')) || (localStorage.getItem('n_final_p') ? [] : demoData);
-        let cats = ['الكل', 'خضروات', 'مطاعم', 'بقالة', 'صيدلية'];
+        let products = JSON.parse(localStorage.getItem('n_p_final')) || [];
+        let cats = JSON.parse(localStorage.getItem('n_c_final')) || ['الكل', 'خضروات', 'مطاعم'];
         let cart = [];
         let tempImg = "";
         let selectedItem = null;
-        let isSpecialOrder = false;
         let adminClicks = 0;
 
         function nav(id) {
@@ -185,8 +170,8 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('btn' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
             if(id === 'shop') renderShop();
-            if(id === 'cart') renderCart();
             if(id === 'admin') renderAdmin();
+            if(id === 'cart') renderCart();
         }
 
         function adminCheck() {
@@ -195,35 +180,49 @@
         }
 
         function renderShop(f = 'الكل') {
-            const bar = document.getElementById('catsBar');
-            bar.innerHTML = cats.map(c => `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`).join('');
+            document.getElementById('catsBar').innerHTML = cats.map(c => `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`).join('');
             const grid = document.getElementById('shopGrid'); grid.innerHTML = "";
             products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
-                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-info"><h4>${p.title}</h4><button class="btn-main" style="margin-top:10px" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">اطلب</button></div></div>`;
+                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-info"><h4>${p.title}</h4><button class="btn-main" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">اطلب</button></div></div>`;
             });
         }
 
+        function addCategory() {
+            let name = document.getElementById('newCatName').value.trim();
+            if(name && !cats.includes(name)) {
+                cats.push(name);
+                localStorage.setItem('n_c_final', JSON.stringify(cats));
+                document.getElementById('newCatName').value = "";
+                renderAdmin();
+            }
+        }
+
+        function deleteCat(index) {
+            if(cats[index] === 'الكل') return alert("لا يمكن مسح هذا القسم");
+            cats.splice(index, 1);
+            localStorage.setItem('n_c_final', JSON.stringify(cats));
+            renderAdmin();
+        }
+
+        function renderAdmin() {
+            document.getElementById('pCatSelect').innerHTML = cats.filter(c => c !== 'الكل').map(c => `<option value="${c}">${c}</option>`).join('');
+            document.getElementById('adminCatsList').innerHTML = cats.map((c, i) => `<div class="admin-item"><span>${c}</span><span style="color:red" onclick="deleteCat(${i})">مسح</span></div>`).join('');
+            document.getElementById('adminProductList').innerHTML = products.map((p, i) => `<div class="admin-item"><span>${p.title}</span><span style="color:red" onclick="products.splice(${i},1); localStorage.setItem('n_p_final',JSON.stringify(products)); renderAdmin();">مسح</span></div>`).join('');
+        }
+
         function openModal(item) {
-            isSpecialOrder = false; selectedItem = item;
+            selectedItem = item;
             document.getElementById('mTitle').innerText = item.title;
-            document.getElementById('manualQty').value = "";
-            document.getElementById('mSource').value = "";
             document.getElementById('priceSection').style.display = item.allowPrice ? 'block' : 'none';
-            const s = document.getElementById('qtySlider');
-            if(item.unit === 'كيلو') { s.min = 0.25; s.step = 0.25; s.value = 0.25; } else { s.min = 1; s.step = 1; s.value = 1; }
-            handleSlider(s.value);
             document.getElementById('stdFields').style.display = 'block';
             document.getElementById('spcFields').style.display = 'none';
             document.getElementById('modal').style.display = 'flex';
+            handleSlider(0.25);
         }
 
-        function handleSlider(v) {
-            document.getElementById('qtyText').innerText = v + " " + (selectedItem ? selectedItem.unit : "");
-        }
-
-        function openSpecial() {
-            isSpecialOrder = true;
-            document.getElementById('mTitle').innerText = "مشوار نجدة 🚀";
+        function handleSlider(v) { document.getElementById('qtyText').innerText = v + " " + selectedItem.unit; }
+        function openSpecial() { 
+            document.getElementById('mTitle').innerText = "مشوار خاص";
             document.getElementById('stdFields').style.display = 'none';
             document.getElementById('spcFields').style.display = 'block';
             document.getElementById('modal').style.display = 'flex';
@@ -232,55 +231,32 @@
         function closeModal() { document.getElementById('modal').style.display = 'none'; }
 
         function confirmAdd() {
-            if(isSpecialOrder) {
-                const desc = document.getElementById('mDesc').value;
-                if(!desc) return alert("اكتب تفاصيل طلبك");
-                cart.push({ type: 'مشوار', desc, from: document.getElementById('mFrom').value, to: document.getElementById('mTo').value });
+            if(document.getElementById('spcFields').style.display === 'block') {
+                cart.push({ type: 'مشوار', desc: document.getElementById('mDesc').value });
             } else {
-                let m = document.getElementById('manualQty').value.trim();
-                let finalQty = m !== "" ? m : (document.getElementById('qtySlider').value + " " + selectedItem.unit);
-                cart.push({ type: 'منتج', name: selectedItem.title, qty: finalQty, source: document.getElementById('mSource').value.trim() || "أي مكان" });
+                let qty = document.getElementById('manualQty').value || document.getElementById('qtySlider').value + " " + selectedItem.unit;
+                cart.push({ type: 'منتج', name: selectedItem.title, qty, source: document.getElementById('mSource').value || "أي مكان" });
             }
             closeModal(); updateBadge();
         }
 
         function updateBadge() {
-            const b = document.getElementById('badge');
-            b.innerText = cart.length; b.style.display = cart.length ? 'flex' : 'none';
+            document.getElementById('badge').innerText = cart.length;
+            document.getElementById('badge').style.display = cart.length ? 'flex' : 'none';
         }
 
         function renderCart() {
             const list = document.getElementById('cartList');
-            if(!cart.length) { list.innerHTML = "<p style='text-align:center; padding:50px; color:var(--dim)'>سلتك فاضية يا بطل</p>"; document.getElementById('checkoutForm').style.display='none'; return; }
+            if(!cart.length) { list.innerHTML = "<p style='text-align:center; padding:50px;'>السلة فاضية</p>"; document.getElementById('checkoutForm').style.display='none'; return; }
             document.getElementById('checkoutForm').style.display='block';
-            list.innerHTML = cart.map((i, idx) => `
-                <div style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:10px; border:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
-                    <div>${i.type==='مشوار'? `<b>🚀 ${i.desc}</b>` : `<b>📦 ${i.name}</b><br><small>${i.qty} | ${i.source}</small>`}</div>
-                    <div style="color:var(--neon-pink); cursor:pointer;" onclick="cart.splice(${idx},1); renderCart(); updateBadge();">حذف</div>
-                </div>
-            `).join('');
+            list.innerHTML = cart.map((i, idx) => `<div class="admin-item"><div>${i.name || i.desc}</div><div style="color:red" onclick="cart.splice(${idx},1); renderCart(); updateBadge();">حذف</div></div>`).join('');
         }
 
         function completeOrder() {
-            const n = document.getElementById('uName').value;
-            const p = document.getElementById('uPhone').value;
-            const a = document.getElementById('uAddr').value;
-            if(!n || !p || !a) return alert("اكمل بياناتك");
-
-            let msg = `*طلب نجدة أوردر (By مصطفى حجازي)*%0A━━━━━━━━━━━━━━%0A`;
-            cart.forEach(i => {
-                if(i.type === 'مشوار') msg += `• *مشوار:* ${i.desc}%0A   - من: ${i.from} | لـ: ${i.to}%0A`;
-                else msg += `• *${i.name}*%0A   - الكمية: ${i.qty}%0A   - المكان: ${i.source}%0A`;
-            });
-            msg += `━━━━━━━━━━━━━━%0A👤 *العميل:* ${n}%0A📞 *الهاتف:* ${p}%0A📍 *العنوان:* ${a}`;
-            
+            let msg = `*طلب نجدة أوردر*%0A`;
+            cart.forEach(i => msg += `- ${i.name || i.type}: ${i.qty || i.desc}%0A`);
             window.open(`https://wa.me/201140293628?text=${msg}`);
-
-            // الجزء الخاص بمسح كل شيء تلقائياً بعد الطلب
-            cart = []; 
-            updateBadge();
-            nav('shop');
-            alert("تم إرسال طلبك بنجاح! السلة الآن فارغة.");
+            cart = []; updateBadge(); nav('shop');
         }
 
         function imgProcess(el) {
@@ -290,24 +266,12 @@
 
         function saveProduct() {
             const t = document.getElementById('pTitle').value;
-            const u = document.getElementById('pUnit').value;
             const c = document.getElementById('pCatSelect').value;
-            const ap = document.getElementById('pAllowPrice').checked;
-            if(!t || !tempImg) return alert("بيانات ناقصة");
-            products.push({ id: Date.now(), title: t, unit: u, allowPrice: ap, cat: c, img: tempImg });
-            localStorage.setItem('n_final_p', JSON.stringify(products));
+            if(!t || !tempImg) return alert("اكمل البيانات");
+            products.push({ title: t, cat: c, img: tempImg, unit: document.getElementById('pUnit').value, allowPrice: document.getElementById('pAllowPrice').checked });
+            localStorage.setItem('n_p_final', JSON.stringify(products));
             renderAdmin(); renderShop();
-            alert("تمت الإضافة!");
-        }
-
-        function renderAdmin() {
-            document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-            document.getElementById('adminProductList').innerHTML = products.map((p, idx) => `
-                <div style="background:#000; padding:10px; margin-top:5px; border-radius:10px; display:flex; justify-content:space-between;">
-                    <span>${p.title}</span>
-                    <span style="color:red; cursor:pointer;" onclick="products.splice(${idx},1); localStorage.setItem('n_final_p',JSON.stringify(products)); renderAdmin();">مسح</span>
-                </div>
-            `).join('');
+            alert("تم الحفظ!");
         }
 
         renderShop();
