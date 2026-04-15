@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>نجدة اوردر | Nagda Order</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --primary: #0a192f;
@@ -18,122 +16,55 @@
             --admin-color: #00ff00;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        
-        body { 
-            background: var(--bg); 
-            color: var(--primary); 
-            padding-top: 150px; 
-            padding-bottom: 90px; 
-            transition: background 0.3s;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--primary); padding-top: 150px; padding-bottom: 90px; }
 
-        /* --- الهيدر الاحترافي --- */
-        header { 
-            position: fixed; top: 0; width: 100%; background: var(--white); z-index: 1000;
-            box-shadow: var(--shadow); border-bottom: 3px solid var(--accent);
-        }
-
-        .top-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 20px; max-width: 1200px; margin: 0 auto;
-        }
-
-        .logo-area { cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+        /* الهيدر والأقسام */
+        header { position: fixed; top: 0; width: 100%; background: var(--white); z-index: 1000; box-shadow: var(--shadow); border-bottom: 3px solid var(--accent); }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; max-width: 1200px; margin: 0 auto; }
+        .logo-area { cursor: pointer; user-select: none; }
         .logo-en { font-size: 1.8rem; font-weight: 900; line-height: 1; }
         .logo-en span { color: var(--accent); }
-        .owner-tag { font-size: 0.85rem; font-weight: 700; opacity: 0.8; margin-top: -2px; color: var(--secondary); }
+        .owner-tag { font-size: 0.85rem; font-weight: 700; opacity: 0.8; color: var(--secondary); }
+        .pages-nav { display: flex; gap: 15px; }
+        .page-link { font-size: 0.95rem; font-weight: 700; cursor: pointer; color: var(--primary); }
 
-        .pages-nav { display: flex; gap: 18px; }
-        .page-link { font-size: 0.95rem; font-weight: 700; color: var(--primary); text-decoration: none; cursor: pointer; transition: 0.2s; }
-        .page-link:hover { color: var(--accent); }
+        .cats-bar { background: #fff; padding: 12px 0; overflow-x: auto; display: flex; justify-content: center; gap: 10px; border-top: 1px solid #f0f0f0; }
+        .tab { padding: 8px 22px; background: #f0f2f5; border-radius: 50px; font-size: 0.9rem; font-weight: 700; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        .tab.active { background: var(--accent); color: #fff; }
 
-        /* --- شريط الأقسام السريع --- */
-        .cats-bar {
-            background: #fff; padding: 12px 0; overflow-x: auto; display: flex;
-            justify-content: center; gap: 12px; border-top: 1px solid #f0f0f0;
-            scrollbar-width: none;
-        }
-        .cats-bar::-webkit-scrollbar { display: none; }
-
-        .tab { 
-            padding: 8px 22px; background: #f0f2f5; border-radius: 50px; 
-            font-size: 0.9rem; font-weight: 700; cursor: pointer; white-space: nowrap; 
-            transition: 0.3s; border: 1px solid transparent;
-        }
-        .tab.active { background: var(--accent); color: #fff; transform: scale(1.05); }
-
-        /* --- محتوى الصفحات --- */
-        .page-content { display: none; max-width: 1100px; margin: 0 auto; padding: 20px; animation: fadeIn 0.4s ease-out; }
+        /* المحتوى والشبكة */
+        .page-content { display: none; max-width: 1100px; margin: 0 auto; padding: 20px; animation: fadeIn 0.4s ease; }
         .page-content.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- شبكة المنتجات --- */
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; }
-        .p-card { 
-            background: #fff; border-radius: 22px; overflow: hidden; 
-            box-shadow: var(--shadow); transition: 0.3s; text-align: center; 
-            border: 1px solid #f0f0f0; position: relative;
-        }
-        .p-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.12); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .p-card { background: #fff; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid #f0f0f0; text-align: center; }
         .p-card img { width: 100%; height: 150px; object-fit: cover; background: #eee; }
-        .p-card-body { padding: 15px; }
+        .p-card-body { padding: 12px; }
         .p-title { font-weight: 800; font-size: 1.1rem; display: block; margin-bottom: 5px; }
-        .p-unit-tag { font-size: 0.8rem; color: #fff; background: var(--secondary); padding: 3px 12px; border-radius: 8px; font-weight: 600; }
+        .p-unit-tag { font-size: 0.8rem; color: #fff; background: var(--secondary); padding: 3px 12px; border-radius: 8px; }
+        .add-btn { background: var(--accent); color: #fff; border: none; width: 100%; padding: 12px; margin-top: 10px; border-radius: 12px; font-weight: 800; cursor: pointer; }
 
-        .add-btn { 
-            background: var(--accent); color: #fff; border: none; width: 100%; 
-            padding: 12px; margin-top: 15px; border-radius: 14px; font-weight: 800; 
-            cursor: pointer; transition: 0.2s;
-        }
-        .add-btn:active { transform: scale(0.95); }
+        /* لوحة التحكم السرية */
+        #adminPanel { display: none; background: #121212; color: var(--admin-color); padding: 25px; border-radius: 20px; margin-bottom: 30px; border: 2px solid var(--admin-color); font-family: monospace; }
+        .admin-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #333; background: #1e1e1e; color: #fff; font-size: 1rem; }
+        .file-label { display: block; background: #222; padding: 15px; border: 1px dashed var(--admin-color); text-align: center; border-radius: 10px; cursor: pointer; margin: 10px 0; }
 
-        /* --- لوحة الأدمن السرية (الخبيثة) --- */
-        #adminPanel { 
-            display: none; background: #121212; color: var(--admin-color); padding: 25px; 
-            border-radius: 20px; margin-bottom: 30px; border: 2px solid var(--admin-color);
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2); font-family: monospace;
-        }
-        .admin-input { 
-            width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; 
-            border: 1px solid #333; background: #1e1e1e; color: #fff; font-size: 1rem;
-        }
-        .admin-btn { background: var(--admin-color); color: #000; font-weight: 900; border: none; padding: 15px; width: 100%; border-radius: 12px; cursor: pointer; }
+        /* السلة والمودال */
+        .cart-float { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 450px; background: var(--primary); color: #fff; padding: 18px 28px; border-radius: 60px; display: none; justify-content: space-between; align-items: center; cursor: pointer; z-index: 1001; box-shadow: 0 15px 40px rgba(0,0,0,0.3); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-box { background: #fff; width: 92%; max-width: 500px; border-radius: 30px; padding: 25px; max-height: 85vh; overflow-y: auto; }
+        .checkout-btn { background: #25d366; color: #fff; border: none; padding: 18px; width: 100%; border-radius: 18px; font-weight: 800; margin-top: 20px; cursor: pointer; }
 
-        /* --- شريط السلة العائم --- */
-        .cart-float {
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%);
-            width: 90%; max-width: 450px; background: var(--primary); color: #fff;
-            padding: 18px 28px; border-radius: 60px; display: none; justify-content: space-between;
-            align-items: center; cursor: pointer; box-shadow: 0 15px 40px rgba(0,0,0,0.3); z-index: 1001;
-            animation: slideUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes slideUp { from { bottom: -100px; } to { bottom: 25px; } }
-
-        /* --- المودال --- */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-box { background: #fff; width: 92%; max-width: 500px; border-radius: 30px; padding: 30px; max-height: 85vh; overflow-y: auto; position: relative; }
-        .checkout-btn { background: #25d366; color: #fff; border: none; padding: 18px; width: 100%; border-radius: 18px; font-weight: 800; font-size: 1.2rem; margin-top: 20px; cursor: pointer; }
-
-        @media (max-width: 500px) {
-            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .logo-en { font-size: 1.5rem; }
-            .cats-bar { justify-content: flex-start; padding-left: 15px; }
-            body { padding-top: 140px; }
-        }
+        @media (max-width: 500px) { .products-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; } .logo-en { font-size: 1.5rem; } }
     </style>
 </head>
 <body>
 
     <header>
         <div class="top-nav">
-            <div class="logo-area" 
-                 onmousedown="startPress()" 
-                 onmouseup="cancelPress()" 
-                 onmouseleave="cancelPress()"
-                 ontouchstart="startPress()" 
-                 ontouchend="cancelPress()">
+            <div class="logo-area" onmousedown="startPress()" onmouseup="cancelPress()" ontouchstart="startPress()" ontouchend="cancelPress()">
                 <div class="logo-en">NAGDA<span>.</span>ORDER</div>
                 <div class="owner-tag">مصطفى حجازي</div>
             </div>
@@ -143,223 +74,125 @@
                 <span class="page-link" onclick="showPage('about')">من نحن</span>
             </nav>
         </div>
-        <div class="cats-bar" id="catsContainer">
+        <div class="cats-bar">
             <div class="tab active" onclick="filterBy('الكل', this)">الكل</div>
             <div class="tab" onclick="filterBy('خضار وفواكه', this)">خضار وفواكه</div>
             <div class="tab" onclick="filterBy('بقالة', this)">بقالة</div>
             <div class="tab" onclick="filterBy('مطاعم', this)">مطاعم</div>
-            <div class="tab" onclick="filterBy('توصيل شخصي', this)">توصيل طرود</div>
         </div>
     </header>
 
     <div id="mainPage" class="page-content active">
         <div id="adminPanel">
-            <h2 style="margin-bottom:15px; border-bottom:1px solid #333; padding-bottom:10px;">> ADMIN_CONSOLE_ACTIVE</h2>
-            <div style="display:grid; gap:10px;">
-                <input type="text" id="pName" class="admin-input" placeholder="اسم المنتج">
-                <input type="text" id="pImg" class="admin-input" placeholder="رابط صورة (URL)">
-                <select id="pCat" class="admin-input">
-                    <option value="خضار وفواكه">خضار وفواكه</option>
-                    <option value="بقالة">بقالة</option>
-                    <option value="مطاعم">مطاعم</option>
-                </select>
-                <select id="pUnit" class="admin-input">
-                    <option value="بالقطعة">بالقطعة</option>
-                    <option value="بالجرام/الكيلو">بالجرام/الكيلو</option>
-                </select>
-                <button onclick="saveNewProduct()" class="admin-btn">تحديث المتجر الآن</button>
-                <button onclick="document.getElementById('adminPanel').style.display='none'" style="color:#666; background:none; border:none; margin-top:10px; cursor:pointer;">خروج من النظام</button>
-            </div>
+            <h3>> لوحة التحكم | Admin</h3>
+            <input type="text" id="pName" class="admin-input" placeholder="اسم المنتج">
+            <label class="file-label">📷 صور المنتج أو اختر صورة <input type="file" id="pImgFile" accept="image/*" style="display:none" onchange="previewImage(this)"></label>
+            <div id="imgPreview" style="text-align:center; display:none; margin-bottom:10px;"><img id="previewItem" src="" style="width:100px; height:100px; border-radius:10px; object-fit:cover;"></div>
+            <select id="pCat" class="admin-input">
+                <option value="خضار وفواكه">خضار وفواكه</option>
+                <option value="بقالة">بقالة</option>
+                <option value="مطاعم">مطاعم</option>
+            </select>
+            <select id="pUnit" class="admin-input">
+                <option value="بالقطعة">بالقطعة</option>
+                <option value="بالجرام/الكيلو">بالجرام/الكيلو</option>
+            </select>
+            <button onclick="saveNewProduct()" class="add-btn" style="background:var(--admin-color); color:#000;">حفظ ونشر</button>
+            <button onclick="clearDatabase()" style="color:red; background:none; border:none; margin-top:20px; cursor:pointer; width:100%;">حذف كل المنتجات ⚠️</button>
         </div>
-
         <div class="products-grid" id="productsGrid"></div>
     </div>
 
-    <div id="servicesPage" class="page-content">
-        <h2 style="color:var(--accent); margin-bottom:20px;">ماذا نقدم لك؟ ⚡</h2>
-        <div style="background:#fff; padding:20px; border-radius:20px; box-shadow:var(--shadow);">
-            <p style="font-size:1.1rem; line-height:1.8;">نحن في <b>نجدة اوردر</b> نسعى لراحتك. نخدمك في Shibin al-Qanater والمناطق المجاورة بأسرع خدمة توصيل لكل احتياجاتك اليومية.</p>
-        </div>
-    </div>
+    <div id="servicesPage" class="page-content"><h2>خدماتنا ⚡</h2><p>توصيل خضار، فاكهة، بقالة، ووجبات مطاعم في شبين القناطر.</p></div>
+    <div id="aboutPage" class="page-content"><h2>من نحن</h2><p>نجدة اوردر - بإدارة مصطفى حجازي. هدفنا راحتك.</p></div>
 
-    <div id="aboutPage" class="page-content">
-        <h2 style="color:var(--primary); margin-bottom:20px;">عن نجدة اوردر</h2>
-        <div style="background:#fff; padding:20px; border-radius:20px; box-shadow:var(--shadow);">
-            <p style="font-size:1.1rem; line-height:1.8;">المؤسس: <b>مصطفى حجازي</b><br>مشروع محلي متخصص في توفير الوقت والجهد، نضمن لك وصول طلبك طازجاً وبأعلى جودة من محلك المفضل.</p>
-        </div>
-    </div>
-
-    <div class="cart-float" id="cartBar" onclick="openCart()">
-        <span style="font-weight:800; font-size:1.1rem;">متابعة الطلب 🛒</span>
-        <span id="cartCount" style="background:var(--accent); padding:4px 14px; border-radius:20px; font-weight:900;">0</span>
-    </div>
+    <div class="cart-float" id="cartBar" onclick="openCart()"><span>تأكيد الطلب 🛒</span> <span id="cartCount">0</span></div>
 
     <div class="modal" id="cartModal">
         <div class="modal-box">
-            <h3 style="text-align:center; font-size:1.5rem; color:var(--primary);">قائمة مشترياتك</h3>
-            <div id="cartItems" style="margin: 25px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 10px 0;"></div>
-            
-            <div class="input-section">
-                <input type="text" id="prefShop" class="admin-input" style="background:#f9f9f9; color:#000; border:1px solid #ddd;" placeholder="اسم المحل المفضل (اختياري)">
-                <input type="text" id="custName" class="admin-input" style="background:#f9f9f9; color:#000; border:1px solid #ddd;" placeholder="اسمك الثنائي">
-                <input type="text" id="custAddr" class="admin-input" style="background:#f9f9f9; color:#000; border:1px solid #ddd;" placeholder="العنوان بالتفصيل">
-                <input type="tel" id="custPhone" class="admin-input" style="background:#f9f9f9; color:#000; border:1px solid #ddd;" placeholder="رقم الهاتف">
-            </div>
-            
-            <button class="checkout-btn" onclick="sendWhatsApp()">إرسال الطلب (WhatsApp) 💬</button>
-            <button onclick="closeCart()" style="width:100%; border:none; background:none; margin-top:15px; color:#999; font-weight:700; cursor:pointer;">رجوع للمتجر</button>
+            <h3 style="text-align:center">طلباتك</h3>
+            <div id="cartItems" style="margin:20px 0; border-top:1px solid #eee; padding-top:10px;"></div>
+            <input type="text" id="custName" class="admin-input" style="background:#f9f9f9; color:#000" placeholder="الاسم">
+            <input type="text" id="custAddr" class="admin-input" style="background:#f9f9f9; color:#000" placeholder="العنوان">
+            <input type="tel" id="custPhone" class="admin-input" style="background:#f9f9f9; color:#000" placeholder="رقم الموبايل">
+            <button class="checkout-btn" onclick="sendWhatsApp()">إرسال واتساب ✅</button>
+            <button onclick="closeCart()" style="width:100%; border:none; background:none; color:#888; margin-top:10px;">رجوع</button>
         </div>
     </div>
 
     <script>
-        // --- قاعدة البيانات ---
-        let products = JSON.parse(localStorage.getItem('nagda_v3_db')) || [
-            { name: 'موز فاخر', img: 'https://cdn-icons-png.flaticon.com/512/2909/2909808.png', cat: 'خضار وفواكه', unit: 'بالجرام/الكيلو' },
-            { name: 'وجبة كريسبي', img: 'https://cdn-icons-png.flaticon.com/512/3075/3075977.png', cat: 'مطاعم', unit: 'بالقطعة' },
-            { name: 'سمن بلدي', img: 'https://cdn-icons-png.flaticon.com/512/819/819865.png', cat: 'بقالة', unit: 'بالقطعة' }
+        // داتا افتراضية بالأقسام
+        const defaultData = [
+            { name: 'طماطم', img: 'https://cdn-icons-png.flaticon.com/512/1202/1202125.png', cat: 'خضار وفواكه', unit: 'بالجرام/الكيلو' },
+            { name: 'خيار', img: 'https://cdn-icons-png.flaticon.com/512/765/765544.png', cat: 'خضار وفواكه', unit: 'بالجرام/الكيلو' },
+            { name: 'جبنة فانيلا', img: 'https://cdn-icons-png.flaticon.com/512/819/819865.png', cat: 'بقالة', unit: 'بالقطعة' },
+            { name: 'كريب زنجر', img: 'https://cdn-icons-png.flaticon.com/512/575/575422.png', cat: 'مطاعم', unit: 'بالقطعة' }
         ];
 
+        let products = JSON.parse(localStorage.getItem('nagda_db_v5')) || defaultData;
         let cart = [];
+        let currentImgBase64 = "";
         let pressTimer;
 
-        // --- نظام الحماية السرية (خباثة مصطفى) ---
-        function startPress() {
-            pressTimer = setTimeout(() => {
-                const pass = prompt(">> SECURITY CHECK: ENTER ACCESS CODE");
-                if (pass === "135790") {
-                    document.getElementById('adminPanel').style.display = 'block';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else if (pass !== null) {
-                    alert("ACCESS DENIED");
-                }
-            }, 2000); // 2 seconds hold
-        }
-
+        // اللوحة السرية
+        function startPress() { pressTimer = setTimeout(() => {
+            const p = prompt("الباسورد:"); if(p === "135790") document.getElementById('adminPanel').style.display = 'block';
+        }, 2000); }
         function cancelPress() { clearTimeout(pressTimer); }
 
-        // --- نظام الصفحات ---
-        function showPage(pageId) {
-            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
-            document.getElementById(pageId + 'Page').classList.add('active');
-            window.scrollTo(0,0);
+        function showPage(id) { document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active')); document.getElementById(id + 'Page').classList.add('active'); }
+
+        // معالجة الصور
+        function previewImage(input) {
+            const reader = new FileReader();
+            reader.onload = (e) => { currentImgBase64 = e.target.result; document.getElementById('previewItem').src = e.target.result; document.getElementById('imgPreview').style.display = 'block'; }
+            reader.readAsDataURL(input.files[0]);
         }
 
-        // --- نظام المنتجات ---
-        function render(filter = 'الكل') {
-            const grid = document.getElementById('productsGrid');
-            grid.innerHTML = '';
-            
-            products.forEach(p => {
-                if (filter === 'الكل' || p.cat === filter) {
-                    grid.innerHTML += `
-                        <div class="p-card">
-                            <img src="${p.img}" onerror="this.src='https://via.placeholder.com/150?text=Nagda+Order'">
-                            <div class="p-card-body">
-                                <span class="p-title">${p.name}</span>
-                                <span class="p-unit-tag">${p.unit}</span>
-                                <button class="add-btn" onclick="addToCart('${p.name}')">إضافة للسلة</button>
-                            </div>
-                        </div>
-                    `;
-                }
-            });
-
-            // كارت التوصيل الخاص
-            if (filter === 'الكل' || filter === 'توصيل شخصي') {
-                grid.innerHTML += `
-                    <div class="p-card" style="border: 2px dashed var(--accent); background: #fff5f6;">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1039/1039328.png">
-                        <div class="p-card-body">
-                            <span class="p-title">توصيل طرد خاص</span>
-                            <span class="p-unit-tag" style="background:var(--accent)">خدمة من مكان لمكان</span>
-                            <button class="add-btn" onclick="addToCart('توصيل طرد شخصي (سيتم توضيح التفاصيل في المكالمة)')">طلب الخدمة</button>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function filterBy(c, el) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            render(c);
-        }
-
-        // --- السلة ---
-        function addToCart(name) {
-            cart.push(name);
-            const bar = document.getElementById('cartBar');
-            bar.style.display = 'flex';
-            document.getElementById('cartCount').innerText = cart.length;
-            
-            // اهتزاز خفيف للموبايل عند الإضافة
-            if (navigator.vibrate) navigator.vibrate(50);
-        }
-
-        function openCart() {
-            document.getElementById('cartModal').style.display = 'flex';
-            const container = document.getElementById('cartItems');
-            container.innerHTML = cart.map((item, idx) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f9f9f9;">
-                    <span style="font-weight:700;">• ${item}</span>
-                    <span style="color:red; cursor:pointer; font-weight:900;" onclick="removeItem(${idx})">حذف</span>
-                </div>
-            `).join('');
-        }
-
-        function removeItem(idx) {
-            cart.splice(idx, 1);
-            if(cart.length === 0) {
-                closeCart();
-                document.getElementById('cartBar').style.display = 'none';
-            } else {
-                openCart();
-                document.getElementById('cartCount').innerText = cart.length;
-            }
-        }
-
-        function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
-
-        // --- الإدارة ---
         function saveNewProduct() {
             const name = document.getElementById('pName').value;
-            const img = document.getElementById('pImg').value;
             const cat = document.getElementById('pCat').value;
             const unit = document.getElementById('pUnit').value;
-
-            if(name) {
-                products.push({name, img, cat, unit});
-                localStorage.setItem('nagda_v3_db', JSON.stringify(products));
-                alert("DONE: DATABASE_UPDATED");
-                render();
-                document.getElementById('pName').value = '';
-                document.getElementById('pImg').value = '';
-            }
+            if(name && currentImgBase64) {
+                products.push({ name, img: currentImgBase64, cat, unit });
+                localStorage.setItem('nagda_db_v5', JSON.stringify(products));
+                alert("تمت الإضافة!"); render();
+                document.getElementById('pName').value = ""; document.getElementById('imgPreview').style.display = 'none'; currentImgBase64 = "";
+            } else { alert("اكمل البيانات"); }
         }
 
-        // --- واتساب ---
+        function clearDatabase() { if(confirm("حذف الكل؟")) { localStorage.removeItem('nagda_db_v5'); products = []; render(); } }
+
+        // العرض والفلترة
+        function render(f = 'الكل') {
+            const grid = document.getElementById('productsGrid'); grid.innerHTML = '';
+            products.forEach(p => {
+                if(f === 'الكل' || p.cat === f) {
+                    grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-body"><span class="p-title">${p.name}</span><span class="p-unit-tag">${p.unit}</span><button class="add-btn" onclick="addToCart('${p.name}')">أضف للسلة</button></div></div>`;
+                }
+            });
+        }
+
+        function filterBy(c, el) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); el.classList.add('active'); render(c); }
+
+        // السلة والواتساب
+        function addToCart(n) { cart.push(n); document.getElementById('cartBar').style.display = 'flex'; document.getElementById('cartCount').innerText = cart.length; }
+        function openCart() {
+            document.getElementById('cartModal').style.display = 'flex';
+            document.getElementById('cartItems').innerHTML = cart.map((i, idx) => `<div style="display:flex; justify-content:space-between; padding:8px 0;"><span>${i}</span><span style="color:red" onclick="removeItem(${idx})">حذف</span></div>`).join('');
+        }
+        function removeItem(idx) { cart.splice(idx,1); if(cart.length===0){ closeCart(); document.getElementById('cartBar').style.display='none'; } else openCart(); document.getElementById('cartCount').innerText = cart.length; }
+        function closeCart() { document.getElementById('cartModal').style.display = 'none'; }
+        
         function sendWhatsApp() {
-            const name = document.getElementById('custName').value;
-            const addr = document.getElementById('custAddr').value;
-            const phone = document.getElementById('custPhone').value;
-            const shop = document.getElementById('prefShop').value || 'أقرب مكان متاح';
-
-            if(!name || !addr || !phone) return alert('برجاء كتابة البيانات لضمان وصول المندوب');
-
-            let message = `*✨ طلب جديد من نجدة اوردر ✨*%0A`;
-            message += `━━━━━━━━━━━━━━%0A`;
-            message += `*الطلبات:*%0A${cart.map(i => '• ' + i).join('%0A')}%0A%0A`;
-            message += `🏪 *المكان المفضل:* ${shop}%0A`;
-            message += `━━━━━━━━━━━━━━%0A`;
-            message += `👤 *الاسم:* ${name}%0A`;
-            message += `📍 *العنوان:* ${addr}%0A`;
-            message += `📞 *الهاتف:* ${phone}%0A`;
-            message += `━━━━━━━━━━━━━━`;
-
-            window.open(`https://wa.me/201140293628?text=${message}`, '_blank');
+            const n = document.getElementById('custName').value;
+            const a = document.getElementById('custAddr').value;
+            const ph = document.getElementById('custPhone').value;
+            if(!n || !a || !ph) return alert("اكمل بياناتك");
+            let m = `*طلب نجدة*%0A*الطلبات:*%0A${cart.join('%0A')}%0A*الاسم:* ${n}%0A*العنوان:* ${a}%0A*الموبايل:* ${ph}`;
+            window.open(`https://wa.me/201140293628?text=${m}`);
         }
 
-        // تشغيل العرض الأول
         render();
     </script>
 </body>
