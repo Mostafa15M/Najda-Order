@@ -5,53 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Nagda Order Elite | مصطفى حجازي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
     <style>
         :root {
             --accent: #00f2ff; --bg: #030712; --card: #111827;
             --text: #f9fafb; --dim: #9ca3af; --neon-pink: #ff007a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 120px; overflow-x: hidden; line-height: 1.6; }
+        body { background: var(--bg); color: var(--text); padding-bottom: 120px; overflow-x: hidden; }
 
-        /* الهيدر الجديد */
-        header { padding: 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); background: linear-gradient(to bottom, #0a0f1d, var(--bg)); }
+        header { padding: 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .dev-tag { font-size: 0.6rem; letter-spacing: 3px; color: var(--accent); font-weight: 700; opacity: 0.8; margin-bottom: 5px; display: block; }
         .hegazy-tag { color: var(--accent); font-weight: 900; font-size: 0.9rem; margin-top: 5px; }
 
-        /* كارت المشوار الخاص */
         .hero-action { 
             margin: 20px; padding: 25px; border-radius: 24px; 
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
             border: 1px solid rgba(0, 242, 255, 0.2); cursor: pointer;
-            transition: 0.3s; position: relative; overflow: hidden;
         }
-        .hero-action::after { content: '🚀'; position: absolute; left: 20px; bottom: 10px; font-size: 3rem; opacity: 0.1; }
 
-        /* الأقسام */
         .cats-bar { display: flex; gap: 12px; overflow-x: auto; padding: 20px; scrollbar-width: none; }
         .pill { 
             padding: 10px 28px; background: var(--card); border-radius: 50px; 
             font-size: 0.9rem; font-weight: 700; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
         }
-        .pill.active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); border-color: var(--accent); }
+        .pill.active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
 
-        /* جريد المنتجات */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .p-card { background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; }
+        .p-card { background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
         .p-card img { width: 100%; height: 160px; object-fit: cover; }
         .p-card-info { padding: 15px; text-align: center; }
-        .p-card-info h4 { font-size: 1rem; margin-bottom: 10px; color: #fff; }
 
         .btn-main { 
             width: 100%; padding: 14px; border-radius: 14px; border: none; 
             font-weight: 900; cursor: pointer; background: var(--accent); color: #000;
-            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-main:active { transform: scale(0.95); }
 
-        /* نافيجيشن */
         .bottom-nav { 
             position: fixed; bottom: 25px; left: 20px; right: 20px; 
             background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(20px);
@@ -63,40 +55,32 @@
         .badge { 
             position: absolute; top: -12px; right: -12px; background: var(--neon-pink); 
             color: #fff; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem;
-            display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px var(--neon-pink);
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* المودال */
         .modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 3000; align-items: flex-end; justify-content: center;
         }
         .modal-content { 
             background: var(--card); width: 100%; border-radius: 32px 32px 0 0; padding: 35px;
-            border-top: 3px solid var(--accent); animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border-top: 3px solid var(--accent); animation: slideUp 0.4s ease;
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
         input, select, textarea { 
             width: 100%; padding: 16px; border-radius: 16px; background: #000;
-            border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 15px; outline: none; font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 15px; outline: none;
         }
-        input:focus { border-color: var(--accent); }
 
         .admin-box { background: #1f2937; padding: 25px; border-radius: 24px; margin-bottom: 30px; border: 1px dashed var(--accent); }
         .admin-item { background: #000; padding: 15px; margin-top: 10px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
-
-        .qty-box { text-align: center; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 20px; margin-bottom: 20px; }
-        input[type=range] { margin: 20px 0; accent-color: var(--accent); }
-
-        .footer-text { text-align: center; padding: 20px; color: var(--dim); font-size: 0.75rem; opacity: 0.6; }
     </style>
 </head>
 <body>
 
     <header onclick="adminCheck()">
         <div class="logo">
-            <span class="dev-tag">ENGINEERED BY</span>
             <h1>نجدة<span>.</span>ORDER</h1>
             <p class="hegazy-tag">MOSTAFA HEGAZY</p>
         </div>
@@ -105,9 +89,10 @@
     <div id="shopPage" class="page">
         <div class="hero-action" onclick="openSpecial()">
             <h3 style="color:#fff">🚀 مشوار نجدة الخاص</h3>
-            <p style="color:var(--dim); font-size: 0.85rem;">وصل أماناتك، مفاتيحك، أو أي طرد لأي مكان</p>
+            <p style="color:var(--dim); font-size: 0.85rem;">وصل أي طرد لأي مكان</p>
         </div>
         <div class="cats-bar" id="catsBar"></div>
+        <div id="loading" style="text-align:center; padding:20px; color:var(--accent);">جاري التحميل من جوجل...</div>
         <div class="grid" id="shopGrid"></div>
     </div>
 
@@ -115,39 +100,33 @@
         <h2 style="margin-bottom:25px; font-weight: 900;">قائمة طلباتك 🛒</h2>
         <div id="cartList"></div>
         <div id="checkoutForm" style="display:none; margin-top:30px;">
-            <div style="background: var(--card); padding: 20px; border-radius: 24px;">
-                <h4 style="margin-bottom:15px; color: var(--accent);">بيانات التوصيل</h4>
-                <input type="text" id="uName" placeholder="الاسم بالكامل">
-                <input type="tel" id="uPhone" placeholder="رقم الموبايل">
-                <input type="text" id="uAddr" placeholder="العنوان (بالتفصيل)">
-                <button class="btn-main" style="padding:20px; font-size: 1.1rem;" onclick="completeOrder()">إرسال الطلب واتساب ✅</button>
-            </div>
+            <input type="text" id="uName" placeholder="الاسم بالكامل">
+            <input type="tel" id="uPhone" placeholder="رقم الموبايل">
+            <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
+            <button class="btn-main" style="padding:20px;" onclick="completeOrder()">إرسال الطلب واتساب ✅</button>
         </div>
     </div>
 
     <div id="adminPage" class="page" style="display:none; padding:20px;">
         <h2 style="color:var(--accent); margin-bottom:25px;">لوحة التحكم ⚙️</h2>
-        
         <div class="admin-box">
-            <h4 style="margin-bottom:15px;">📁 الأقسام</h4>
-            <div style="display:flex; gap:8px;">
-                <input type="text" id="newCatName" placeholder="قسم جديد (مثلاً: مجمدات)">
+            <h4>📁 الأقسام</h4>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <input type="text" id="newCatName" placeholder="قسم جديد">
                 <button class="btn-main" style="width:100px;" onclick="addCategory()">إضافة</button>
             </div>
             <div id="adminCatsList" style="margin-top:15px;"></div>
         </div>
-
         <div class="admin-box">
-            <h4 style="margin-bottom:15px;">🍕 إضافة منتج</h4>
+            <h4>🍕 إضافة منتج</h4>
             <input type="text" id="pTitle" placeholder="اسم الصنف">
             <input type="file" accept="image/*" onchange="imgProcess(this)">
-            <select id="pUnit"><option value="كيلو">بالكيلو</option><option value="قطعة">بالقطعة</option></select>
+            <select id="pUnit"><option value="كيلو">كيلو</option><option value="قطعة">قطعة</option></select>
             <select id="pCatSelect"></select>
-            <div style="display:flex; align-items:center; gap:12px; margin: 10px 0 20px;">
-                <input type="checkbox" id="pAllowPrice" style="width:22px; height:22px;">
-                <label>تفعيل "الطلب بالسعر" (مثلاً بـ 50ج)</label>
-            </div>
-            <button class="btn-main" onclick="saveProduct()">نشر المنتج في الموقع</button>
+            <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                <input type="checkbox" id="pAllowPrice"> تفعيل "الطلب بالسعر"
+            </label>
+            <button class="btn-main" onclick="saveProduct()">حفظ في جوجل</button>
         </div>
         <div id="adminProductList"></div>
     </div>
@@ -161,225 +140,141 @@
     <div class="modal" id="modal">
         <div class="modal-content">
             <h2 id="mTitle" style="color:var(--accent); margin-bottom:20px;"></h2>
-            
             <div id="stdFields">
-                <div class="qty-box">
-                    <div style="font-size:2.5rem; color:var(--accent); font-weight:900;" id="qtyText">0.25 كيلو</div>
-                    <input type="range" id="qtySlider" min="0.25" max="10" step="0.25" oninput="handleSlider(this.value)">
-                    <div id="priceSection" style="display:none; margin-top:15px;">
-                        <p style="color:var(--dim); font-size: 0.8rem; margin-bottom: 8px;">أو اطلب بمبلغ محدد:</p>
-                        <input type="text" id="manualQty" placeholder="مثلاً: بـ 100 جنيه">
-                    </div>
-                </div>
-                <input type="text" id="mSource" placeholder="مكان معين نجيب منه؟ (اختياري)">
+                <div style="text-align:center; font-size:2.5rem; color:var(--accent); font-weight:900;" id="qtyText">0.25 كيلو</div>
+                <input type="range" id="qtySlider" min="0.25" max="10" step="0.25" oninput="handleSlider(this.value)">
+                <div id="priceSection" style="display:none;"><input type="text" id="manualQty" placeholder="بمبلغ كام؟"></div>
+                <input type="text" id="mSource" placeholder="من مكان محدد؟">
             </div>
-
             <div id="spcFields" style="display:none;">
-                <textarea id="mDesc" rows="4" placeholder="اكتب طلبك أو مشوارك بالتفصيل هنا.."></textarea>
-                <input type="text" id="mFrom" placeholder="مكان الاستلام؟">
-                <input type="text" id="mTo" placeholder="مكان التوصيل؟">
+                <textarea id="mDesc" placeholder="تفاصيل المشوار.."></textarea>
+                <input type="text" id="mFrom" placeholder="منين؟">
+                <input type="text" id="mTo" placeholder="لفين؟">
             </div>
-
-            <button class="btn-main" style="padding:18px;" onclick="confirmAdd()">إضافة إلى السلة</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--dim); margin-top:20px; font-weight:700;">إلغاء</button>
+            <button class="btn-main" onclick="confirmAdd()">إضافة للسلة</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--dim); margin-top:20px;">إلغاء</button>
         </div>
     </div>
 
-    <p class="footer-text">Nagda Order Elite v3.0 | By Mostafa Hegazy & Abdel-Moneim</p>
-
     <script>
-        let products = JSON.parse(localStorage.getItem('nagda_p_v3')) || [];
-        let cats = JSON.parse(localStorage.getItem('nagda_c_v3')) || ['الكل', 'خضروات', 'مطاعم', 'بقالة'];
+        // --- بياناتك من الصورة ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY",
+            authDomain: "nagdaorder.firebaseapp.com",
+            projectId: "nagdaorder",
+            storageBucket: "nagdaorder.firebasestorage.app",
+            messagingSenderId: "99058164922",
+            appId: "1:99058164922:web:7063d1686dc82a7ac30e83"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let products = [];
+        let cats = JSON.parse(localStorage.getItem('nagda_cats')) || ['الكل', 'مطاعم', 'خضروات', 'بقالة'];
         let cart = [];
         let tempImg = "";
         let selectedItem = null;
         let adminClicks = 0;
+
+        async function fetchProducts() {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const snapshot = await db.collection("products").orderBy("createdAt", "desc").get();
+                products = [];
+                snapshot.forEach(doc => products.push({id: doc.id, ...doc.data()}));
+                renderShop();
+            } catch(e) { console.error(e); }
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        async function saveProduct() {
+            const t = document.getElementById('pTitle').value;
+            const c = document.getElementById('pCatSelect').value;
+            if(!t || !tempImg) return alert("أكمل البيانات");
+            
+            try {
+                await db.collection("products").add({ 
+                    title: t, cat: c, img: tempImg, 
+                    unit: document.getElementById('pUnit').value, 
+                    allowPrice: document.getElementById('pAllowPrice').checked,
+                    createdAt: new Date()
+                });
+                alert("تم الحفظ في جوجل! ✅");
+                fetchProducts();
+            } catch(e) { alert("تأكد من تفعيل Firestore في جوجل: " + e.message); }
+        }
+
+        async function deleteProduct(id) {
+            if(confirm("حذف نهائي؟")) {
+                await db.collection("products").doc(id).delete();
+                fetchProducts();
+            }
+        }
 
         function nav(id) {
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById(id + 'Page').style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('btn' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
-            if(id === 'shop') renderShop();
             if(id === 'admin') renderAdmin();
             if(id === 'cart') renderCart();
-            window.scrollTo(0,0);
-        }
-
-        function adminCheck() {
-            adminClicks++;
-            if(adminClicks > 5) { if(prompt("أدخل رمز الدخول:")==="135790") { document.getElementById('btnAdmin').style.display='block'; nav('admin'); } adminClicks=0; }
         }
 
         function renderShop(f = 'الكل') {
             document.getElementById('catsBar').innerHTML = cats.map(c => `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`).join('');
-            const grid = document.getElementById('shopGrid'); 
-            grid.innerHTML = "";
-            let filtered = products.filter(p => f === 'الكل' || p.cat === f);
-            if(filtered.length === 0) grid.innerHTML = `<p style="grid-column: 1/3; text-align:center; padding:50px; color:var(--dim)">لا يوجد منتجات في هذا القسم</p>`;
-            filtered.forEach(p => {
-                grid.innerHTML += `
-                <div class="p-card">
-                    <img src="${p.img}">
-                    <div class="p-card-info">
-                        <h4>${p.title}</h4>
-                        <button class="btn-main" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">اطلب الآن</button>
-                    </div>
-                </div>`;
+            const grid = document.getElementById('shopGrid'); grid.innerHTML = "";
+            products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
+                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-info"><h4>${p.title}</h4><button class="btn-main" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">اطلب</button></div></div>`;
             });
-        }
-
-        function addCategory() {
-            let name = document.getElementById('newCatName').value.trim();
-            if(name && !cats.includes(name)) {
-                cats.push(name);
-                localStorage.setItem('nagda_c_v3', JSON.stringify(cats));
-                document.getElementById('newCatName').value = "";
-                renderAdmin();
-            }
-        }
-
-        function deleteCat(index) {
-            if(cats[index] === 'الكل') return alert("قسم أساسي لا يمكن حذفه");
-            if(confirm("هل أنت متأكد من حذف هذا القسم؟")) {
-                cats.splice(index, 1);
-                localStorage.setItem('nagda_c_v3', JSON.stringify(cats));
-                renderAdmin();
-            }
-        }
-
-        function renderAdmin() {
-            document.getElementById('pCatSelect').innerHTML = cats.filter(c => c !== 'الكل').map(c => `<option value="${c}">${c}</option>`).join('');
-            document.getElementById('adminCatsList').innerHTML = cats.map((c, i) => `
-                <div class="admin-item">
-                    <span>${c}</span>
-                    ${c!=='الكل'?`<span style="color:var(--neon-pink); font-weight:bold; cursor:pointer;" onclick="deleteCat(${i})">حذف</span>`:''}
-                </div>`).join('');
-            document.getElementById('adminProductList').innerHTML = products.map((p, i) => `
-                <div class="admin-item">
-                    <span>${p.title}</span>
-                    <span style="color:var(--neon-pink); cursor:pointer;" onclick="products.splice(${i},1); localStorage.setItem('nagda_p_v3',JSON.stringify(products)); renderAdmin();">مسح المنتج</span>
-                </div>`).join('');
-        }
-
-        function openModal(item) {
-            selectedItem = item;
-            document.getElementById('mTitle').innerText = item.title;
-            document.getElementById('priceSection').style.display = item.allowPrice ? 'block' : 'none';
-            document.getElementById('manualQty').value = "";
-            document.getElementById('mSource').value = "";
-            document.getElementById('stdFields').style.display = 'block';
-            document.getElementById('spcFields').style.display = 'none';
-            document.getElementById('modal').style.display = 'flex';
-            const s = document.getElementById('qtySlider');
-            if(item.unit === 'كيلو') { s.min = 0.25; s.step = 0.25; s.value = 0.25; } else { s.min = 1; s.step = 1; s.value = 1; }
-            handleSlider(s.value);
-        }
-
-        function handleSlider(v) { document.getElementById('qtyText').innerText = v + " " + selectedItem.unit; }
-
-        function openSpecial() { 
-            document.getElementById('mTitle').innerText = "مشوار نجدة الخاص 🚀";
-            document.getElementById('stdFields').style.display = 'none';
-            document.getElementById('spcFields').style.display = 'block';
-            document.getElementById('modal').style.display = 'flex';
-        }
-
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
-
-        function confirmAdd() {
-            if(document.getElementById('spcFields').style.display === 'block') {
-                let desc = document.getElementById('mDesc').value;
-                if(!desc) return alert("اكتب تفاصيل المشوار أولاً");
-                cart.push({ type: 'مشوار', desc, from: document.getElementById('mFrom').value, to: document.getElementById('mTo').value });
-            } else {
-                let m = document.getElementById('manualQty').value.trim();
-                let qty = m !== "" ? m : (document.getElementById('qtySlider').value + " " + selectedItem.unit);
-                cart.push({ type: 'منتج', name: selectedItem.title, qty, source: document.getElementById('mSource').value || "أي مكان" });
-            }
-            closeModal(); updateBadge();
-        }
-
-        function updateBadge() {
-            document.getElementById('badge').innerText = cart.length;
-            document.getElementById('badge').style.display = cart.length ? 'flex' : 'none';
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cartList');
-            if(!cart.length) { 
-                list.innerHTML = `<div style="text-align:center; padding:50px; opacity:0.5;">السلة فارغة حالياً..</div>`; 
-                document.getElementById('checkoutForm').style.display='none'; 
-                return; 
-            }
-            document.getElementById('checkoutForm').style.display='block';
-            list.innerHTML = cart.map((i, idx) => `
-                <div class="admin-item" style="border: 1px solid rgba(255,255,255,0.05); background: var(--card);">
-                    <div>
-                        ${i.type==='مشوار' ? `<b style="color:var(--accent)">🚀 مشوار: ${i.desc}</b>` : `<b>📦 ${i.name}</b><br><small style="color:var(--dim)">${i.qty} | من: ${i.source}</small>`}
-                    </div>
-                    <div style="color:var(--neon-pink); font-weight:bold; cursor:pointer;" onclick="cart.splice(${idx},1); renderCart(); updateBadge();">حذف</div>
-                </div>
-            `).join('');
         }
 
         function completeOrder() {
-            const n = document.getElementById('uName').value;
-            const p = document.getElementById('uPhone').value;
-            const a = document.getElementById('uAddr').value;
-            if(!n || !p || !a) return alert("من فضلك أكمل بيانات التوصيل");
+            const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddr').value;
+            if(!n || !p || !a) return alert("أكمل بيانات التوصيل");
 
-            let msg = `*✨ طلب جديد من نجدة أوردر ✨*%0A`;
-            msg += `*بواسطة: مصطفى حجازي ⚡*%0A`;
-            msg += `━━━━━━━━━━━━━━%0A%0A`;
-
-            cart.forEach((item, index) => {
-                if (item.type === 'مشوار') {
-                    msg += `*${index + 1}️⃣ مـشـوار خـاص 🚀*%0A📝 التفاصيل: ${item.desc}%0A📍 من: ${item.from || 'غير محدد'} | لـ: ${item.to || 'غير محدد'}%0A`;
-                } else {
-                    msg += `*${index + 1}️⃣ مـنـتـج سـريـع 📦*%0A🔹 الصنف: ${item.name}%0A⚖️ الكمية: ${item.qty}%0A📍 من: ${item.source}%0A`;
-                }
+            let msg = `*✨ طلب جديد من نجدة أوردر ✨*%0A*بواسطة: مصطفى حجازي ⚡*%0A━━━━━━━━━━━━━━%0A%0A`;
+            cart.forEach((i, idx) => {
+                msg += i.type === 'مشوار' ? `*${idx+1}️⃣ مشوار خاص 🚀*%0A📝 التفاصيل: ${i.desc}%0A` : `*${idx+1}️⃣ منتج 📦*%0A🔹 ${i.name}%0A⚖️ الكمية: ${i.qty}%0A📍 من: ${i.source}%0A`;
                 msg += `----------------------------%0A`;
             });
-
-            msg += `%0A*👤 بيانات العميل:*%0A🔸 الاسم: ${n}%0A📞 الهاتف: ${p}%0A🏠 العنوان: ${a}%0A%0A*شكراً لاختياركم نجدة أوردر! ❤️*`;
-
+            msg += `%0A*👤 العميل:* ${n}%0A📞 الهاتف: ${p}%0A🏠 العنوان: ${a}`;
+            
             window.open(`https://wa.me/201140293628?text=${msg}`);
-
-            // تصفير كل شيء بعد الطلب
-            cart = []; 
-            updateBadge(); 
-            document.getElementById('uName').value = "";
-            document.getElementById('uPhone').value = "";
-            document.getElementById('uAddr').value = "";
-            nav('shop');
-            alert("تم إرسال طلبك! السلة الآن فارغة.");
+            cart = []; updateBadge(); nav('shop');
         }
 
-        function imgProcess(el) {
-            const r = new FileReader(); r.onload = (e) => tempImg = e.target.result;
-            r.readAsDataURL(el.files[0]);
+        function adminCheck() { adminClicks++; if(adminClicks > 5) { if(prompt("رمز الدخول:")==="135790") { document.getElementById('btnAdmin').style.display='block'; nav('admin'); } adminClicks=0; } }
+        function imgProcess(el) { const r = new FileReader(); r.onload = (e) => tempImg = e.target.result; r.readAsDataURL(el.files[0]); }
+        function addCategory() { let n = document.getElementById('newCatName').value; if(n) { cats.push(n); localStorage.setItem('nagda_cats', JSON.stringify(cats)); renderAdmin(); } }
+        function openModal(item) { selectedItem = item; document.getElementById('mTitle').innerText = item.title; document.getElementById('modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('modal').style.display = 'none'; }
+        function handleSlider(v) { document.getElementById('qtyText').innerText = v + " " + selectedItem.unit; }
+        function updateBadge() { document.getElementById('badge').innerText = cart.length; document.getElementById('badge').style.display = cart.length ? 'flex' : 'none'; }
+        
+        function confirmAdd() { 
+            let qty = document.getElementById('manualQty').value || document.getElementById('qtyText').innerText;
+            cart.push({ name: selectedItem?.title || "مشوار خاص", qty: qty, source: document.getElementById('mSource').value || "أي مكان", type: selectedItem ? 'منتج' : 'مشوار', desc: document.getElementById('mDesc').value }); 
+            closeModal(); updateBadge(); 
         }
 
-        function saveProduct() {
-            const t = document.getElementById('pTitle').value;
-            const c = document.getElementById('pCatSelect').value;
-            if(!t || !tempImg) return alert("من فضلك أضف اسم المنتج والصورة");
-            products.push({ 
-                title: t, 
-                cat: c, 
-                img: tempImg, 
-                unit: document.getElementById('pUnit').value, 
-                allowPrice: document.getElementById('pAllowPrice').checked 
-            });
-            localStorage.setItem('nagda_p_v3', JSON.stringify(products));
-            document.getElementById('pTitle').value = "";
-            renderAdmin(); renderShop();
-            alert("تم حفظ المنتج بنجاح!");
+        function renderAdmin() {
+            document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+            document.getElementById('adminProductList').innerHTML = products.map(p => `
+                <div class="admin-item"><span>${p.title}</span><span style="color:red" onclick="deleteProduct('${p.id}')">حذف</span></div>
+            `).join('');
+        }
+        
+        function renderCart() {
+            const list = document.getElementById('cartList');
+            if(!cart.length) { list.innerHTML = "السلة فارغة"; document.getElementById('checkoutForm').style.display='none'; return; }
+            document.getElementById('checkoutForm').style.display='block';
+            list.innerHTML = cart.map((i, idx) => `<div class="admin-item"><div>${i.name || 'مشوار'} - ${i.qty}</div><div onclick="cart.splice(${idx},1); renderCart(); updateBadge();">❌</div></div>`).join('');
         }
 
-        // تشغيل أولي
-        renderShop();
+        function openSpecial() { selectedItem = null; document.getElementById('mTitle').innerText = "مشوار خاص"; document.getElementById('stdFields').style.display='none'; document.getElementById('spcFields').style.display='block'; document.getElementById('modal').style.display='flex'; }
+
+        fetchProducts();
     </script>
 </body>
 </html>
