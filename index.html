@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نجدة أوردر | NAGDA ORDER</title>
+    <title>نجدة أوردر | مصطفى حجازي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
@@ -12,89 +12,78 @@
     <style>
         :root { 
             --main: #00d2ff; 
-            --sec: #9d50bb; 
+            --sec: #bd00ff; 
             --bg: #0a0a0c; 
             --card: #16161a; 
             --danger: #ff3131; 
             --gold: #ffd700; 
-            --neon: 0 0 15px #00d2ff, 0 0 30px #00d2ff; 
+            --success: #00ff88; 
+            --neon: 0 0 15px var(--main);
+            --neon-name: 0 0 10px var(--sec), 0 0 20px var(--sec);
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: #fff; padding-bottom: 90px; overflow-x: hidden; }
 
-        /* الهيدر النيون المظبوط */
-        header { 
-            padding: 15px 12px; 
-            background: #000; 
-            border-bottom: 2px solid var(--main); 
-            position: sticky; top: 0; z-index: 1000;
-        }
+        header { padding: 15px 12px; background: #000; border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 1000; }
         .header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .right-brand { font-size: 1.2rem; font-weight: 900; color: var(--main); flex: 1; text-align: right; text-shadow: var(--neon); }
-        .left-name { font-size: 0.9rem; color: var(--sec); font-weight: 900; flex: 1; text-align: left; }
         
-        .center-logo {
-            width: 55px; height: 55px; background: #000; border: 2px solid var(--main); 
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 1.6rem; color: var(--main); box-shadow: var(--neon);
-            animation: pulse 2s infinite; cursor: pointer; user-select: none;
+        /* اسم مصطفى حجازي المنور */
+        .left-name { 
+            font-size: 0.95rem; 
+            color: var(--sec); 
+            font-weight: 900; 
+            flex: 1; 
+            text-align: left; 
+            text-shadow: var(--neon-name);
+            animation: glowName 2s infinite alternate;
+        }
+        @keyframes glowName {
+            from { text-shadow: 0 0 5px var(--sec); }
+            to { text-shadow: 0 0 20px var(--sec), 0 0 30px var(--sec); }
+        }
+
+        .right-brand { font-size: 1.1rem; font-weight: 900; color: var(--main); flex: 1; text-align: right; text-shadow: var(--neon); }
+        
+        .center-logo { 
+            width: 55px; height: 55px; background: #000; border: 2px solid var(--main); border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-size: 1.6rem; color: var(--main); 
+            box-shadow: var(--neon); animation: pulse 2s infinite; cursor: pointer;
         }
         @keyframes pulse { 0%, 100% { transform: scale(1); box-shadow: var(--neon); } 50% { transform: scale(1.1); box-shadow: 0 0 25px var(--main); } }
 
-        /* شريط الهدية المتحرك */
-        .gift-ticker {
-            background: linear-gradient(90deg, #b8860b, var(--gold), #b8860b);
-            color: #000; padding: 10px 0; font-weight: 900; font-size: 0.85rem;
-            margin-top: 10px; overflow: hidden; white-space: nowrap;
-        }
+        .gift-ticker { background: linear-gradient(90deg, #b8860b, var(--gold), #b8860b); color: #000; padding: 10px 0; font-weight: 900; font-size: 0.85rem; margin-top: 10px; overflow: hidden; white-space: nowrap; }
         .ticker-text { display: inline-block; animation: scroll 15s linear infinite; }
         @keyframes scroll { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 
-        /* الصفحات والتحكم */
         .page { display: none; padding: 15px; animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* وضع الإدارة */
         .admin-only { display: none !important; }
         .admin-mode .admin-only { display: block !important; }
 
-        /* الكروت والمدخلات */
         .card { background: var(--card); padding: 18px; border-radius: 24px; margin-bottom: 15px; border: 1px solid #222; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        input, select, textarea { 
-            width: 100%; padding: 14px; margin: 10px 0; border-radius: 14px; 
-            border: 1px solid #333; background: #000; color: #fff; font-size: 1rem;
-        }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border-radius: 14px; border: 1px solid #333; background: #000; color: #fff; font-size: 1rem; }
+        
         .btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-weight: 900; cursor: pointer; transition: 0.3s; font-size: 1rem; }
-        .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; box-shadow: 0 4px 15px rgba(0,210,255,0.3); }
-        .btn-main:active { transform: scale(0.95); }
-        .btn-del { background: var(--danger); color: #fff; padding: 6px 14px; font-size: 0.8rem; border-radius: 10px; }
+        .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; }
+        .btn-success { background: var(--success); color: #000; }
+        .btn-del { background: var(--danger); color: #fff; padding: 6px 14px; font-size: 0.8rem; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
 
-        /* شبكة المنتجات */
         .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .p-item { background: var(--card); padding: 12px; border-radius: 20px; text-align: center; border: 1px solid #222; position: relative; }
-        .p-item img { width: 100%; height: 120px; border-radius: 16px; object-fit: cover; margin-bottom: 10px; border: 1px solid #333; }
-        .p-item h3 { font-size: 0.95rem; margin-bottom: 5px; height: 45px; overflow: hidden; }
-        .p-item b { color: var(--main); font-size: 1.1rem; display: block; margin-bottom: 10px; }
+        .p-item { background: var(--card); padding: 12px; border-radius: 20px; text-align: center; border: 1px solid #222; }
+        .p-item img { width: 100%; height: 120px; border-radius: 16px; object-fit: cover; margin-bottom: 10px; }
 
-        /* الأقسام */
-        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 5px 0 15px; scrollbar-width: none; }
-        .cat-chip { padding: 8px 18px; background: var(--card); border-radius: 50px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; transition: 0.3s; }
-        .cat-chip.active { background: var(--main); color: #000; font-weight: bold; border-color: var(--main); box-shadow: var(--neon); }
-
-        /* النافيجيشن السفلي */
-        nav { 
-            position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.95); 
-            display: flex; justify-content: space-around; padding: 12px 5px; 
-            border-top: 1px solid #222; z-index: 1000; backdrop-filter: blur(10px);
-        }
-        .nav-link { color: #666; text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: bold; transition: 0.3s; }
-        .nav-link.active { color: var(--main); transform: translateY(-5px); }
+        nav { position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; padding: 12px 5px; border-top: 1px solid #222; z-index: 1000; backdrop-filter: blur(10px); }
+        .nav-link { color: #666; text-decoration: none; text-align: center; font-size: 0.75rem; font-weight: bold; }
+        .nav-link.active { color: var(--main); }
         .nav-link i { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+
+        .loyalty-box { background: rgba(255, 215, 0, 0.1); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; margin-bottom: 15px; text-align: center; }
     </style>
 </head>
-<body id="mainBody">
+<body>
 
 <header>
     <div class="header-top">
@@ -105,76 +94,45 @@
 </header>
 
 <div id="home" class="page active">
-    <div class="gift-ticker">
-        <div class="ticker-text">🎁 اطلب 9 أوردرات وهديتك مجانية في العاشر! — نجدة أوردر أسرع توصيل في منطقتك 🎁</div>
-    </div>
-    <div class="cats-bar" id="catsHome"></div>
+    <div class="gift-ticker"><div class="ticker-text">🎁 اطلب 9 أوردرات وهديتك مجانية في العاشر! — نجدة أوردر أسرع توصيل 🎁</div></div>
     <div class="prod-grid" id="prodsHome"></div>
 </div>
 
 <div id="shipping" class="page">
     <div class="card">
+        <div class="loyalty-box loyalty-display"></div>
         <h2 style="color:var(--main); margin-bottom:15px; text-align:center;">📦 توصيل مستلزمات شخصية</h2>
-        <p style="text-align:center; color:#888; font-size:0.85rem; margin-bottom:15px;">المندوب هيوصلك في أسرع وقت لاستلام حاجتك</p>
-        
-        <label>إيه الحاجة اللي هنوصلها؟</label>
-        <input type="text" id="shipItem" placeholder="مثلاً: مفاتيح، طرد، أكل بيت...">
-        
-        <label>عنوان الاستلام (ناخدها منين؟)</label>
-        <input type="text" id="shipFrom" placeholder="العنوان بالتفصيل">
-        
-        <label>عنوان التسليم (نوديها فين؟)</label>
-        <input type="text" id="shipTo" placeholder="العنوان بالتفصيل">
-        
-        <label>اسم الشخص اللي هيستلم</label>
+        <input type="text" id="shipItem" placeholder="إيه الحاجة اللي هنوصلها؟">
+        <input type="text" id="shipFrom" placeholder="مكان الاستلام (منين؟)">
+        <input type="text" id="shipTo" placeholder="مكان التسليم (لفين؟)">
         <input type="text" id="shipReceiver" placeholder="اسم المستلم">
-        
-        <label>رقم موبايل المستلم</label>
-        <input type="tel" id="shipPhone" placeholder="01xxxxxxxxx">
-        
-        <button class="btn btn-main" style="margin-top:15px;" onclick="sendShippingRequest()">اطلب المندوب الآن 🚀</button>
+        <input type="tel" id="shipPhone" placeholder="رقم موبايل المستلم">
+        <button class="btn btn-main" style="margin-top:15px;" onclick="sendShippingRequest()">اطلب المندوب 🚀</button>
     </div>
 </div>
 
 <div id="cart" class="page">
     <div class="card">
-        <h2 style="text-align:center;">🛒 سلة المشتريات</h2>
+        <div class="loyalty-box loyalty-display"></div>
+        <h2 style="text-align:center;">🛒 السلة</h2>
         <div id="cartItems" style="margin: 20px 0;"></div>
-        <div id="cartTotal" style="font-size:1.3rem; color:var(--main); text-align:center; font-weight:900; margin-bottom:20px;">الإجمالي: 0 ج.م</div>
-        
         <input type="text" id="custName" placeholder="اسمك بالكامل">
         <input type="tel" id="custPhone" placeholder="رقم موبايلك">
-        
-        <button class="btn btn-main" onclick="confirmOrder()">تأكيد الطلب عبر واتساب ✅</button>
+        <button class="btn btn-main" onclick="confirmOrder()">تأكيد الطلب 💬</button>
     </div>
 </div>
 
 <div id="admin-panel" class="page">
     <div class="card">
-        <h3>📂 إدارة الأقسام</h3>
-        <input type="text" id="newCatName" placeholder="اسم القسم الجديد">
-        <button class="btn btn-main" onclick="addCategory()">إضافة قسم</button>
-        <div id="adminCatsList" style="margin-top:10px;"></div>
-    </div>
-
-    <div class="card">
         <h3>🛍️ إضافة منتج جديد</h3>
         <input type="text" id="pTitle" placeholder="اسم المنتج">
-        <input type="number" id="pPrice" placeholder="السعر">
-        <select id="pCatSelect"></select>
         <input type="file" onchange="processImage(this)">
         <button class="btn btn-main" onclick="addProduct()">نشر المنتج</button>
     </div>
-
-    <div class="card">
-        <h3>🔔 الطلبات الواردة</h3>
-        <div id="ordersList"></div>
-    </div>
-    
-    <div class="card">
-        <h3>🛍️ المنتجات الحالية</h3>
-        <div id="adminProdsList"></div>
-    </div>
+    <h3>🔔 الطلبات الواردة</h3>
+    <div id="ordersList"></div>
+    <h3>🛍️ المنتجات الحالية</h3>
+    <div id="adminProdsList"></div>
 </div>
 
 <nav>
@@ -185,153 +143,89 @@
 </nav>
 
 <script>
-    // إعدادات Firebase
-    const firebaseConfig = { 
-        apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", 
-        authDomain: "nagdaorder.firebaseapp.com", 
-        projectId: "nagdaorder", 
-        storageBucket: "nagdaorder.firebasestorage.app", 
-        messagingSenderId: "99058164922", 
-        appId: "1:99058164922:web:7063d1686dc82a7ac30e83" 
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const firebaseConfig = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
+    firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
 
     let isAdmin = false, currentBase64 = "", cart = [];
+    let userPoints = parseInt(localStorage.getItem('nagda_points')) || 0;
 
-    // نظام فتح الإدارة (باسورد: 135790) بالضغط المطول 3 ثواني على اللوجو
-    let timer;
-    const adminBtn = document.getElementById('adminTrigger');
-    adminBtn.addEventListener('mousedown', startTimer);
-    adminBtn.addEventListener('touchstart', startTimer);
-    adminBtn.addEventListener('mouseup', endTimer);
-    adminBtn.addEventListener('touchend', endTimer);
-
-    function startTimer() { timer = setTimeout(unlockAdmin, 3000); }
-    function endTimer() { clearTimeout(timer); }
-
-    function unlockAdmin() {
-        const pass = prompt("كلمة السر يا مصطفى:");
-        if(pass === "135790") {
-            isAdmin = true;
-            document.body.classList.add('admin-mode');
-            alert("تم تفعيل وضع الإدارة بنجاح! ✅");
-        } else { alert("كلمة السر غلط يا درش ❌"); }
+    function updateLoyaltyUI() {
+        document.querySelectorAll('.loyalty-display').forEach(box => {
+            box.innerHTML = userPoints < 9 ? `<h3>رصيدك: ${userPoints} نقطة 🎯</h3>` : `<h3 style="color:var(--success)">🎉 العاشر مجاناً يا بطل! 🎉</h3>`;
+        });
     }
+    updateLoyaltyUI();
+
+    let timer;
+    document.getElementById('adminTrigger').addEventListener('mousedown', () => timer = setTimeout(() => {
+        if(prompt("كلمة السر:") === "135790") { isAdmin = true; document.body.classList.add('admin-mode'); }
+    }, 3000));
 
     function navigate(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        el.classList.add('active');
-        window.scrollTo(0,0);
+        document.getElementById(id).classList.add('active'); el.classList.add('active');
     }
-
-    // مزامنة الأقسام والمنتجات من Firebase
-    db.collection("categories").onSnapshot(s => {
-        const cats = s.docs.map(d => ({id:d.id, ...d.data()}));
-        document.getElementById('catsHome').innerHTML = `<div class="cat-chip active">الكل</div>` + 
-            cats.map(c => `<div class="cat-chip">${c.name}</div>`).join('');
-        document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option>${c.name}</option>`).join('');
-        document.getElementById('adminCatsList').innerHTML = cats.map(c => `
-            <div style="display:flex; justify-content:space-between; margin:5px 0; background:#000; padding:10px; border-radius:10px;">
-                <span>${c.name}</span> <button class="btn-del" onclick="deleteDoc('categories','${c.id}')">حذف</button>
-            </div>`).join('');
-    });
 
     db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
         const prods = s.docs.map(d => ({id:d.id, ...d.data()}));
-        document.getElementById('prodsHome').innerHTML = prods.map(p => `
-            <div class="p-item">
-                <img src="${p.img}">
-                <h3>${p.title}</h3>
-                <b>${p.price} ج.م</b>
-                <button class="btn btn-main" style="padding:8px; font-size:0.8rem;" onclick="addToCart('${p.id}')">إضافة 🛒</button>
-            </div>`).join('');
-        document.getElementById('adminProdsList').innerHTML = prods.map(p => `
-            <div style="display:flex; justify-content:space-between; margin:5px 0; background:#000; padding:10px; border-radius:10px; align-items:center;">
-                <span>${p.title}</span> <button class="btn-del" onclick="deleteDoc('products','${p.id}')">حذف</button>
-            </div>`).join('');
+        document.getElementById('prodsHome').innerHTML = prods.map(p => `<div class="p-item"><img src="${p.img}"><h3>${p.title}</h3><button class="btn btn-main" onclick="addToCart('${p.id}', '${p.title}')">إضافة 🛒</button></div>`).join('');
+        document.getElementById('adminProdsList').innerHTML = prods.map(p => `<div style="display:flex; justify-content:space-between; margin:5px 0; background:#000; padding:10px; border-radius:10px;"><span>${p.title}</span><button class="btn-del" onclick="deleteDoc('products','${p.id}')">حذف</button></div>`).join('');
     });
 
-    // السلة والطلبات
-    function addToCart(id) {
-        db.collection("products").doc(id).get().then(doc => {
-            cart.push(doc.data());
-            updateCartUI();
-            alert("تمت الإضافة للسلة ✅");
-        });
-    }
-
+    function addToCart(id, title) { cart.push({id, title}); updateCartUI(); }
     function updateCartUI() {
-        const container = document.getElementById('cartItems');
-        container.innerHTML = cart.map((item, idx) => `
-            <div style="display:flex; justify-content:space-between; background:#000; padding:12px; border-radius:15px; margin-bottom:8px; border:1px solid #222;">
-                <span>${item.title}</span> <b>${item.price} ج</b>
-                <button style="background:none; border:none; color:red;" onclick="cart.splice(${idx},1); updateCartUI();">❌</button>
-            </div>`).join('');
-        document.getElementById('cartTotal').innerText = `الإجمالي: ${cart.reduce((s,i) => s + Number(i.price), 0)} ج.م`;
+        document.getElementById('cartItems').innerHTML = cart.map((item, idx) => `<div style="display:flex; justify-content:space-between; background:#000; padding:10px; border-radius:10px; margin-bottom:5px;"><span>${item.title}</span><button style="color:red; border:none; background:none;" onclick="cart.splice(${idx},1); updateCartUI();">❌</button></div>`).join('');
     }
 
-    // إرسال طلب الشحن الخاص (توصيل مستلزمات)
+    function handlePoints() {
+        let isFree = userPoints >= 9;
+        userPoints = isFree ? 0 : userPoints + 1;
+        localStorage.setItem('nagda_points', userPoints);
+        updateLoyaltyUI();
+        return isFree;
+    }
+
     async function sendShippingRequest() {
-        const item = document.getElementById('shipItem').value, from = document.getElementById('shipFrom').value, 
-              to = document.getElementById('shipTo').value, rec = document.getElementById('shipReceiver').value, ph = document.getElementById('shipPhone').value;
-        
-        if(item && from && to && rec && ph) {
-            await db.collection("orders").add({ type: 'شحن_خاص', item, from, to, rec, ph, createdAt: new Date() });
-            const msg = `⚡ *NAGDA ORDER | نجدة أوردر* ⚡\n\n📦 *طلب توصيل مستلزمات*\n━━━━━━━━━━━━\n🔹 *الغرض:* ${item}\n📍 *من:* ${from}\n🏁 *إلى:* ${to}\n━━━━━━━━━━━━\n👤 *المستلم:* ${rec}\n📞 *هاتف:* ${ph}\n━━━━━━━━━━━━\n🚀 _بسرعة البرق_`;
+        const item = document.getElementById('shipItem').value, from = document.getElementById('shipFrom').value, to = document.getElementById('shipTo').value, rec = document.getElementById('shipReceiver').value, ph = document.getElementById('shipPhone').value;
+        if(item && from && to) {
+            await db.collection("orders").add({ type: 'شحن', item, from, to, rec, ph, status: 'pending', createdAt: new Date() });
+            let isFree = handlePoints();
+            let msg = `⚡ *NAGDA ORDER | شحن*\nالغرض: ${item}\nمن: ${from}\nإلى: ${to}\nمستلم: ${rec} (${ph})`;
+            if(isFree) msg += `\n\n*10Mostafa Hegazy10*\n(الطلب العاشر مجاناً)`;
             window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-            alert("تم إرسال طلب المندوب! 🚀");
-        } else { alert("يا درش كمل البيانات ناقصة!"); }
-    }
-
-    // إرسال أوردر المتجر
-    async function confirmOrder() {
-        const name = document.getElementById('custName').value, phone = document.getElementById('custPhone').value;
-        if(name && phone && cart.length > 0) {
-            await db.collection("orders").add({ type: 'متجر', items: cart.map(i=>i.title), userName: name, userPhone: phone, createdAt: new Date() });
-            const msg = `⚡ *أوردر جديد من المتجر* ⚡\n\n👤 *العميل:* ${name}\n📱 *الهاتف:* ${phone}\n━━━━━━━━━━━━\n🛒 *الطلبات:*\n${cart.map(i=>`• ${i.title} (${i.price} ج)`).join('\n')}\n━━━━━━━━━━━━\n💰 *الإجمالي:* ${cart.reduce((s,i)=>s+Number(i.price),0)} ج.م`;
-            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-            cart = []; updateCartUI(); navigate('home', document.querySelectorAll('.nav-link')[0]);
-        } else { alert("تأكد من كتابة بياناتك وإضافة منتجات!"); }
-    }
-
-    // لوحة الإدارة - عرض الطلبات
-    db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
-        const orders = s.docs.map(d => ({id:d.id, ...d.data()}));
-        document.getElementById('ordersList').innerHTML = orders.map(o => `
-            <div class="card" style="font-size:0.85rem; border-right: 5px solid ${o.type=='شحن_خاص' ? 'var(--sec)' : 'var(--main)'}">
-                <b>${o.type === 'شحن_خاص' ? '📦 شحن خاص' : '🛒 متجر'}</b>
-                ${o.type === 'شحن_خاص' ? 
-                  `<p>الغرض: ${o.item}<br>من: ${o.from}<br>لـ: ${o.to}<br>مستلم: ${o.rec} (${o.ph})</p>` : 
-                  `<p>العميل: ${o.userName}<br>أصناف: ${o.items?.join(' + ')}</p>`}
-                <button class="btn-del" style="margin-top:10px;" onclick="deleteDoc('orders','${o.id}')">مسح الطلب</button>
-            </div>`).join('');
-    });
-
-    // وظائف الإدارة (إضافة منتجات وأقسام)
-    async function addCategory() {
-        const val = document.getElementById('newCatName').value;
-        if(val) { await db.collection("categories").add({name: val}); document.getElementById('newCatName').value = ""; }
-    }
-
-    async function addProduct() {
-        const t = document.getElementById('pTitle').value, p = document.getElementById('pPrice').value, c = document.getElementById('pCatSelect').value;
-        if(t && p && currentBase64) {
-            await db.collection("products").add({ title: t, price: p, cat: c, img: currentBase64, createdAt: new Date() });
-            alert("تم النشر!");
-            document.getElementById('pTitle').value = ""; document.getElementById('pPrice').value = "";
         }
     }
 
-    function processImage(input) {
-        const reader = new FileReader();
-        reader.onload = () => currentBase64 = reader.result;
-        reader.readAsDataURL(input.files[0]);
+    async function confirmOrder() {
+        const name = document.getElementById('custName').value, phone = document.getElementById('custPhone').value;
+        if(name && cart.length > 0) {
+            await db.collection("orders").add({ type: 'متجر', items: cart.map(i=>i.title), userName: name, userPhone: phone, status: 'pending', createdAt: new Date() });
+            let isFree = handlePoints();
+            let msg = `⚡ *NAGDA ORDER | متجر*\nالعميل: ${name}\nالطلبات: ${cart.map(i=>i.title).join(' + ')}`;
+            if(isFree) msg += `\n\n*10Mostafa Hegazy10*\n(الطلب العاشر مجاناً)`;
+            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+            cart = []; updateCartUI();
+        }
     }
 
-    async function deleteDoc(col, id) { if(confirm("أكيد هتمسح؟")) await db.collection(col).doc(id).delete(); }
+    db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
+        const orders = s.docs.map(d => ({id:d.id, ...d.data()}));
+        document.getElementById('ordersList').innerHTML = orders.map(o => `
+            <div class="card" style="border-right: 5px solid ${o.status == 'confirmed' ? 'var(--success)' : 'var(--main)'}">
+                <b>${o.type} - ${o.status == 'confirmed' ? 'مؤكد ✅' : 'قيد الانتظار ⏳'}</b>
+                <p>${o.type == 'شحن' ? o.item : o.items?.join(', ')}</p>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <button class="btn-success" style="flex:1; border-radius:8px; padding:5px;" onclick="confirmDoc('${o.id}')">تأكيد</button>
+                    <button class="btn-del" style="flex:1;" onclick="deleteDoc('orders','${o.id}')">حذف</button>
+                </div>
+            </div>`).join('');
+    });
+
+    async function confirmDoc(id) { await db.collection("orders").doc(id).update({ status: 'confirmed' }); }
+    async function addProduct() { const t = document.getElementById('pTitle').value; if(t && currentBase64) await db.collection("products").add({ title: t, img: currentBase64, createdAt: new Date() }); }
+    function processImage(input) { const reader = new FileReader(); reader.onload = () => currentBase64 = reader.result; reader.readAsDataURL(input.files[0]); }
+    async function deleteDoc(col, id) { if(confirm("حذف؟")) await db.collection(col).doc(id).delete(); }
 </script>
 </body>
 </html>
