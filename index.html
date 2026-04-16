@@ -19,7 +19,7 @@
 
         .promo-banner { background: linear-gradient(90deg, var(--main), var(--sec)); padding: 10px; text-align: center; font-weight: bold; border-radius: 10px; margin: 10px; font-size: 0.9rem; }
 
-        .cat-chip { background: #222; padding: 8px 18px; border-radius: 20px; white-space: nowrap; border: 1px solid #333; font-size: 0.85rem; color: #bbb; cursor: pointer; transition: 0.3s; margin-bottom: 5px; }
+        .cat-chip { background: #222; padding: 8px 18px; border-radius: 20px; white-space: nowrap; border: 1px solid #333; font-size: 0.85rem; color: #bbb; cursor: pointer; transition: 0.3s; }
         .cat-chip.active { background: var(--main); color: #000; font-weight: bold; border-color: var(--main); box-shadow: var(--neon); }
 
         .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
@@ -29,7 +29,7 @@
         input, textarea, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: #fff; outline: none; }
         .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
         .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; }
-        .btn-outline { background: transparent; border: 1px solid var(--main); color: var(--main); margin-top: 5px; }
+        .btn-danger { background: var(--danger); color: #fff; font-size: 0.7rem; padding: 5px 10px; border-radius: 8px; }
 
         .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .p-card { background: var(--card); padding: 10px; border-radius: 20px; border: 1px solid #222; text-align: center; }
@@ -40,10 +40,7 @@
         .nav-link.active { color: var(--main); }
         .nav-link span { font-size: 1.5rem; display: block; }
 
-        .admin-order-card { background: #000; border: 1px solid var(--main); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 25px; border-radius: 25px; border: 2px solid var(--main); width: 100%; max-width: 400px; }
-        
+        .admin-item { background: #111; padding: 10px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
         .hidden-admin { display: none; }
         .admin-mode .hidden-admin { display: block !important; }
     </style>
@@ -63,61 +60,60 @@
     <div class="prod-grid" id="prodsHome"></div>
 </div>
 
-<div id="special" class="page">
-    <div style="background:var(--card); padding:20px; border-radius:25px; border:1px solid var(--sec);">
-        <h3 style="color:var(--sec); text-align:center;">📦 توصيل مستلزمات شخصية</h3>
-        <input type="text" id="spDetails" placeholder="تفاصيل الحاجة (مثلاً: مفاتيح، شنطة هدوم)">
-        <input type="text" id="spFrom" placeholder="هجيبها منين؟ (العنوان بالتفصيل)">
-        <input type="text" id="spTo" placeholder="هوديها فين؟ (العنوان بالتفصيل)">
-        <input type="text" id="spReceiver" placeholder="اسم المستلم">
-        <input type="tel" id="spPhone" placeholder="رقم هاتف المستلم">
-        <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال الطلب الآن 🚀</button>
-    </div>
-</div>
-
 <div id="cart" class="page">
     <div style="background:var(--card); padding:20px; border-radius:25px; border:1px solid #222;">
         <h3 style="color:var(--main); text-align:center;">🛒 مراجعة السلة</h3>
         <div id="cartList" style="margin:15px 0;"></div>
-        <input type="text" id="uName" placeholder="اسمك">
-        <input type="text" id="uAddress" placeholder="عنوانك">
+        <input type="text" id="uName" placeholder="اسمك بالكامل">
+        <input type="text" id="uAddress" placeholder="عنوانك بالتفصيل">
         <input type="tel" id="uPhone" placeholder="رقم موبايلك" oninput="checkUserHistory(this.value)">
         <div id="loyaltyInfo" style="text-align:center; margin:10px 0;"></div>
-        <button class="btn btn-main" onclick="confirmFullOrder()">تأكيد وإرسال 💬</button>
+        <button class="btn btn-main" onclick="confirmFullOrder()">تأكيد وإرسال للواتساب 💬</button>
     </div>
 </div>
 
 <div id="admin" class="page">
-    <div style="background:var(--card); padding:15px; border-radius:20px;">
+    <div style="background:var(--card); padding:15px; border-radius:20px; border:1px solid var(--sec);">
         <h3 style="color:var(--sec); text-align:center;">⚙️ لوحة التحكم</h3>
+        
         <div style="margin-top:20px;">
-            <h4>📈 إدارة الطلبات</h4>
+            <h4>📈 الطلبات الواردة</h4>
             <input type="tel" id="searchPhone" placeholder="بحث برقم الهاتف..." oninput="renderOrders(this.value)">
-            <div id="ordersDashboard" style="margin-top:10px;"></div>
+            <div id="ordersDashboard" style="margin-top:10px; max-height: 300px; overflow-y: auto;"></div>
         </div>
+
         <hr style="margin:20px 0; border:0.5px solid #333;">
-        <h4>➕ إضافة منتج</h4>
+
+        <h4>📂 إدارة الأقسام</h4>
+        <input type="text" id="newCatName" placeholder="اسم القسم الجديد">
+        <button class="btn btn-main" style="padding:10px;" onclick="addCategory()">إضافة قسم +</button>
+        <div id="adminCatsList" style="margin-top:10px;"></div>
+
+        <hr style="margin:20px 0; border:0.5px solid #333;">
+
+        <h4>🍔 إضافة منتج جديد</h4>
         <input type="text" id="pTitle" placeholder="اسم المنتج">
         <input type="file" id="pImage" accept="image/*" onchange="handleImage(this)">
         <select id="pCatSelect"></select>
-        <button class="btn btn-main" onclick="saveNewProd()">حفظ المنتج</button>
+        <button class="btn btn-main" onclick="saveNewProd()">حفظ المنتج في الموقع</button>
+        
+        <h4 style="margin-top:15px;">🛍️ المنتجات الحالية</h4>
         <div id="adminProdsList" style="margin-top:10px;"></div>
     </div>
 </div>
 
-<div id="orderModal" class="modal-overlay">
-    <div class="modal-content">
+<div id="orderModal" class="modal-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:5000; display:none; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:var(--card); padding:25px; border-radius:25px; border:2px solid var(--main); width:90%; max-width:400px;">
         <h3 id="modalTitle" style="color:var(--main);"></h3>
         <input type="number" id="modalQty" value="1" min="1">
-        <textarea id="modalNotes" placeholder="أي ملاحظات؟"></textarea>
-        <button class="btn btn-main" onclick="addToCart()">إضافة للسلة</button>
-        <button class="btn" style="background:transparent;" onclick="closeModal('orderModal')">إلغاء</button>
+        <textarea id="modalNotes" placeholder="أي ملاحظات إضافية؟"></textarea>
+        <button class="btn btn-main" onclick="addToCart()">إضافة للسلة 🛒</button>
+        <button class="btn" style="background:transparent; color:#555;" onclick="closeModal('orderModal')">إلغاء</button>
     </div>
 </div>
 
 <nav>
     <a href="#" class="nav-link active" onclick="go('home', this)"><span>🏠</span>الرئيسية</a>
-    <a href="#" class="nav-link" onclick="go('special', this)"><span>📦</span>توصيل خاص</a>
     <a href="#" class="nav-link" onclick="go('cart', this)"><span>🛒</span>السلة</a>
     <a href="#" class="nav-link hidden-admin" id="adminLink" onclick="go('admin', this)"><span>⚙️</span>الإدارة</a>
 </nav>
@@ -138,6 +134,28 @@
         el.classList.add('active');
     }
 
+    // --- إدارة الأقسام (إضافة ومسح) ---
+    function addCategory() {
+        const name = document.getElementById('newCatName').value;
+        if(name) db.collection("categories").add({ n: name }).then(() => document.getElementById('newCatName').value = "");
+    }
+
+    db.collection("categories").onSnapshot(s => {
+        let chips = `<div class="cat-chip ${selectedCat === 'الكل' ? 'active' : ''}" onclick="filterCat('الكل')">الكل</div>`;
+        let options = '';
+        let adminList = '';
+        s.forEach(d => {
+            const name = d.data().n;
+            chips += `<div class="cat-chip ${selectedCat === name ? 'active' : ''}" onclick="filterCat('${name}')">${name}</div>`;
+            options += `<option value="${name}">${name}</option>`;
+            adminList += `<div class="admin-item"><span>${name}</span><button class="btn-danger" onclick="deleteDoc('categories','${d.id}')">حذف</button></div>`;
+        });
+        document.getElementById('catsHeader').innerHTML = chips;
+        document.getElementById('pCatSelect').innerHTML = options;
+        document.getElementById('adminCatsList').innerHTML = adminList;
+    });
+
+    // --- إدارة المنتجات ---
     function handleImage(input) {
         const file = input.files[0];
         const reader = new FileReader();
@@ -145,13 +163,11 @@
             const img = new Image();
             img.onload = function() {
                 const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
                 const max = 400;
                 let w = img.width, h = img.height;
-                if (w > h) { if (w > max) { h *= max/w; w = max; } }
-                else { if (h > max) { w *= max/h; h = max; } }
+                if (w > h) { if (w > max) { h *= max/w; w = max; } } else { if (h > max) { w *= max/h; h = max; } }
                 canvas.width = w; canvas.height = h;
-                ctx.drawImage(img, 0, 0, w, h);
+                canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                 tempImg = canvas.toDataURL('image/jpeg', 0.7);
             }
             img.src = e.target.result;
@@ -161,120 +177,79 @@
 
     function saveNewProd() {
         const t = document.getElementById('pTitle').value, c = document.getElementById('pCatSelect').value;
-        if(t && tempImg) db.collection("products").add({ title: t, img: tempImg, cat: c }).then(() => { alert("تم الحفظ!"); tempImg = ""; document.getElementById('pImage').value = ""; });
+        if(t && tempImg) db.collection("products").add({ title: t, img: tempImg, cat: c }).then(() => { alert("تم الحفظ!"); tempImg = ""; document.getElementById('pImage').value=""; });
     }
-
-    db.collection("categories").onSnapshot(s => {
-        let h = `<div class="cat-chip ${selectedCat === 'الكل' ? 'active' : ''}" onclick="filterCat('الكل')">الكل</div>`;
-        let o = '';
-        s.forEach(d => {
-            h += `<div class="cat-chip ${selectedCat === d.data().n ? 'active' : ''}" onclick="filterCat('${d.data().n}')">${d.data().n}</div>`;
-            o += `<option value="${d.data().n}">${d.data().n}</option>`;
-        });
-        document.getElementById('catsHeader').innerHTML = h;
-        document.getElementById('pCatSelect').innerHTML = o;
-    });
 
     function filterCat(c) { selectedCat = c; renderHomeProds(); }
 
     function renderHomeProds() {
         db.collection("products").onSnapshot(s => {
-            let h = '';
+            let h = '', adminList = '';
             s.forEach(d => {
                 const p = d.data();
                 if(selectedCat === 'الكل' || p.cat === selectedCat) {
-                    h += `<div class="p-card" onclick="openModal('${p.title}')"><img src="${p.img}"><h5>${p.title}</h5><button class="btn-main" style="padding:5px; font-size:0.7rem;">اطلب</button></div>`;
+                    h += `<div class="p-card" onclick="openModal('${p.title}')"><img src="${p.img}"><h5>${p.title}</h5><button class="btn-main" style="padding:5px; font-size:0.7rem; margin-top:5px;">اطلب الآن</button></div>`;
                 }
+                adminList += `<div class="admin-item"><span>${p.title}</span><button class="btn-danger" onclick="deleteDoc('products','${d.id}')">حذف</button></div>`;
             });
             document.getElementById('prodsHome').innerHTML = h;
+            document.getElementById('adminProdsList').innerHTML = adminList;
         });
     }
     renderHomeProds();
 
-    function renderOrders(filter = "") {
-        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
-            let h = '';
-            s.forEach(d => {
-                const o = d.data();
-                if(!filter || o.p.includes(filter)) {
-                    h += `<div class="admin-order-card">
-                        <small>${o.createdAt?.toDate().toLocaleString('ar-EG')}</small>
-                        <p>👤 ${o.n} | 📞 ${o.p}</p>
-                        <p>📍 ${o.address || o.spTo}</p>
-                        <div style="background:#111; padding:5px; border-radius:5px; margin:5px 0;">${o.items ? o.items.map(i=>i.t).join(', ') : 'توصيل خاص: '+o.spDetails}</div>
-                        <button class="btn btn-outline" style="border-color:var(--success); color:var(--success);" onclick="updateOrder('${d.id}', 'تم التأكيد')">تأكيد ✅</button>
-                        <button class="btn btn-outline" style="border-color:var(--danger); color:var(--danger);" onclick="updateOrder('${d.id}', 'إلغاء')">حذف 🗑️</button>
-                    </div>`;
-                }
-            });
-            document.getElementById('ordersDashboard').innerHTML = h || '<p>لا يوجد طلبات</p>';
-        });
-    }
-    renderOrders();
+    function deleteDoc(col, id) { if(confirm("هل أنت متأكد من الحذف؟")) db.collection(col).doc(id).delete(); }
 
-    function updateOrder(id, status) {
-        if(confirm(`هل تريد ${status} هذا الطلب؟`)) db.collection("orders").doc(id).delete();
-    }
-
-    // --- نظام الولاء والبحث المطور ---
+    // --- السلة ونظام الولاء المحدث ---
     async function checkUserHistory(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).get();
             ordersCount = snap.size;
             const infoDiv = document.getElementById('loyaltyInfo');
-            
-            // لو الأوردرات السابقة 9، يبقى الأوردر ده هو العاشر
             if(ordersCount === 9) {
-                infoDiv.innerHTML = `<div style="background:var(--success); color:#000; padding:10px; border-radius:10px; font-weight:bold; animation: pulse 1s infinite;">🎁 مبروك! هذا هو أوردرك العاشر.. التوصيل مجاني تماماً!</div>`;
+                infoDiv.innerHTML = `<div style="background:var(--success); color:#000; padding:10px; border-radius:12px; font-weight:bold;">🎁 مبروك! ده أوردرك العاشر والتوصيل مجاني!</div>`;
             } else {
-                infoDiv.innerHTML = `<span class="cat-chip active">عدد أوردراتك السابقة: ${ordersCount}</span>`;
+                infoDiv.innerHTML = `<b style="color:var(--main);">عدد أوردراتك السابقة: ${ordersCount}</b>`;
             }
         }
     }
 
     function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
-        if(!n || !p || cart.length === 0) return alert("بياناتك ناقصة!");
-        sendToWA(n, p, a, cart, false);
+        if(!n || !p || !a || cart.length === 0) return alert("من فضلك كمل بياناتك والسلة!");
+        sendToWA(n, p, a);
     }
 
-    function sendSpecialOrder() {
-        const det = document.getElementById('spDetails').value, fr = document.getElementById('spFrom').value, to = document.getElementById('spTo').value, rec = document.getElementById('spReceiver').value, ph = document.getElementById('spPhone').value;
-        if(!det || !rec || !ph) return alert("كمل تفاصيل التوصيل!");
-        sendToWA(rec, ph, to, det, true, fr);
-    }
-
-    async function sendToWA(name, phone, addr, content, isSpecial, from = "") {
-        // التحقق من أن هذا هو الأوردر العاشر (9 سابقين)
-        const isFreeOrder = (ordersCount === 9 && !isSpecial);
+    async function sendToWA(name, phone, addr) {
+        const isFree = (ordersCount === 9);
+        let msg = `⚡ *أوردر جديد من نجدة أوردر*\n\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${addr}\n🛒 الطلبات:\n` + cart.map(i => `- ${i.t} (ج${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
         
-        let msg = `⚡ *أوردر جديد من نجدة أوردر*\n\n`;
-        msg += `👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${addr}\n`;
-        
-        if(isSpecial) {
-            msg += `📦 نوع الطلب: توصيل مستلزمات\n📝 التفاصيل: ${content}\n🏠 من: ${from}\n🤝 المستلم: ${name}`;
-        } else {
-            msg += `🛒 الطلبات:\n` + content.map(i => `- ${i.t} (ج${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
-        }
+        if(isFree) msg += `\n\n🎁 *الطلب العاشر - التوصيل مجاني*\n*10MostafaHegazy10*`;
 
-        // لو مجاني، ضيف الرسالة والكود المطلوب بخط عريض
-        if(isFreeOrder) {
-            msg += `\n\n🎁 *مبروك! هذا هو الأوردر العاشر - التوصيل مجاني!*`;
-            msg += `\n\n*10MostafaHegazy10*`; 
-        }
-
-        // حفظ الأوردر في الداتابيز أولاً
-        await db.collection("orders").add({ 
-            n: name, p: phone, address: addr, 
-            items: isSpecial ? null : content, 
-            spDetails: isSpecial ? content : null, 
-            isFree: isFreeOrder,
-            createdAt: new Date() 
-        });
-
+        await db.collection("orders").add({ n: name, p: phone, address: addr, items: cart, isFree: isFree, createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-        if(!isSpecial) { cart = []; renderCart(); }
+        cart = []; renderCart();
     }
+
+    // --- الطلبات في الإدارة ---
+    function renderOrders(filter = "") {
+        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
+            let h = '';
+            s.forEach(d => {
+                const o = d.data();
+                if(!filter || o.p.includes(filter)) {
+                    h += `<div style="background:#000; border:1px solid #333; padding:10px; border-radius:10px; margin-bottom:10px;">
+                        <small>${o.createdAt?.toDate().toLocaleString('ar-EG')}</small><br>
+                        <b>👤 ${o.n}</b> | 📞 ${o.p}<br>
+                        📦 ${o.items ? o.items.length : 0} أصناف <br>
+                        <button class="btn-danger" style="margin-top:5px;" onclick="deleteDoc('orders','${d.id}')">حذف الطلب</button>
+                    </div>`;
+                }
+            });
+            document.getElementById('ordersDashboard').innerHTML = h || '<p>لا توجد طلبات</p>';
+        });
+    }
+    renderOrders();
 
     function openModal(t) { currentProd = t; document.getElementById('modalTitle').innerText = t; document.getElementById('orderModal').style.display='flex'; }
     function closeModal(id) { document.getElementById(id).style.display='none'; }
@@ -283,7 +258,7 @@
         closeModal('orderModal'); renderCart();
     }
     function renderCart() {
-        document.getElementById('cartList').innerHTML = cart.map((i, idx) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #333; font-size:0.9rem;"><span>${i.t} (ج${i.q})</span><span onclick="cart.splice(${idx},1);renderCart()" style="color:red">✕</span></div>`).join('');
+        document.getElementById('cartList').innerHTML = cart.map((i, idx) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #333;"><span>${i.t} (ج${i.q})</span><span onclick="cart.splice(${idx},1);renderCart()" style="color:red">✕</span></div>`).join('');
     }
 </script>
 </body>
