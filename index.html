@@ -12,34 +12,44 @@
     <style>
         :root { --neon-cyan: #00f2ff; --neon-purple: #bc13fe; --bg: #050505; --surface: #121212; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; padding-bottom: 80px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; padding-bottom: 80px; overflow-x: hidden; line-height: 1.4; }
 
+        /* هيدر صغير وذكي */
         header { padding: 12px 15px; background: #0a0a0a; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
         .logo-text { font-size: 1.3rem; font-weight: 900; color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); cursor: pointer; }
         .user-tag { font-size: 0.75rem; color: var(--neon-purple); font-weight: 700; border: 1px solid var(--neon-purple); padding: 2px 8px; border-radius: 8px; }
 
+        /* بار الأقسام مع تأثير التنوير */
         .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; background: #080808; scrollbar-width: none; }
-        .cat-item { padding: 8px 18px; background: #1a1a1a; border-radius: 12px; white-space: nowrap; font-weight: 700; border: 1px solid #333; color: #666; transition: 0.3s; }
+        .cats-bar::-webkit-scrollbar { display: none; }
+        .cat-item { padding: 8px 18px; background: #1a1a1a; border-radius: 12px; white-space: nowrap; font-weight: 700; border: 1px solid #333; color: #777; transition: 0.3s; font-size: 0.85rem; }
         .cat-item.active { background: var(--neon-purple); color: #fff; border-color: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); transform: scale(1.05); }
 
+        /* شبكة المنتجات */
         .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
-        .p-card { background: var(--surface); border-radius: 20px; overflow: hidden; border: 1px solid #222; position: relative; }
-        .p-card img { width: 100%; height: 120px; object-fit: cover; border-bottom: 2px solid var(--neon-cyan); }
+        .p-card { background: var(--surface); border-radius: 20px; overflow: hidden; border: 1px solid #222; position: relative; transition: 0.3s; }
+        .p-card img { width: 100%; height: 125px; object-fit: cover; border-bottom: 2px solid var(--neon-cyan); }
         .p-card-body { padding: 10px; text-align: center; }
-        .p-card-body h4 { font-size: 0.9rem; margin-bottom: 8px; font-weight: 700; }
+        .p-card-body h4 { font-size: 0.85rem; margin-bottom: 8px; font-weight: 700; height: 38px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 
-        .btn-action { width: 100%; padding: 10px; border-radius: 12px; border: none; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)); color: #000; font-weight: 900; font-size: 0.85rem; }
-        .btn-delete { position: absolute; top: 5px; left: 5px; background: rgba(255,0,0,0.8); border: none; color: white; width: 25px; height: 25px; border-radius: 50%; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 10; }
+        .btn-action { width: 100%; padding: 10px; border-radius: 12px; border: none; background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple)); color: #000; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
+        .btn-delete { position: absolute; top: 8px; left: 8px; background: rgba(255, 46, 46, 0.9); border: none; color: white; width: 28px; height: 28px; border-radius: 50%; z-index: 10; font-weight: bold; cursor: pointer; }
 
+        /* ناف بار سفلي */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #222; z-index: 1000; }
         .nav-link { color: #555; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
-        .nav-link.active { color: var(--neon-cyan); }
+        .nav-link.active { color: var(--neon-cyan); text-shadow: 0 0 8px var(--neon-cyan); }
 
+        /* مودال الطلب */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; align-items: flex-end; }
-        .modal-box { background: #0f0f0f; width: 100%; border-radius: 25px 25px 0 0; padding: 25px; border-top: 3px solid var(--neon-purple); }
-        input, select { width: 100%; padding: 15px; border-radius: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; margin-bottom: 12px; outline: none; }
+        .modal-box { background: #0f0f0f; width: 100%; border-radius: 25px 25px 0 0; padding: 25px; border-top: 3px solid var(--neon-purple); animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        .admin-item { display: flex; justify-content: space-between; background: #1a1a1a; padding: 10px; border-radius: 10px; margin-bottom: 5px; border-right: 3px solid red; }
+        input, select { width: 100%; padding: 15px; border-radius: 12px; background: #1a1a1a; border: 1px solid #333; color: #fff; margin-bottom: 12px; outline: none; font-size: 1rem; }
+
+        /* صفحة الإدارة */
+        .admin-section { background: #080808; padding: 15px; border-radius: 15px; border: 1px dashed #444; margin-bottom: 20px; }
+        .admin-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px 15px; border-radius: 12px; margin-bottom: 8px; border-right: 4px solid #ff2e2e; }
     </style>
 </head>
 <body>
@@ -55,26 +65,26 @@
     </div>
 
     <div id="cartPage" class="page" style="display:none; padding:15px;">
-        <h2 style="margin-bottom:15px; color: var(--neon-cyan);">طلباتك 🛒</h2>
+        <h2 style="margin-bottom:15px; color: var(--neon-cyan);">سلة طلباتك 🛒</h2>
         <div id="cartItems"></div>
         <div id="orderForm" style="display:none; margin-top:20px;">
             <input type="text" id="uName" placeholder="الاسم بالكامل">
             <input type="tel" id="uPhone" placeholder="رقم الموبايل">
             <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
-            <button class="btn-action" style="padding:18px;" onclick="sendOrder()">إرسال الطلب لنجدة 🚀</button>
+            <button class="btn-action" style="padding:18px; font-size:1.1rem;" onclick="sendOrder()">تأكيد الطلب عبر واتساب 🚀</button>
         </div>
     </div>
 
     <div id="adminPage" class="page" style="display:none; padding:15px;">
-        <h3 style="color:var(--neon-purple); margin-bottom:15px;">🛠 إدارة الموقع</h3>
-        <div style="background:#080808; padding:15px; border-radius:15px; border:1px dashed #333; margin-bottom:20px;">
-            <h4>إضافة منتج بصورة</h4>
-            <input type="text" id="pTitle" placeholder="اسم المنتج">
+        <h3 style="color:var(--neon-purple); margin-bottom:20px;">🛠 لوحة التحكم</h3>
+        <div class="admin-section">
+            <h4 style="margin-bottom:10px;">نشر منتج جديد</h4>
+            <input type="text" id="pTitle" placeholder="اسم المنتج/الخدمة">
             <select id="pCatSelect"></select>
             <input type="file" accept="image/*" onchange="handleImg(this)">
-            <button class="btn-action" onclick="saveProduct()">حفظ ونشر 🚀</button>
+            <button class="btn-action" onclick="saveProduct()">حفظ ونشر الآن 🚀</button>
         </div>
-        <h4>إدارة الأقسام (حذف)</h4>
+        <h4 style="margin-bottom:10px;">حذف الأقسام</h4>
         <div id="adminCatsList"></div>
     </div>
 
@@ -86,11 +96,11 @@
 
     <div class="modal-overlay" id="orderModal">
         <div class="modal-box">
-            <h3 id="mTitle" style="color:var(--neon-cyan); margin-bottom:15px;"></h3>
-            <input type="text" id="mQty" placeholder="الكمية؟">
-            <input type="text" id="mNote" placeholder="ملاحظة (اختياري)">
-            <button class="btn-action" onclick="confirmCart()">أضف للسلة 🛒</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#555; margin-top:15px;">إلغاء</button>
+            <h3 id="mTitle" style="color:var(--neon-cyan); margin-bottom:15px; font-size:1.4rem;"></h3>
+            <input type="text" id="mQty" placeholder="الكمية أو التفاصيل؟">
+            <input type="text" id="mNote" placeholder="ملاحظة إضافية لنجدة (اختياري)">
+            <button class="btn-action" onclick="confirmCart()">إضافة للسلة 🛒</button>
+            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#555; margin-top:15px; font-weight:bold;">رجوع</button>
         </div>
     </div>
 
@@ -99,20 +109,26 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let cats = [], products = [], cart = [], selectedP = null, tempImg = "", isAdmin = false;
+        let cats = [], products = [], cart = [], selectedP = null, tempImg = "", isAdminMode = false;
 
-        let pressTimer;
+        // الدخول السري (ضغط مطول 4 ثواني)
+        let timer;
         document.getElementById('logoAdmin').addEventListener('touchstart', () => {
-            pressTimer = setTimeout(() => {
-                if(prompt("كلمة السر:") === "135790") { isAdmin = true; document.getElementById('btnAdmin').style.display='block'; nav('admin'); }
+            timer = setTimeout(() => {
+                if(prompt("ادخل كلمة سر الإدارة:") === "135790") {
+                    isAdminMode = true;
+                    document.getElementById('btnAdmin').style.display = 'block';
+                    nav('admin');
+                }
             }, 4000);
         });
+        document.getElementById('logoAdmin').addEventListener('touchend', () => clearTimeout(timer));
 
         function init() {
             db.collection("categories").onSnapshot(s => {
                 cats = []; s.forEach(d => cats.push({id: d.id, ...d.data()}));
+                if(cats.length === 0) seedAllData(); 
                 renderCats();
-                if(cats.length === 0) seedData(); // لو فاضي حط داتا من عندي
             });
             db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
                 products = []; s.forEach(d => products.push({id: d.id, ...d.data()}));
@@ -120,17 +136,18 @@
             });
         }
 
-        async function seedData() {
-            // إضافة أقسام افتراضية
-            const demoCats = ["خضروات", "مشروبات", "سناكس"];
-            for(let c of demoCats) { await db.collection("categories").add({name: c}); }
-            // إضافة منتجات افتراضية بصور من النت للتجربة
-            const demoProds = [
-                {t: "طماطم فريش", c: "خضروات", i: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"},
-                {t: "كوكاكولا كانز", c: "مشروبات", i: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97"},
-                {t: "شيبسي عائلي", c: "سناكس", i: "https://images.unsplash.com/photo-1566478989037-eec170784d0b"}
+        async function seedAllData() {
+            const initialCats = ["توصيل طلبات", "مستلزمات شخصية", "خضروات", "مشروبات", "بقالة"];
+            for(let c of initialCats) { await db.collection("categories").add({name: c}); }
+            
+            const initialProds = [
+                {t: "توصيل أوردر من أي مكان 🛵", c: "توصيل طلبات", i: "https://images.unsplash.com/photo-1512810194970-ed7764dca70a"},
+                {t: "شراء مستلزمات الصيدلية 💊", c: "مستلزمات شخصية", i: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae"},
+                {t: "طماطم فريش (كيلو) 🍅", c: "خضروات", i: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c"},
+                {t: "شيبسي عائلي 🥔", c: "بقالة", i: "https://images.unsplash.com/photo-1566478989037-eec170784d0b"},
+                {t: "كوكاكولا كانز 🥤", c: "مشروبات", i: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97"}
             ];
-            for(let p of demoProds) {
+            for(let p of initialProds) {
                 await db.collection("products").add({ title: p.t, cat: p.c, img: p.i, createdAt: new Date() });
             }
         }
@@ -139,10 +156,17 @@
             const container = document.getElementById('catsContainer');
             const select = document.getElementById('pCatSelect');
             const adminList = document.getElementById('adminCatsList');
+            
             container.innerHTML = `<div class="cat-item active" onclick="filterBy('الكل', this)">الكل</div>` + 
                                 cats.map(c => `<div class="cat-item" onclick="filterBy('${c.name}', this)">${c.name}</div>`).join('');
+            
             select.innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-            adminList.innerHTML = cats.map(c => `<div class="admin-item"><span>${c.name}</span> <button onclick="deleteDoc('categories','${c.id}')" style="background:none; border:none; color:red;">حذف</button></div>`).join('');
+            
+            adminList.innerHTML = cats.map(c => `
+                <div class="admin-item">
+                    <span>${c.name}</span>
+                    <button onclick="deleteDoc('categories','${c.id}')" style="background:none; border:none; color:#ff2e2e; font-weight:900;">حذف</button>
+                </div>`).join('');
         }
 
         function renderProducts(filter = 'الكل') {
@@ -150,48 +174,54 @@
             products.filter(p => filter === 'الكل' || p.cat === filter).forEach(p => {
                 grid.innerHTML += `
                     <div class="p-card">
-                        ${isAdmin ? `<button class="btn-delete" onclick="deleteDoc('products','${p.id}')">X</button>` : ''}
+                        ${isAdminMode ? `<button class="btn-delete" onclick="deleteDoc('products','${p.id}')">X</button>` : ''}
                         <img src="${p.img || 'https://via.placeholder.com/150'}">
                         <div class="p-card-body">
                             <h4>${p.title}</h4>
-                            <button class="btn-action" onclick='openM(${JSON.stringify(p)})'>اطلب</button>
+                            <button class="btn-action" onclick='openM(${JSON.stringify(p)})'>أضف للسلة</button>
                         </div>
                     </div>`;
             });
         }
 
-        async function deleteDoc(col, id) { if(confirm("حذف نهائي؟")) await db.collection(col).doc(id).delete(); }
+        async function deleteDoc(col, id) { if(confirm("هل أنت متأكد من الحذف؟")) await db.collection(col).doc(id).delete(); }
 
         function openM(p) { selectedP = p; document.getElementById('mTitle').innerText = p.title; document.getElementById('orderModal').style.display='flex'; }
         function closeModal() { document.getElementById('orderModal').style.display='none'; }
 
         function confirmCart() {
             cart.push({ title: selectedP.title, qty: document.getElementById('mQty').value, note: document.getElementById('mNote').value });
-            closeModal(); alert("تمت الإضافة ✅");
+            document.getElementById('mQty').value = ""; document.getElementById('mNote').value = "";
+            closeModal(); alert("تمت الإضافة للسلة ✅");
         }
 
         function sendOrder() {
             const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddr').value;
-            if(!n || !p || !a) return alert("كمل بياناتك!");
+            if(!n || !p || !a) return alert("من فضلك كمل بياناتك الأول!");
+
             let msg = `*✨ طلب جديد من نجدة أوردر ✨*\n*بواسطة: مصطفى حجازي ⚡*\n━━━━━━━━━━━━━━\n\n`;
-            cart.forEach((i, idx) => msg += `*${idx+1}️⃣ صنف سريع 📦*\n🔹 الصنف: ${i.title}\n⚖️ الكمية: ${i.qty}\n📍 ملاحظة: ${i.note || 'لا يوجد'}\n----------------------------\n`);
+            cart.forEach((item, idx) => {
+                msg += `*${idx+1}️⃣ صنف سريع 📦*\n🔹 الصنف: ${item.title}\n⚖️ التفاصيل: ${item.qty}\n📍 ملاحظة: ${item.note || 'لا يوجد'}\n----------------------------\n`;
+            });
             msg += `\n*👤 بيانات العميل:*\n🔸 الاسم: ${n}\n📞 الهاتف: ${p}\n🏠 العنوان: ${a}`;
+            
             window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
             cart = []; nav('shop');
+            alert("تم الإرسال وتصفير السلة بنجاح! ✅");
         }
 
         function handleImg(el) {
-            const r = new FileReader(); r.readAsDataURL(el.files[0]);
-            r.onload = (e) => tempImg = e.target.result;
+            const reader = new FileReader(); reader.readAsDataURL(el.files[0]);
+            reader.onload = (e) => tempImg = e.target.result;
         }
 
         async function saveProduct() {
             const t = document.getElementById('pTitle').value, c = document.getElementById('pCatSelect').value;
             if(t && tempImg) {
                 await db.collection("products").add({ title: t, cat: c, img: tempImg, createdAt: new Date() });
-                alert("تم النشر ✅");
+                alert("تم النشر بنجاح! 🚀");
                 document.getElementById('pTitle').value = "";
-            }
+            } else { alert("اكتب الاسم واختار صورة!"); }
         }
 
         function filterBy(name, el) {
@@ -206,8 +236,13 @@
             document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');
             if(id === 'cart') {
                 const list = document.getElementById('cartItems');
-                list.innerHTML = cart.map(i => `<div style="background:#1a1a1a; padding:12px; border-radius:12px; margin-bottom:10px;"><b>${i.title}</b> - ${i.qty}</div>`).join('');
+                list.innerHTML = cart.map((i, idx) => `
+                    <div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:12px; border-right:5px solid var(--neon-purple); display:flex; justify-content:space-between;">
+                        <div><b>${i.title}</b><br><small style="color:#888">${i.qty}</small></div>
+                        <button onclick="cart.splice(${idx},1); nav('cart')" style="background:none; border:none; color:red;">حذف</button>
+                    </div>`).join('');
                 document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none';
+                if(cart.length === 0) list.innerHTML = "<p style='text-align:center; color:#555;'>السلة فاضية.. اطلب حاجة يا بطل!</p>";
             }
         }
 
