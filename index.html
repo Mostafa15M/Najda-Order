@@ -16,7 +16,7 @@
         header { padding: 15px 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 2000; }
         .logo-text { font-weight: 900; font-size: 1.1rem; background: linear-gradient(var(--main), var(--sec)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        .gift-banner { background: linear-gradient(45deg, var(--main), var(--sec)); padding: 10px; text-align: center; font-weight: bold; font-size: 0.85rem; border-radius: 12px; margin: 10px 15px; box-shadow: 0 4px 15px rgba(189,0,255,0.3); }
+        .gift-banner { background: linear-gradient(45deg, var(--main), var(--sec)); padding: 10px; text-align: center; font-weight: bold; font-size: 0.85rem; border-radius: 12px; margin: 10px 15px; }
 
         nav { position: fixed; bottom: 0; width: 100%; background: #0a0a0c; border-top: 1px solid #2c2c2e; display: flex; justify-content: space-around; padding: 10px 0 25px; z-index: 3000; }
         .nav-link { color: #8e8e93; text-decoration: none; text-align: center; flex: 1; font-size: 0.8rem; }
@@ -27,30 +27,31 @@
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* البحث والأقسام */
+        .search-box { margin: 10px 0; position: relative; }
+        .search-box input { padding-right: 40px; margin-bottom: 5px; }
+        .cat-bar { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
+        .cat-chip { background: #222; padding: 6px 15px; border-radius: 20px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; }
+        .cat-chip.active { background: var(--main); color: #000; border-color: var(--main); font-weight: bold; }
+
         .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
         .p-card { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid #2c2c2e; position: relative; }
-        .p-card img { width: 100%; height: 120px; object-fit: cover; }
-        .delete-btn { position: absolute; top: 8px; left: 8px; background: var(--danger); width: 25px; height: 25px; border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 12px; z-index: 5; }
-        .admin-mode .delete-btn { display: flex; }
-
+        .p-card img { width: 100%; height: 110px; object-fit: cover; }
+        
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 360px; border: 1px solid var(--main); }
         
-        .qty-input-group { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 15px 0; }
-        .qty-control { background: #333; border: none; width: 45px; height: 45px; border-radius: 12px; color: white; font-size: 1.5rem; }
-        #customQty { width: 100px; text-align: center; font-size: 1.2rem; font-weight: bold; background: #000; border: 1px solid var(--main); margin: 0; }
-
         input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #333; background: #1c1c1e; color: #fff; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
         .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: white; }
         
-        .admin-section { background: #151517; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed #444; }
+        .admin-section { background: #151517; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
         .hidden-admin { display: none !important; }
         .admin-mode .hidden-admin { display: block !important; }
-        .cat-tag { background: #333; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; color: var(--main); margin-bottom: 5px; display: inline-block; }
+        .order-card { background: #1c1c1e; border: 1px solid #333; padding: 12px; border-radius: 15px; margin-bottom: 10px; }
     </style>
 </head>
-<body class="">
+<body>
 
 <header>
     <div class="logo-text">نجدة أوردر ⚡</div>
@@ -62,28 +63,26 @@
 <div id="qtyModal" class="modal">
     <div class="modal-content">
         <h3 id="modalTitle">اسم المنتج</h3>
-        <p style="font-size: 0.8rem; color: #8e8e93; margin-top: 5px;">حدد الكمية (مثلاً: 1، نص، ربع)</p>
-        <div class="qty-input-group">
-            <button class="qty-control" onclick="stepQty(-1)">-</button>
-            <input type="text" id="customQty" value="1">
-            <button class="qty-control" onclick="stepQty(1)">+</button>
-        </div>
-        <textarea id="pNote" placeholder="أي ملاحظات؟ (سبايسي، بدون بصل..)"></textarea>
+        <input type="text" id="customQty" placeholder="الكمية (مثلاً: 1 أو نص)" value="1" style="margin-top:15px; text-align:center; font-weight:bold; border-color:var(--main);">
+        <textarea id="pNote" placeholder="أي ملاحظات إضافية؟"></textarea>
         <button class="btn btn-main" onclick="confirmAdd()">إضافة للسلة ✅</button>
-        <p onclick="closeModal()" style="margin-top:15px; color:#8e8e93; font-size:0.8rem; cursor:pointer;">إلغاء</p>
+        <p onclick="closeModal()" style="margin-top:10px; color:#8e8e93; text-align:center; cursor:pointer;">إلغاء</p>
     </div>
 </div>
 
 <div id="home" class="page active">
-    <div id="categoriesFilter" style="display:flex; gap:10px; overflow-x:auto; padding: 10px 0;"></div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="ابحث عن أكلة أو منتج..." oninput="filterProducts()">
+    </div>
+    <div id="categoriesFilter" class="cat-bar"></div>
     <div id="prodsHome" class="prod-grid"></div>
 </div>
 
 <div id="special" class="page">
     <h3 style="text-align:center; margin: 20px 0;">📦 شحن وتوصيل خاص</h3>
     <input type="text" id="spDetails" placeholder="الأغراض المطلوب نقلها">
-    <input type="text" id="spFrom" placeholder="نقطة الاستلام (منين؟)">
-    <input type="text" id="spTo" placeholder="نقطة التسليم (لفين؟)">
+    <input type="text" id="spFrom" placeholder="نقطة الاستلام">
+    <input type="text" id="spTo" placeholder="نقطة التسليم">
     <input type="tel" id="spPhone" placeholder="رقم الموبايل">
     <button class="btn btn-main" onclick="sendSpecialOrder()">طلب مندوب شحن 🚀</button>
 </div>
@@ -91,11 +90,8 @@
 <div id="cart" class="page">
     <h3 style="margin: 20px 0;">🛒 طلباتك</h3>
     <div id="cartList"></div>
-    <div id="loyaltyStatus" style="display:none; background:#1c1c1e; padding:15px; border-radius:15px; margin: 15px 0; border: 1px solid var(--success); text-align:center;">
+    <div id="loyaltyStatus" style="display:none; background:#1c1c1e; padding:15px; border-radius:15px; border: 1px solid var(--success); text-align:center; margin-bottom:15px;">
         <p id="loyaltyMsg"></p>
-        <div style="background:#333; height:8px; border-radius:4px; margin-top:10px;">
-            <div id="loyaltyProgress" style="background:var(--main); height:100%; width:0%; border-radius:4px;"></div>
-        </div>
     </div>
     <input type="text" id="uName" placeholder="الاسم">
     <input type="text" id="uAddress" placeholder="العنوان بالتفصيل">
@@ -107,26 +103,23 @@
     <h3 style="margin: 20px 0; color: var(--main);">⚙️ لوحة التحكم</h3>
     
     <div class="admin-section">
-        <h4>✨ إضافة منتج جديد</h4>
-        <input type="text" id="newPTitle" placeholder="اسم المنتج">
-        <select id="newPCat"><option value="عام">اختر القسم</option></select>
-        <p style="font-size:0.7rem; color:#8e8e93;">صورة المنتج:</p>
-        <input type="file" id="newPImg" accept="image/*" style="background:transparent; border:none;">
-        <button class="btn btn-main" onclick="uploadProduct()">حفظ المنتج في المنيو</button>
-    </div>
-
-    <div class="admin-section">
-        <h4>📁 إدارة الأقسام</h4>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="newCatName" placeholder="اسم القسم الجديد">
-            <button class="btn btn-main" style="width:80px; padding:10px;" onclick="addCategory()">+</button>
-        </div>
-        <div id="catsManagerList" style="margin-top:10px;"></div>
-    </div>
-
-    <div class="admin-section">
-        <h4>📨 الطلبات الواردة</h4>
+        <h4>📨 الطلبات الجديدة</h4>
         <div id="adminOrdersList"></div>
+    </div>
+
+    <div class="admin-section">
+        <h4>✨ إضافة منتج</h4>
+        <input type="text" id="newPTitle" placeholder="اسم المنتج">
+        <select id="newPCat"></select>
+        <input type="file" id="newPImg" accept="image/*">
+        <button class="btn btn-main" onclick="uploadProduct()">حفظ</button>
+    </div>
+
+    <div class="admin-section">
+        <h4>📁 الأقسام</h4>
+        <input type="text" id="newCatName" placeholder="قسم جديد">
+        <button class="btn btn-main" onclick="addCategory()">إضافة قسم</button>
+        <div id="catsManagerList" style="margin-top:10px;"></div>
     </div>
 </div>
 
@@ -142,174 +135,146 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let cart = [], currentProduct = "", userOrdersCount = 0;
+    let cart = [], currentProduct = "", allProducts = [], selectedCat = "الكل";
 
-    function toggleAdmin() { if(prompt("باسورد الإدارة؟") === "135790") document.body.classList.toggle('admin-mode'); }
+    function toggleAdmin() { if(prompt("الباسورد؟") === "135790") document.body.classList.toggle('admin-mode'); }
 
     function go(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         el.classList.add('active');
-        if(id === 'admin-page') { loadAdminData(); }
+        if(id === 'admin-page') loadOrders();
     }
 
-    // إدارة الكمية
-    function stepQty(val) {
-        let cur = parseFloat(document.getElementById('customQty').value) || 0;
-        document.getElementById('customQty').value = Math.max(1, cur + val);
+    // جلب المنتجات والأقسام
+    db.collection("categories").onSnapshot(s => {
+        let cats = [{name:'الكل'}];
+        s.forEach(d => cats.push(d.data()));
+        renderCats(cats);
+    });
+
+    function renderCats(cats) {
+        let h = '', opts = '';
+        cats.forEach(c => {
+            h += `<div class="cat-chip ${selectedCat === c.name ? 'active' : ''}" onclick="filterCat('${c.name}')">${c.name}</div>`;
+            if(c.name !== 'الكل') opts += `<option value="${c.name}">${c.name}</option>`;
+        });
+        document.getElementById('categoriesFilter').innerHTML = h;
+        document.getElementById('newPCat').innerHTML = opts;
+    }
+
+    db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
+        allProducts = [];
+        s.forEach(d => allProducts.push({id: d.id, ...d.data()}));
+        filterProducts();
+    });
+
+    function filterCat(cat) { selectedCat = cat; filterProducts(); }
+
+    function filterProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        let filtered = allProducts.filter(p => {
+            const matchCat = (selectedCat === "الكل" || p.cat === selectedCat);
+            const matchSearch = p.title.toLowerCase().includes(query);
+            return matchCat && matchSearch;
+        });
+
+        let h = '';
+        filtered.forEach(p => {
+            h += `<div class="p-card">
+                <div class="admin-mode" style="position:absolute; top:5px; left:5px; display:none;" onclick="deleteDoc('products','${p.id}')">🗑️</div>
+                <img src="${p.img}">
+                <div style="padding:10px; text-align:center;">
+                    <p style="font-size:0.85rem; font-weight:bold;">${p.title}</p>
+                    <button class="btn btn-main" style="padding:6px; margin-top:5px; font-size:0.75rem;" onclick="openQtyModal('${p.title}')">اطلب</button>
+                </div>
+            </div>`;
+        });
+        document.getElementById('prodsHome').innerHTML = h;
     }
 
     function openQtyModal(title) {
         currentProduct = title;
         document.getElementById('modalTitle').innerText = title;
-        document.getElementById('customQty').value = "1";
-        document.getElementById('pNote').value = "";
         document.getElementById('qtyModal').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('qtyModal').style.display = 'none'; }
 
     function confirmAdd() {
-        const q = document.getElementById('customQty').value;
-        const n = document.getElementById('pNote').value;
-        cart.push({ t: currentProduct, q: q, n: n });
+        cart.push({ t: currentProduct, q: document.getElementById('customQty').value, n: document.getElementById('pNote').value });
         closeModal();
         renderCart();
     }
 
-    // فحص النقاط (الولاء)
-    async function checkLoyalty(phone) {
-        if(phone.length >= 11) {
-            const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "done").get();
-            userOrdersCount = snap.size;
-            const sec = document.getElementById('loyaltyStatus');
-            sec.style.display = 'block';
-            const progress = (userOrdersCount / 9) * 100;
-            document.getElementById('loyaltyProgress').style.width = Math.min(progress, 100) + "%";
-            document.getElementById('loyaltyMsg').innerHTML = userOrdersCount >= 9 ? "🎊 مبروك! طلبك القادم توصيله مجاني" : `فاضلك ${9 - userOrdersCount} أوردرات وتكسب توصيل مجاني!`;
-        }
-    }
-
-    // معالجة الصور (تصغير وحفظ)
-    async function uploadProduct() {
-        const title = document.getElementById('newPTitle').value;
-        const cat = document.getElementById('newPCat').value;
-        const file = document.getElementById('newPImg').files[0];
-        
-        if(!title || !file) return alert("اكتب الاسم واختار صورة!");
-
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = async (e) => {
-            const img = new Image();
-            img.src = e.target.result;
-            img.onload = async () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const max_w = 400; 
-                const scale = max_w / img.width;
-                canvas.width = max_w;
-                canvas.height = img.height * scale;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                const base64 = canvas.toDataURL('image/jpeg', 0.7);
-
-                await db.collection("products").add({ title, cat, img: base64, createdAt: new Date() });
-                alert("تمت الإضافة!");
-                document.getElementById('newPTitle').value = "";
-            };
-        };
-    }
-
-    // عرض المنتجات
-    db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
-        let h = '';
-        s.forEach(d => {
-            const p = d.data();
-            h += `<div class="p-card">
-                <div class="delete-btn" onclick="deleteDoc('products','${d.id}')">✕</div>
-                <img src="${p.img}">
-                <div style="padding:10px; text-align:center;">
-                    <span class="cat-tag">${p.cat}</span>
-                    <p style="font-size:0.9rem; font-weight:bold; margin-bottom:8px;">${p.title}</p>
-                    <button class="btn btn-main" style="padding:8px; font-size:0.8rem;" onclick="openQtyModal('${p.title}')">اطلب الآن</button>
-                </div>
-            </div>`;
-        });
-        document.getElementById('prodsHome').innerHTML = h;
-    });
-
-    // إدارة الأقسام
-    async function addCategory() {
-        const name = document.getElementById('newCatName').value;
-        if(name) await db.collection("categories").add({ name });
-        document.getElementById('newCatName').value = "";
-    }
-
-    db.collection("categories").onSnapshot(s => {
-        let opts = '<option value="عام">اختر القسم</option>';
-        let list = '';
-        s.forEach(d => {
-            opts += `<option value="${d.data().name}">${d.data().name}</option>`;
-            list += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; background:#222; padding:8px; border-radius:8px;">
-                        <span>${d.data().name}</span>
-                        <span style="color:red; cursor:pointer;" onclick="deleteDoc('categories','${d.id}')">حذف</span>
-                    </div>`;
-        });
-        document.getElementById('newPCat').innerHTML = opts;
-        document.getElementById('catsManagerList').innerHTML = list;
-    });
-
     function renderCart() {
         document.getElementById('cartList').innerHTML = cart.map((i,idx)=>`
-            <div style="background:#222; padding:12px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between;">
-                <div><b>${i.t}</b> (الكمية: ${i.q})<br><small style="color:var(--main)">${i.n || ''}</small></div>
+            <div style="background:#222; padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between;">
+                <span>${i.t} (${i.q})</span>
                 <span onclick="cart.splice(${idx},1);renderCart()" style="color:red;">✕</span>
             </div>
         `).join('');
     }
 
+    async function checkLoyalty(phone) {
+        if(phone.length >= 11) {
+            const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "done").get();
+            const count = snap.size;
+            document.getElementById('loyaltyStatus').style.display = 'block';
+            document.getElementById('loyaltyMsg').innerText = count >= 9 ? "🎁 مبروك! الأوردر ده هدية توصيل مجاني" : `عندك ${count} أوردرات ناجحة. فاضلك ${9-count} للهدية!`;
+        }
+    }
+
     async function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
         if(!n || !p || cart.length === 0) return alert("كمل بياناتك!");
-        
-        let items = cart.map(i => `- ${i.t} (كمية: ${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
-        let loyalty = userOrdersCount >= 9 ? "\n\n🎁 *أوردر الهدية: توصيل مجاني!*" : "";
-        let msg = `⚡ *أوردر جديد*\n👤 الاسم: ${n}\n📞 الهاتف: ${p}\n📍 العنوان: ${a}\n\n📦 الطلبات:\n${items}${loyalty}`;
-
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("أوردر جديد من: " + n)}`);
         cart = []; renderCart();
     }
 
-    function loadAdminData() {
-        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
+    // الإدارة
+    function loadOrders() {
+        db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
             let h = '';
             s.forEach(d => {
                 const o = d.data();
-                h += `<div style="background:#222; padding:10px; border-radius:10px; margin-bottom:10px; border-right:3px solid ${o.status=='done'?'green':'orange'}">
-                    <p><b>${o.n}</b> - ${o.p}</p>
-                    <p style="font-size:0.75rem;">${o.a || 'توصيل خاص'}</p>
-                    <div style="display:flex; gap:5px; margin-top:5px;">
-                        <button class="btn" style="background:green; padding:5px; font-size:0.7rem;" onclick="db.collection('orders').doc('${d.id}').update({status:'done'})">تأكيد بنجاح</button>
-                        <button class="btn" style="background:red; padding:5px; font-size:0.7rem;" onclick="deleteDoc('orders','${d.id}')">حذف</button>
+                h += `<div class="order-card">
+                    <p>👤 <b>${o.n}</b> | 📞 ${o.p}</p>
+                    <p style="font-size:0.8rem; color:var(--main);">${o.items.map(i=>i.t+'('+i.q+')').join(', ')}</p>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="btn" style="background:var(--success); color:#000; flex:1;" onclick="updateStatus('${d.id}', 'done')">موافقة ✅</button>
+                        <button class="btn" style="background:var(--danger); flex:1;" onclick="updateStatus('${d.id}', 'canceled')">إلغاء ❌</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('adminOrdersList').innerHTML = h;
+            document.getElementById('adminOrdersList').innerHTML = h || 'لا يوجد طلبات جديدة';
         });
     }
 
-    async function sendSpecialOrder() {
-        const det = document.getElementById('spDetails').value, ph = document.getElementById('spPhone').value, 
-              from = document.getElementById('spFrom').value, to = document.getElementById('spTo').value;
-        if(!det || !ph) return alert("اكتب التفاصيل!");
-        let msg = `📦 *طلب شحن خاص*\n📝 الحاجة: ${det}\n🏠 من: ${from}\n📍 إلى: ${to}\n📞 المستلم: ${ph}`;
-        await db.collection("orders").add({ n: "شحن خاص", p: ph, sp: det, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+    async function updateStatus(id, status) {
+        await db.collection("orders").doc(id).update({ status: status });
+        alert(status === 'done' ? "تمت الموافقة والحفظ في سجل العميل" : "تم إلغاء الطلب");
     }
 
-    function deleteDoc(col, id) { if(confirm("أكيد حذف؟")) db.collection(col).doc(id).delete(); }
+    async function uploadProduct() {
+        const title = document.getElementById('newPTitle').value, cat = document.getElementById('newPCat').value, file = document.getElementById('newPImg').files[0];
+        if(!title || !file) return alert("اختار صورة واسم");
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = async (e) => {
+            await db.collection("products").add({ title, cat, img: e.target.result, createdAt: new Date() });
+            alert("تم الحفظ");
+        }
+    }
+
+    async function addCategory() {
+        const name = document.getElementById('newCatName').value;
+        if(name) await db.collection("categories").add({ name });
+    }
+
+    function deleteDoc(col, id) { if(confirm("حذف؟")) db.collection(col).doc(id).delete(); }
 </script>
 </body>
 </html>
