@@ -233,10 +233,12 @@
     async function checkLoyalty(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "done").get();
-            userOrdersCount = snap.size;
+            let totalDone = snap.size;
+            userOrdersCount = totalDone % 10; 
+            
             document.getElementById('loyaltyStatus').style.display = 'block';
-            if(userOrdersCount >= 9) {
-                document.getElementById('loyaltyMsg').innerHTML = "🎊 مبروك! عندك 9 أوردرات ناجحة. فاضلك 0 للهدية!<br>أوردرك العاشر التوصيل مجاناً 🎁";
+            if(userOrdersCount === 9) {
+                document.getElementById('loyaltyMsg').innerHTML = "🎊 مبروك! هذا هو أوردرك العاشر.<br>التوصيل مجاناً بالكامل! 🎁";
                 document.getElementById('loyaltyMsg').style.color = "var(--success)";
             } else {
                 document.getElementById('loyaltyMsg').innerText = `عندك ${userOrdersCount} أوردرات ناجحة. فاضلك ${9-userOrdersCount} للهدية!`;
@@ -245,61 +247,48 @@
         }
     }
 
-    // تنسيق الرسالة الموحد
     function formatWhatsAppHeader() {
         return `*✨ أوردر جديد - نجدة أوردر ✨*\n*بواسطة: مصطفى حجازي ⚡*\n━━━━━━━━━━━━━━\n\n`;
     }
 
     function formatLoyaltyFooter() {
-        if (userOrdersCount >= 9) {
+        if (userOrdersCount === 9) {
             return `\n\n*10Mostafa-Hegazy10*\n*مبروك الاوردر دا توصيله مجانا علشان دا عاشر اوردر ليك* 🎁`;
         }
         return "";
     }
 
     async function confirmFullOrder() {
-        const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
+        const nInput = document.getElementById('uName'), pInput = document.getElementById('uPhone'), aInput = document.getElementById('uAddress');
+        const n = nInput.value, p = pInput.value, a = aInput.value;
+        
         if(!n || !p || cart.length === 0) return alert("كمل بياناتك!");
         
         let itemsMsg = cart.map(i => `- ${i.t} (${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
-        
-        let finalMsg = formatWhatsAppHeader() + 
-                       `*📦 محتويات السلة:*\n${itemsMsg}\n\n` +
-                       `*👤 صاحب الأوردر:*\n🔸 الاسم: ${n}\n📞 التليفون: ${p}\n🏠 العنوان: ${a}` + 
-                       formatLoyaltyFooter();
+        let finalMsg = formatWhatsAppHeader() + `*📦 محتويات السلة:*\n${itemsMsg}\n\n` + `*👤 صاحب الأوردر:*\n🔸 الاسم: ${n}\n📞 التليفون: ${p}\n🏠 العنوان: ${a}` + formatLoyaltyFooter();
 
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
+        
         cart = []; renderCart();
+        nInput.value = ""; pInput.value = ""; aInput.value = "";
+        document.getElementById('loyaltyStatus').style.display = 'none';
     }
 
     async function sendSpecialOrder() {
-        const details = document.getElementById('spDetails').value;
-        const from = document.getElementById('spFrom').value;
-        const to = document.getElementById('spTo').value;
-        const phone = document.getElementById('spPhone').value;
-        const sName = document.getElementById('spSenderName').value;
-        const sPhone = document.getElementById('spSenderPhone').value;
+        const dIn = document.getElementById('spDetails'), fIn = document.getElementById('spFrom'), tIn = document.getElementById('spTo'), pIn = document.getElementById('spPhone'), snIn = document.getElementById('spSenderName'), spIn = document.getElementById('spSenderPhone');
+        
+        if(!dIn.value || !fIn.value || !tIn.value || !pIn.value || !snIn.value || !spIn.value) return alert("من فضلك كمل كل البيانات");
 
-        if(!details || !from || !to || !phone || !sName || !sPhone) return alert("من فضلك كمل كل البيانات");
+        let finalMsg = formatWhatsAppHeader() + `*1️⃣ توصيل خاص 🛵*\nالطلب: ${dIn.value}\nمن: ${fIn.value}\nالمستلم: ${tIn.value}\nتليفونه: ${pIn.value}\n----------\n\n*👤 صاحب الأوردر:*\n🔸 الاسم: ${snIn.value}\n📞 التليفون: ${spIn.value}` + formatLoyaltyFooter();
 
-        let finalMsg = formatWhatsAppHeader() +
-                       `*1️⃣ توصيل خاص 🛵*\n` +
-                       `الطلب: ${details}\n` +
-                       `من: ${from}\n` +
-                       `المستلم: ${to}\n` +
-                       `تليفونه: ${phone}\n` +
-                       `----------\n\n` +
-                       `*👤 صاحب الأوردر:*\n` +
-                       `🔸 الاسم: ${sName}\n` +
-                       `📞 التليفون: ${sPhone}` +
-                       formatLoyaltyFooter();
-
-        await db.collection("orders").add({ n: sName, p: sPhone, items: [{t: "توصيل خاص", q: details}], status: "pending", createdAt: new Date() });
+        await db.collection("orders").add({ n: snIn.value, p: spIn.value, items: [{t: "توصيل خاص", q: dIn.value}], status: "pending", createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
+
+        dIn.value = ""; fIn.value = ""; tIn.value = ""; pIn.value = ""; snIn.value = ""; spIn.value = "";
+        document.getElementById('loyaltyStatus').style.display = 'none';
     }
 
-    // الإدارة
     function loadOrders() {
         db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
             let h = '';
