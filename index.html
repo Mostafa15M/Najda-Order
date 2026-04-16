@@ -2,279 +2,175 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nagda Order Elite | مصطفى حجازي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم نجدة أوردر - Nagda Order</title>
     
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        :root {
-            --accent: #00f2ff; --bg: #030712; --card: #111827;
-            --text: #f9fafb; --dim: #9ca3af; --neon-pink: #ff007a;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); padding-bottom: 120px; overflow-x: hidden; }
-
-        header { padding: 40px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo h1 { font-size: 2.2rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hegazy-tag { color: var(--accent); font-weight: 900; font-size: 0.9rem; margin-top: 5px; }
-
-        .hero-action { 
-            margin: 20px; padding: 25px; border-radius: 24px; 
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            border: 1px solid rgba(0, 242, 255, 0.2); cursor: pointer;
-        }
-
-        .cats-bar { display: flex; gap: 12px; overflow-x: auto; padding: 20px; scrollbar-width: none; }
-        .pill { 
-            padding: 10px 28px; background: var(--card); border-radius: 50px; 
-            font-size: 0.9rem; font-weight: 700; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .pill.active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .p-card { background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
-        .p-card img { width: 100%; height: 160px; object-fit: cover; }
-        .p-card-info { padding: 15px; text-align: center; }
-
-        .btn-main { 
-            width: 100%; padding: 14px; border-radius: 14px; border: none; 
-            font-weight: 900; cursor: pointer; background: var(--accent); color: #000;
-        }
-
-        .bottom-nav { 
-            position: fixed; bottom: 25px; left: 20px; right: 20px; 
-            background: rgba(17, 24, 39, 0.85); backdrop-filter: blur(20px);
-            border-radius: 24px; display: flex; justify-content: space-around; padding: 18px;
-            border: 1px solid rgba(255,255,255,0.1); z-index: 2000;
-        }
-        .nav-item { color: var(--dim); font-size: 0.85rem; font-weight: 700; cursor: pointer; position: relative; }
-        .nav-item.active { color: var(--accent); }
-        .badge { 
-            position: absolute; top: -12px; right: -12px; background: var(--neon-pink); 
-            color: #fff; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .modal { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 3000; align-items: flex-end; justify-content: center;
-        }
-        .modal-content { 
-            background: var(--card); width: 100%; border-radius: 32px 32px 0 0; padding: 35px;
-            border-top: 3px solid var(--accent); animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        input, select, textarea { 
-            width: 100%; padding: 16px; border-radius: 16px; background: #000;
-            border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 15px; outline: none;
-        }
-
-        .admin-box { background: #1f2937; padding: 25px; border-radius: 24px; margin-bottom: 30px; border: 1px dashed var(--accent); }
-        .admin-item { background: #000; padding: 15px; margin-top: 10px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
+        :root { --main-color: #00adb5; --bg-dark: #121212; --card-bg: #1e1e1e; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 20px; }
+        h2 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
+        .container { max-width: 600px; margin: auto; }
+        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; box-sizing: border-box; }
+        input, select { background: #252525; color: white; }
+        button { cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
+        .save-btn { background-color: var(--main-color); color: white; }
+        .save-btn:hover { background-color: #008f96; }
+        .delete-btn { background-color: #ff4d4d; color: white; width: auto; padding: 5px 15px; }
+        .product-item { background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+        .product-info { display: flex; align-items: center; gap: 15px; }
+        .product-img { width: 60px; height: 60px; object-fit: cover; border-radius: 5px; background: #444; }
+        .loader { color: #888; text-align: center; }
     </style>
 </head>
 <body>
 
-    <header onclick="adminCheck()">
-        <div class="logo">
-            <h1>نجدة<span>.</span>ORDER</h1>
-            <p class="hegazy-tag">MOSTAFA HEGAZY</p>
-        </div>
-    </header>
+<div class="container">
+    <h2>🚀 إضافة منتج لـ نجدة أوردر</h2>
+    <div class="card">
+        <input type="text" id="pName" placeholder="اسم المنتج (مثلاً: بصل أحمر)">
+        <input type="number" id="pPrice" placeholder="السعر (ج.م)">
+        
+        <select id="pUnit">
+            <option value="كيلو">كيلو</option>
+            <option value="قطعة">قطعة</option>
+            <option value="ربطة">ربطة</option>
+            <option value="كرتونة">كرتونة</option>
+        </select>
 
-    <div id="shopPage" class="page">
-        <div class="hero-action" onclick="openSpecial()">
-            <h3 style="color:#fff">🚀 مشوار نجدة الخاص</h3>
-            <p style="color:var(--dim); font-size: 0.85rem;">وصل أي طرد لأي مكان</p>
-        </div>
-        <div class="cats-bar" id="catsBar"></div>
-        <div id="loading" style="text-align:center; padding:20px; color:var(--accent);">جاري التحميل من جوجل...</div>
-        <div class="grid" id="shopGrid"></div>
+        <input type="text" id="pCategory" placeholder="القسم (مثلاً: خضروات)">
+        
+        <label style="font-size: 12px; color: #aaa;">صورة المنتج (بتتصغر تلقائي):</label>
+        <input type="file" id="pImage" accept="image/*">
+        
+        <button class="save-btn" id="saveBtn" onclick="handleSave()">حفظ في جوجل ☁️</button>
     </div>
 
-    <div id="cartPage" class="page" style="display:none; padding:20px;">
-        <h2 style="margin-bottom:25px; font-weight: 900;">قائمة طلباتك 🛒</h2>
-        <div id="cartList"></div>
-        <div id="checkoutForm" style="display:none; margin-top:30px;">
-            <input type="text" id="uName" placeholder="الاسم بالكامل">
-            <input type="tel" id="uPhone" placeholder="رقم الموبايل">
-            <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
-            <button class="btn-main" style="padding:20px;" onclick="completeOrder()">إرسال الطلب واتساب ✅</button>
-        </div>
+    <h2>📦 المنتجات الموجودة (مسح وتعديل)</h2>
+    <div id="productsDisplay">
+        <p class="loader">جارِ جلب المنتجات من السيرفر...</p>
     </div>
+</div>
 
-    <div id="adminPage" class="page" style="display:none; padding:20px;">
-        <h2 style="color:var(--accent); margin-bottom:25px;">لوحة التحكم ⚙️</h2>
-        <div class="admin-box">
-            <h4>📁 الأقسام</h4>
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <input type="text" id="newCatName" placeholder="قسم جديد">
-                <button class="btn-main" style="width:100px;" onclick="addCategory()">إضافة</button>
-            </div>
-            <div id="adminCatsList" style="margin-top:15px;"></div>
-        </div>
-        <div class="admin-box">
-            <h4>🍕 إضافة منتج</h4>
-            <input type="text" id="pTitle" placeholder="اسم الصنف">
-            <input type="file" accept="image/*" onchange="imgProcess(this)">
-            <select id="pUnit"><option value="كيلو">كيلو</option><option value="قطعة">قطعة</option></select>
-            <select id="pCatSelect"></select>
-            <label style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-                <input type="checkbox" id="pAllowPrice"> تفعيل "الطلب بالسعر"
-            </label>
-            <button class="btn-main" onclick="saveProduct()">حفظ في جوجل</button>
-        </div>
-        <div id="adminProductList"></div>
-    </div>
+<script>
+    // إعدادات Firebase الخاصة بمشروعك
+    const firebaseConfig = {
+        apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY",
+        authDomain: "nagdaorder.firebaseapp.com",
+        projectId: "nagdaorder",
+        storageBucket: "nagdaorder.firebasestorage.app",
+        messagingSenderId: "99058164922",
+        appId: "1:99058164922:web:7063d1686dc82a7ac30e83"
+    };
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" id="btnShop" onclick="nav('shop')">🏠 السوق</div>
-        <div class="nav-item" id="btnCart" onclick="nav('cart')">🛒 السلة <div id="badge" class="badge" style="display:none">0</div></div>
-        <div class="nav-item" id="btnAdmin" style="display:none" onclick="nav('admin')">⚙️ الإدارة</div>
-    </nav>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-    <div class="modal" id="modal">
-        <div class="modal-content">
-            <h2 id="mTitle" style="color:var(--accent); margin-bottom:20px;"></h2>
-            <div id="stdFields">
-                <div style="text-align:center; font-size:2.5rem; color:var(--accent); font-weight:900;" id="qtyText">0.25 كيلو</div>
-                <input type="range" id="qtySlider" min="0.25" max="10" step="0.25" oninput="handleSlider(this.value)">
-                <div id="priceSection" style="display:none;"><input type="text" id="manualQty" placeholder="بمبلغ كام؟"></div>
-                <input type="text" id="mSource" placeholder="من مكان محدد؟">
-            </div>
-            <div id="spcFields" style="display:none;">
-                <textarea id="mDesc" placeholder="تفاصيل المشوار.."></textarea>
-                <input type="text" id="mFrom" placeholder="منين؟">
-                <input type="text" id="mTo" placeholder="لفين؟">
-            </div>
-            <button class="btn-main" onclick="confirmAdd()">إضافة للسلة</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--dim); margin-top:20px;">إلغاء</button>
-        </div>
-    </div>
+    // دالة سحرية لضغط الصورة عشان جوجل ما يرفضهاش
+    async function processImage(file) {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 300; 
+                    const scale = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.6)); // جودة 60% عشان الحجم يبقى صغير
+                };
+            };
+        });
+    }
 
-    <script>
-        // --- بياناتك من الصورة ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY",
-            authDomain: "nagdaorder.firebaseapp.com",
-            projectId: "nagdaorder",
-            storageBucket: "nagdaorder.firebasestorage.app",
-            messagingSenderId: "99058164922",
-            appId: "1:99058164922:web:7063d1686dc82a7ac30e83"
-        };
+    // حفظ المنتج
+    async function handleSave() {
+        const name = document.getElementById('pName').value;
+        const price = document.getElementById('pPrice').value;
+        const unit = document.getElementById('pUnit').value;
+        const category = document.getElementById('pCategory').value;
+        const imageFile = document.getElementById('pImage').files[0];
+        const btn = document.getElementById('saveBtn');
 
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-
-        let products = [];
-        let cats = JSON.parse(localStorage.getItem('nagda_cats')) || ['الكل', 'مطاعم', 'خضروات', 'بقالة'];
-        let cart = [];
-        let tempImg = "";
-        let selectedItem = null;
-        let adminClicks = 0;
-
-        async function fetchProducts() {
-            document.getElementById('loading').style.display = 'block';
-            try {
-                const snapshot = await db.collection("products").orderBy("createdAt", "desc").get();
-                products = [];
-                snapshot.forEach(doc => products.push({id: doc.id, ...doc.data()}));
-                renderShop();
-            } catch(e) { console.error(e); }
-            document.getElementById('loading').style.display = 'none';
+        if (!name || !price) {
+            alert("يا درش لازم تكتب الاسم والسعر!");
+            return;
         }
 
-        async function saveProduct() {
-            const t = document.getElementById('pTitle').value;
-            const c = document.getElementById('pCatSelect').value;
-            if(!t || !tempImg) return alert("أكمل البيانات");
-            
-            try {
-                await db.collection("products").add({ 
-                    title: t, cat: c, img: tempImg, 
-                    unit: document.getElementById('pUnit').value, 
-                    allowPrice: document.getElementById('pAllowPrice').checked,
-                    createdAt: new Date()
-                });
-                alert("تم الحفظ في جوجل! ✅");
-                fetchProducts();
-            } catch(e) { alert("تأكد من تفعيل Firestore في جوجل: " + e.message); }
-        }
+        btn.disabled = true;
+        btn.innerText = "جاري الحفظ...";
 
-        async function deleteProduct(id) {
-            if(confirm("حذف نهائي؟")) {
-                await db.collection("products").doc(id).delete();
-                fetchProducts();
+        try {
+            let finalImg = "";
+            if (imageFile) {
+                finalImg = await processImage(imageFile);
             }
-        }
 
-        function nav(id) {
-            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-            document.getElementById(id + 'Page').style.display = 'block';
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('btn' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
-            if(id === 'admin') renderAdmin();
-            if(id === 'cart') renderCart();
-        }
-
-        function renderShop(f = 'الكل') {
-            document.getElementById('catsBar').innerHTML = cats.map(c => `<div class="pill ${f===c?'active':''}" onclick="renderShop('${c}')">${c}</div>`).join('');
-            const grid = document.getElementById('shopGrid'); grid.innerHTML = "";
-            products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
-                grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-info"><h4>${p.title}</h4><button class="btn-main" onclick="openModal(${JSON.stringify(p).replace(/"/g, '&quot;')})">اطلب</button></div></div>`;
+            await db.collection("products").add({
+                name: name,
+                price: price,
+                unit: unit,
+                category: category || "عام",
+                img: finalImg,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
+
+            alert("تم الحفظ في قلب جوجل بنجاح! ✅");
+            document.getElementById('pName').value = "";
+            document.getElementById('pPrice').value = "";
+            document.getElementById('pImage').value = "";
+        } catch (error) {
+            alert("حصل غلط: " + error.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "حفظ في جوجل ☁️";
         }
+    }
 
-        function completeOrder() {
-            const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddr').value;
-            if(!n || !p || !a) return alert("أكمل بيانات التوصيل");
-
-            let msg = `*✨ طلب جديد من نجدة أوردر ✨*%0A*بواسطة: مصطفى حجازي ⚡*%0A━━━━━━━━━━━━━━%0A%0A`;
-            cart.forEach((i, idx) => {
-                msg += i.type === 'مشوار' ? `*${idx+1}️⃣ مشوار خاص 🚀*%0A📝 التفاصيل: ${i.desc}%0A` : `*${idx+1}️⃣ منتج 📦*%0A🔹 ${i.name}%0A⚖️ الكمية: ${i.qty}%0A📍 من: ${i.source}%0A`;
-                msg += `----------------------------%0A`;
-            });
-            msg += `%0A*👤 العميل:* ${n}%0A📞 الهاتف: ${p}%0A🏠 العنوان: ${a}`;
-            
-            window.open(`https://wa.me/201140293628?text=${msg}`);
-            cart = []; updateBadge(); nav('shop');
-        }
-
-        function adminCheck() { adminClicks++; if(adminClicks > 5) { if(prompt("رمز الدخول:")==="135790") { document.getElementById('btnAdmin').style.display='block'; nav('admin'); } adminClicks=0; } }
-        function imgProcess(el) { const r = new FileReader(); r.onload = (e) => tempImg = e.target.result; r.readAsDataURL(el.files[0]); }
-        function addCategory() { let n = document.getElementById('newCatName').value; if(n) { cats.push(n); localStorage.setItem('nagda_cats', JSON.stringify(cats)); renderAdmin(); } }
-        function openModal(item) { selectedItem = item; document.getElementById('mTitle').innerText = item.title; document.getElementById('modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('modal').style.display = 'none'; }
-        function handleSlider(v) { document.getElementById('qtyText').innerText = v + " " + selectedItem.unit; }
-        function updateBadge() { document.getElementById('badge').innerText = cart.length; document.getElementById('badge').style.display = cart.length ? 'flex' : 'none'; }
+    // عرض المنتجات والمسح (Live Update)
+    db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+        const display = document.getElementById('productsDisplay');
+        display.innerHTML = "";
         
-        function confirmAdd() { 
-            let qty = document.getElementById('manualQty').value || document.getElementById('qtyText').innerText;
-            cart.push({ name: selectedItem?.title || "مشوار خاص", qty: qty, source: document.getElementById('mSource').value || "أي مكان", type: selectedItem ? 'منتج' : 'مشوار', desc: document.getElementById('mDesc').value }); 
-            closeModal(); updateBadge(); 
+        if (snapshot.empty) {
+            display.innerHTML = "<p style='text-align:center;'>مفيش منتجات لسه..</p>";
+            return;
         }
 
-        function renderAdmin() {
-            document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-            document.getElementById('adminProductList').innerHTML = products.map(p => `
-                <div class="admin-item"><span>${p.title}</span><span style="color:red" onclick="deleteProduct('${p.id}')">حذف</span></div>
-            `).join('');
-        }
-        
-        function renderCart() {
-            const list = document.getElementById('cartList');
-            if(!cart.length) { list.innerHTML = "السلة فارغة"; document.getElementById('checkoutForm').style.display='none'; return; }
-            document.getElementById('checkoutForm').style.display='block';
-            list.innerHTML = cart.map((i, idx) => `<div class="admin-item"><div>${i.name || 'مشوار'} - ${i.qty}</div><div onclick="cart.splice(${idx},1); renderCart(); updateBadge();">❌</div></div>`).join('');
-        }
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            display.innerHTML += `
+                <div class="product-item">
+                    <div class="product-info">
+                        ${data.img ? `<img src="${data.img}" class="product-img">` : `<div class="product-img"></div>`}
+                        <div>
+                            <strong>${data.name}</strong><br>
+                            <span style="color:var(--main-color)">${data.price} ج.م / ${data.unit}</span>
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteItem('${doc.id}')">مسح 🗑️</button>
+                </div>
+            `;
+        });
+    });
 
-        function openSpecial() { selectedItem = null; document.getElementById('mTitle').innerText = "مشوار خاص"; document.getElementById('stdFields').style.display='none'; document.getElementById('spcFields').style.display='block'; document.getElementById('modal').style.display='flex'; }
+    // دالة المسح
+    function deleteItem(id) {
+        if (confirm("هتمسح المنتج ده خالص من السيرفر؟")) {
+            db.collection("products").doc(id).delete()
+            .then(() => console.log("Deleted"))
+            .catch(err => alert("متمسحش ليه؟: " + err.message));
+        }
+    }
+</script>
 
-        fetchProducts();
-    </script>
 </body>
 </html>
