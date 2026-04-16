@@ -31,19 +31,21 @@
         .p-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #2c2c2e; position: relative; }
         .p-card img { width: 100%; height: 110px; object-fit: cover; }
         
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 4000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; border: 1px solid var(--main); box-shadow: 0 0 20px rgba(0,210,255,0.2); }
+        /* Modal Style */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 4000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 350px; text-align: center; border: 1px solid var(--main); }
         .qty-btns { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 15px 0; }
-        .qty-btn { background: #333; color: white; border: none; width: 45px; height: 45px; border-radius: 12px; font-size: 1.4rem; cursor: pointer; }
+        .qty-btn { background: #333; color: white; border: none; width: 40px; height: 40px; border-radius: 10px; font-size: 1.2rem; cursor: pointer; }
 
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #333; background: #2c2c2e; color: #fff; font-size: 0.9rem; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
         .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; }
         
-        .cat-item { background: #222; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-right: 3px solid var(--main); }
+        .order-card { background: var(--card); border-radius: 15px; padding: 12px; margin-bottom: 12px; border-right: 4px solid var(--main); }
+        .cat-item { display: flex; justify-content: space-between; background: #222; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-size: 0.9rem; }
         .hidden-admin { display: none !important; }
         .admin-mode .hidden-admin { display: block !important; }
-        .delete-p-btn { position: absolute; top: 5px; left: 5px; background: var(--danger); border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; z-index: 10; }
+        .delete-p-btn { position: absolute; top: 5px; left: 5px; background: var(--danger); border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; font-size: 0.8rem; z-index: 10; }
         .admin-mode .delete-p-btn { display: flex; }
     </style>
 </head>
@@ -56,15 +58,15 @@
 
 <div id="qtyModal" class="modal">
     <div class="modal-content">
-        <h3 id="modalTitle" style="color: var(--main);">اسم المنتج</h3>
+        <h3 id="modalTitle" style="margin-bottom:10px;">اسم المنتج</h3>
         <div class="qty-btns">
             <button class="qty-btn" onclick="changeQty(-1)">-</button>
-            <span id="currentQty" style="font-size: 1.8rem; font-weight: 900;">1</span>
+            <span id="currentQty" style="font-size: 1.5rem; font-weight: 900; color: var(--main);">1</span>
             <button class="qty-btn" onclick="changeQty(1)">+</button>
         </div>
-        <textarea id="pNote" placeholder="ملاحظات (مثلاً: سبايسي، بدون بصل، عاوزه من محل معين..)"></textarea>
+        <textarea id="pNote" placeholder="ملاحظات (سبايسي، عاوزه منين.. إلخ)"></textarea>
         <button class="btn btn-main" onclick="confirmAdd()">إضافة للسلة 🛒</button>
-        <p onclick="closeModal()" style="margin-top:15px; color:#8e8e93; font-size:0.85rem; cursor:pointer;">إلغاء</p>
+        <p onclick="closeModal()" style="margin-top:15px; color:#8e8e93; font-size:0.8rem; cursor:pointer;">إلغاء</p>
     </div>
 </div>
 
@@ -73,7 +75,7 @@
 </div>
 
 <div id="special" class="page">
-    <h3 style="text-align:center; margin: 15px 0;">📦 طلب توصيل خاص (شحن)</h3>
+    <h3 style="text-align:center; margin: 15px 0;">📦 طلب توصيل خاص</h3>
     <input type="text" id="spDetails" placeholder="إيه الحاجة اللي هنوصلها؟">
     <input type="text" id="spFrom" placeholder="مكان الاستلام (منين؟)">
     <input type="text" id="spTo" placeholder="مكان التسليم (لفين؟)">
@@ -84,20 +86,23 @@
 <div id="cart" class="page">
     <h3 style="margin: 15px 0;">🛒 السلة</h3>
     <div id="cartList" style="margin-bottom: 15px;"></div>
-    <input type="text" id="uName" placeholder="الاسم بالكامل">
+    <input type="text" id="uName" placeholder="الاسم">
     <input type="text" id="uAddress" placeholder="العنوان بالتفصيل">
-    <input type="tel" id="uPhone" placeholder="رقم الموبايل">
+    <input type="tel" id="uPhone" placeholder="رقم الموبايل" oninput="checkUserHistory(this.value)">
+    <div id="loyaltySection" style="display:none; background:#1c1c1e; padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid #333; text-align: center;">
+        <p id="loyaltyText" style="font-size:0.85rem; font-weight: bold;"></p>
+    </div>
     <button class="btn btn-main" onclick="confirmFullOrder()">تأكيد وإرسال واتساب 💬</button>
 </div>
 
 <div id="admin-orders" class="page">
-    <h3 style="text-align:center; margin: 15px 0; color: var(--main);">📈 الطلبات الواردة</h3>
+    <h3 style="text-align:center; margin: 15px 0; color: var(--main);">📈 الطلبات الجديدة</h3>
     <div id="ordersDashboard"></div>
 </div>
 
 <nav>
     <a href="#" class="nav-link active" onclick="go('home', this)"><i>🏠</i><span>الرئيسية</span></a>
-    <a href="#" class="nav-link" onclick="go('special', this)"><i>📦</i><span>توصيل خاص</span></a>
+    <a href="#" class="nav-link" onclick="go('special', this)"><i>📦</i><span>توصيل</span></a>
     <a href="#" class="nav-link" onclick="go('cart', this)"><i>🛒</i><span>السلة</span></a>
     <a href="#" class="nav-link hidden-admin" onclick="go('admin-orders', this)"><i>🔔</i><span>طلبات</span></a>
 </nav>
@@ -107,7 +112,7 @@
     firebase.initializeApp(firebaseConfig); 
     const db = firebase.firestore();
 
-    let cart = [], tempProduct = "", currentQtyValue = 1;
+    let cart = [], tempProduct = "", currentQtyValue = 1, ordersCount = 0;
 
     function toggleAdmin() { if(prompt("كود الإدارة؟") === "135790") document.body.classList.toggle('admin-mode'); }
 
@@ -119,7 +124,19 @@
         if(id === 'admin-orders') renderOrders();
     }
 
-    // جلب المنتجات من الفايربيز
+    // فحص عدد الطلبات السابقة للنقاط
+    async function checkUserHistory(phone) {
+        if(phone.length >= 11) {
+            const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "confirmed").get();
+            ordersCount = snap.size;
+            const sec = document.getElementById('loyaltySection');
+            const txt = document.getElementById('loyaltyText');
+            sec.style.display = 'block';
+            txt.innerHTML = ordersCount >= 9 ? "🎁 مبروك! ده الأوردر العاشر (هدية)" : `عدد أوردراتك السابقة: ${ordersCount}`;
+            txt.style.color = ordersCount >= 9 ? "var(--success)" : "#fff";
+        }
+    }
+
     db.collection("products").onSnapshot(s => {
         let h = '';
         s.forEach(d => {
@@ -127,9 +144,9 @@
             h += `<div class="p-card">
                     <div class="delete-p-btn" onclick="deleteDoc('products','${d.id}')">✕</div>
                     <img src="${p.img}">
-                    <div style="padding:10px; text-align:center;">
-                        <p style="font-size:0.9rem; margin-bottom:8px; font-weight:bold;">${p.title}</p>
-                        <button class="btn btn-main" style="padding:8px; font-size:0.8rem;" onclick="openQtyModal('${p.title}')">اطلب الآن</button>
+                    <div style="padding:8px; text-align:center;">
+                        <p style="font-size:0.85rem; margin-bottom:5px;">${p.title}</p>
+                        <button class="btn btn-main" style="padding:6px; font-size:0.75rem;" onclick="openQtyModal('${p.title}')">إضافة</button>
                     </div>
                 </div>`;
         });
@@ -165,23 +182,52 @@
             <div class="cat-item">
                 <div>
                     <b>${i.t}</b> (العدد: ${i.q})
-                    <p style="font-size:0.75rem; color:var(--main); margin-top:4px;">${i.n ? '💬 ملاحظة: ' + i.n : ''}</p>
+                    <p style="font-size:0.7rem; color:var(--main);">${i.n ? '📝 ' + i.n : ''}</p>
                 </div>
-                <span onclick="cart.splice(${idx},1);renderCart()" style="color:var(--danger); cursor:pointer; font-weight:bold; padding:10px;">✕</span>
+                <span onclick="cart.splice(${idx},1);renderCart()" style="color:red; cursor:pointer; padding: 5px;">✕</span>
             </div>
         `).join('');
     }
 
+    async function updateOrderStatus(id, phone) {
+        await db.collection("orders").doc(id).update({ status: "confirmed" });
+        const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "confirmed").get();
+        if(snap.size >= 10) {
+            const batch = db.batch();
+            snap.forEach(doc => batch.update(doc.ref, { status: "archived" }));
+            await batch.commit();
+            alert("تم إتمام الأوردر العاشر وتصفير عداد العميل! 🎁");
+        } else {
+            alert("تم التأكيد! رصيد العميل: " + snap.size);
+        }
+    }
+
+    function renderOrders() {
+        db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
+            let h = '';
+            s.forEach(d => {
+                const o = d.data();
+                h += `<div class="order-card">
+                    <p>👤 <b>${o.n}</b> | 📞 ${o.p}</p>
+                    <p style="font-size:0.8rem; color:var(--main); margin-top:5px;">📦 ${o.items ? o.items.map(i=>i.t + ' (' + i.q + ')').join(', ') : o.spDetails}</p>
+                    <div style="display:flex; gap:10px; margin-top:8px;">
+                        <button class="btn" style="background:var(--success); color:#000; padding:8px; flex:1;" onclick="updateOrderStatus('${d.id}', '${o.p}')">تأكيد ✅</button>
+                        <button class="btn" style="background:var(--danger); padding:8px; flex:1;" onclick="deleteDoc('orders','${d.id}')">حذف 🗑️</button>
+                    </div>
+                </div>`;
+            });
+            document.getElementById('ordersDashboard').innerHTML = h || '<p style="text-align:center;">لا توجد طلبات معلقة</p>';
+        });
+    }
+
     async function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
-        if(!n || !p || cart.length === 0) return alert("يا درش كمل بياناتك والطلبات!");
+        if(!n || !p || cart.length === 0) return alert("كمل البيانات!");
         
-        let itemsList = cart.map((i, index) => `${index + 1}- ${i.t} (عدد: ${i.q}) ${i.n ? '\n الملاحظة: ' + i.n : ''}`).join('\n\n');
-        let msg = `⚡ *أوردر جديد من نجدة أوردر*\n\n` +
-                  `👤 *الاسم:* ${n}\n` +
-                  `📞 *الموبايل:* ${p}\n` +
-                  `📍 *العنوان:* ${a}\n\n` +
-                  `📦 *الطلبات:*\n${itemsList}`;
+        let itemsList = cart.map((i, index) => `${index + 1}- ${i.t} (عدد: ${i.q}) ${i.n ? '[' + i.n + ']' : ''}`).join('\n');
+        let giftText = ordersCount >= 9 ? "\n\n🎁 *هذا الطلب العاشر: هدية توصيل مجاني!*" : "";
+        
+        let msg = `⚡ *أوردر جديد*\n👤 الاسم: ${n}\n📞 الهاتف: ${p}\n📍 العنوان: ${a}\n\n📦 الطلبات:\n${itemsList}${giftText}`;
 
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
@@ -191,35 +237,13 @@
     async function sendSpecialOrder() {
         const det = document.getElementById('spDetails').value, ph = document.getElementById('spPhone').value, 
               from = document.getElementById('spFrom').value, to = document.getElementById('spTo').value;
-        
-        if(!det || !ph || !from || !to) return alert("اكتب كل تفاصيل التوصيل!");
-        
-        let msg = `📦 *طلب شحن مستلزمات خاص*\n\n` +
-                  `📝 *الحاجة:* ${det}\n` +
-                  `🏠 *من:* ${from}\n` +
-                  `📍 *إلى:* ${to}\n` +
-                  `📞 *رقم المستلم:* ${ph}`;
-
+        if(!det || !ph || !from || !to) return alert("اكمل البيانات!");
+        let msg = `📦 *شحن خاص*\n📝 الحاجة: ${det}\n🏠 من: ${from}\n📍 إلى: ${to}\n📞 رقم المستلم: ${ph}`;
         await db.collection("orders").add({ n: "توصيل خاص", p: ph, spDetails: det, spFrom: from, spTo: to, status: "pending", createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
     }
 
-    function deleteDoc(col, id) { if(confirm("أكيد عاوز تحذف؟")) db.collection(col).doc(id).delete(); }
-
-    function renderOrders() {
-        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
-            let h = '';
-            s.forEach(d => {
-                const o = d.data();
-                h += `<div class="cat-item" style="flex-direction:column; align-items:flex-start; gap:5px;">
-                        <p>👤 <b>${o.n}</b> | 📞 ${o.p}</p>
-                        <p style="font-size:0.8rem; color:var(--main);">📍 ${o.a || 'شحن خاص'}</p>
-                        <button class="btn" style="background:var(--danger); padding:5px; width:60px;" onclick="deleteDoc('orders','${d.id}')">حذف</button>
-                    </div>`;
-            });
-            document.getElementById('ordersDashboard').innerHTML = h || '<p style="text-align:center;">لا يوجد طلبات حالياً</p>';
-        });
-    }
+    function deleteDoc(col, id) { if(confirm("حذف؟")) db.collection(col).doc(id).delete(); }
 </script>
 </body>
 </html>
