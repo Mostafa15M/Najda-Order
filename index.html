@@ -3,194 +3,366 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نجدة أوردر | مصطفى حجازي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>مصطفى حجازي | نجدة أوردر</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --main: #00d2ff; --sec: #9d50bb; --bg: #0a0a0c; --card: #16161a; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background: var(--bg); color: #fff; }
+        :root {
+            --main-color: #00d2ff;
+            --accent-color: #9d50bb;
+            --bg-dark: #0a0a0c;
+            --card-bg: #16161a;
+            --text-gray: #888;
+            --danger: #ff4b2b;
+            --gold: #ffd700;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            line-height: 1.6;
+            padding-bottom: 90px;
+        }
+
+        /* الهيدر الرئيسي */
         header {
-            padding: 15px; text-align: center; background: #000;
-            border-bottom: 2px solid var(--main); position: sticky; top: 0; z-index: 1000;
+            background: #000;
+            padding: 25px 15px;
+            text-align: center;
+            border-bottom: 2px solid var(--main-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
-        .brand-name { font-size: 0.8rem; color: var(--sec); font-weight: bold; letter-spacing: 1px; margin-bottom: 2px; display: block; }
-        .logo-main { font-size: 1.5rem; font-weight: 900; color: var(--main); display: block; line-height: 1.2; }
-        .sub-logo { font-size: 0.85rem; color: #aaa; margin-top: 4px; font-weight: 400; display: block; }
+        .top-name { font-size: 0.9rem; color: var(--accent-color); font-weight: 900; letter-spacing: 3px; display: block; margin-bottom: 5px; }
+        .main-logo { font-size: 1.8rem; font-weight: 900; color: var(--main-color); line-height: 1.1; }
+        .sub-slogan { font-size: 0.85rem; color: var(--text-gray); display: block; margin-top: 5px; }
 
-        /* الأقسام */
-        .cats { display: flex; gap: 10px; overflow-x: auto; padding: 15px; scrollbar-width: none; }
-        .cat-item { 
-            padding: 8px 18px; background: var(--card); border: 1px solid #333; 
-            border-radius: 50px; white-space: nowrap; font-size: 0.8rem;
+        /* شريط العرض والهدية */
+        .promo-banner {
+            background: linear-gradient(90deg, #b8860b, var(--gold), #b8860b);
+            color: #000;
+            padding: 12px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 0.85rem;
+            margin: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
         }
-        .cat-item.active { background: var(--main); color: #000; font-weight: bold; }
+
+        /* التنقل بين الصفحات */
+        .page { display: none; padding: 15px; animation: slideUp 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ستايل الكروت والأزرار */
+        .admin-card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #222;
+        }
+        .admin-card h2 {
+            font-size: 1.2rem;
+            color: var(--main-color);
+            margin-bottom: 20px;
+            border-right: 5px solid var(--accent-color);
+            padding-right: 12px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: 1px solid #333;
+            background: #000;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: none;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .btn-primary { background: linear-gradient(45deg, var(--main-color), var(--accent-color)); color: #fff; }
+        .btn-danger { background: var(--danger); font-size: 0.8rem; padding: 8px 15px; width: auto; color: #fff; }
+        .btn-outline { background: transparent; border: 1px solid var(--main-color); color: var(--main-color); }
 
         /* عرض المنتجات */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
-        .card { 
-            background: var(--card); border-radius: 20px; padding: 10px; 
-            border: 1px solid #222; text-align: center;
-        }
-        .card img { width: 100%; height: 110px; border-radius: 15px; object-fit: cover; }
-        .card h3 { font-size: 0.85rem; margin: 10px 0 5px; height: 35px; overflow: hidden; }
-        .card .price { color: var(--main); font-weight: 900; display: block; margin-bottom: 10px; }
+        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0 20px; scrollbar-width: none; }
+        .cat-item { padding: 8px 22px; background: var(--card-bg); border-radius: 50px; border: 1px solid #333; white-space: nowrap; font-size: 0.85rem; }
+        .cat-item.active { background: var(--main-color); color: #000; font-weight: bold; border-color: var(--main-color); }
 
-        .btn-buy {
-            width: 100%; padding: 12px; border-radius: 12px; border: none;
-            background: linear-gradient(45deg, var(--main), var(--sec));
-            color: #fff; font-weight: bold; cursor: pointer;
-        }
+        .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .p-card { background: var(--card-bg); border-radius: 25px; padding: 12px; border: 1px solid #222; text-align: center; }
+        .p-card img { width: 100%; height: 130px; border-radius: 18px; object-fit: cover; margin-bottom: 10px; }
+        .p-card h3 { font-size: 0.9rem; height: 40px; overflow: hidden; margin-bottom: 5px; }
+        .p-card .price { color: var(--main-color); font-weight: 900; font-size: 1.1rem; display: block; margin-bottom: 10px; }
 
-        #giftBar {
-            background: #ffd700; color: #000; padding: 12px; text-align: center;
-            font-weight: 900; display: none; margin: 10px; border-radius: 10px;
-        }
-
+        /* النافيجيشن السفلي */
         nav {
-            position: fixed; bottom: 0; width: 100%; background: #000;
-            display: flex; justify-content: space-around; padding: 10px;
-            border-top: 1px solid #222; z-index: 1000;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 5px;
+            border-top: 1px solid #222;
+            z-index: 2000;
         }
-        .nav-link { color: #666; text-decoration: none; font-size: 0.75rem; text-align: center; }
-        .nav-link.active { color: var(--main); }
+        .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 0.7rem; font-weight: bold; transition: 0.3s; }
+        .nav-item.active { color: var(--main-color); }
+        .nav-item i { font-size: 1.5rem; display: block; margin-bottom: 4px; }
 
-        .form-box { background: var(--card); padding: 20px; border-radius: 20px; margin: 15px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; }
+        /* صفوف قوائم الإدارة */
+        .list-row {
+            background: #000;
+            padding: 15px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border: 1px solid #1a1a1a;
+        }
+
+        /* سلة التسوق */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #000; border-radius: 10px; margin-bottom: 10px; border-right: 4px solid var(--main-color); }
     </style>
 </head>
 <body>
 
 <header>
-    <span class="brand-name">✨ مصطفى حجازي ✨</span>
-    <span class="logo-main">نجدة أوردر ⚡</span>
-    <span class="sub-logo">توصيل مستلزمات شخصية</span>
+    <span class="top-name">✨ مصطفى حجازي ✨</span>
+    <span class="main-logo">نجدة أوردر ⚡</span>
+    <span class="sub-slogan">توصيل مستلزمات شخصية</span>
 </header>
 
-<div id="giftBar">🎁 أوردر الهدية العاشر! طلبك ده مجاني!</div>
+<div id="home-page" class="page active">
+    <div class="promo-banner">🎁 عرض الـ 10 أوردرات: اطلب 9 والعاشر هدية مجاناً! 🎁</div>
+    <div class="cats-bar" id="catsHome"></div>
+    <div class="products-grid" id="productsHome"></div>
+</div>
 
-<main id="view" style="padding-bottom: 80px;"></main>
+<div id="cart-page" class="page">
+    <div class="admin-card">
+        <h2>🛒 سلة المشتريات</h2>
+        <div id="cartItems"></div>
+        <div id="cartTotal" style="text-align: left; padding: 10px; font-weight: 900; font-size: 1.2rem; color: var(--main-color);"></div>
+        <hr style="border: 0; border-top: 1px solid #333; margin: 15px 0;">
+        <input type="text" id="custName" placeholder="الاسم الكامل">
+        <input type="tel" id="custPhone" placeholder="رقم الموبايل">
+        <textarea id="custAddr" placeholder="العنوان بالتفصيل (مثال: شيبين القناطر - كفر سعد)"></textarea>
+        <button class="btn btn-primary" onclick="confirmOrder()">تأكيد الطلب عبر واتساب ✅</button>
+    </div>
+</div>
+
+<div id="orders-page" class="page">
+    <div class="admin-card">
+        <h2>🔔 الأوردرات الجديدة</h2>
+        <div id="adminOrdersList"></div>
+    </div>
+</div>
+
+<div id="cats-page" class="page">
+    <div class="admin-card">
+        <h2>📂 إضافة قسم جديد</h2>
+        <input type="text" id="newCatTitle" placeholder="مثلاً: مشروبات، بقالة، صيدلية...">
+        <button class="btn btn-primary" onclick="createNewCat()">حفظ القسم الجديد</button>
+    </div>
+    <div class="admin-card">
+        <h2>🛠️ تعديل / حذف الأقسام</h2>
+        <div id="adminCatsList"></div>
+    </div>
+</div>
+
+<div id="products-page" class="page">
+    <div class="admin-card">
+        <h2>🛍️ إضافة منتج للمتجر</h2>
+        <input type="text" id="pTitleInp" placeholder="اسم المنتج">
+        <input type="number" id="pPriceInp" placeholder="السعر">
+        <select id="pCatInp"></select>
+        <label style="font-size: 0.8rem; color: #888; display: block; margin-bottom: 5px;">صورة المنتج:</label>
+        <input type="file" accept="image/*" id="pFileInp" onchange="processImage(this)">
+        <button class="btn btn-primary" onclick="uploadNewProduct()">نشر المنتج الآن</button>
+    </div>
+    <div class="admin-card">
+        <h2>📦 التحكم في المنتجات</h2>
+        <div id="adminProdsList"></div>
+    </div>
+</div>
 
 <nav>
-    <a href="#" class="nav-link active" onclick="go('home')">🏠<br>المتجر</a>
-    <a href="#" class="nav-link" onclick="go('cart')">🛒<br>السلة (<span id="cCount">0</span>)</a>
-    <a href="#" class="nav-link" id="admBtn" style="display:none;" onclick="go('admin')">🛡️<br>الإدارة</a>
+    <a href="javascript:void(0)" class="nav-item active" onclick="navTo('home-page', this)"><i>🏠</i>المتجر</a>
+    <a href="javascript:void(0)" class="nav-item" onclick="navTo('cart-page', this)"><i>🛒</i>السلة</a>
+    <a href="javascript:void(0)" class="nav-item" onclick="navTo('orders-page', this)"><i>🔔</i>الطلبات</a>
+    <a href="javascript:void(0)" class="nav-item" onclick="navTo('cats-page', this)"><i>📂</i>الأقسام</a>
+    <a href="javascript:void(0)" class="nav-item" onclick="navTo('products-page', this)"><i>⚙️</i>المنتجات</a>
 </nav>
 
 <script>
+    // إعدادات Firebase
     const firebaseConfig = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
     firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
 
-    let cart = [], products = [], categories = [];
+    let allProds = [], allCats = [], cart = [], base64Img = "";
 
-    // دخول الإدارة السري
-    let t; document.querySelector('.logo-main').ontouchstart = () => t = setTimeout(() => {
-        if(prompt("Pass?") === "135790") { document.getElementById('admBtn').style.display = 'block'; go('admin'); }
-    }, 2000);
-    document.querySelector('.logo-main').ontouchend = () => clearTimeout(t);
+    function navTo(pageId, el) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        el.classList.add('active');
+    }
 
-    function init() {
-        db.collection("categories").onSnapshot(s => { categories = s.docs.map(d=>({id:d.id, ...d.data()})); });
-        db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => { 
-            products = s.docs.map(d=>({id:d.id, ...d.data()})); 
-            go('home'); 
+    // مزامنة البيانات
+    function startSync() {
+        db.collection("categories").onSnapshot(snap => {
+            allCats = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            renderCatsSystem();
+        });
+        db.collection("products").orderBy("createdAt", "desc").onSnapshot(snap => {
+            allProds = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            renderProdsSystem();
+        });
+        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snap => {
+            renderOrdersSystem(snap.docs.map(d => ({id: d.id, ...d.data()})));
         });
     }
 
-    function go(page) {
-        const v = document.getElementById('view');
-        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-        
-        if(page === 'home') {
-            v.innerHTML = `
-                <div class="cats"><div class="cat-item active">الكل</div>${categories.map(c=>`<div class="cat-item">${c.name}</div>`).join('')}</div>
-                <div class="grid">${products.map(p => `
-                    <div class="card">
-                        <img src="${p.img || 'https://via.placeholder.com/150'}">
-                        <h3>${p.title}</h3>
-                        <span class="price">${p.price || 0} ج.م</span>
-                        <button class="btn-buy" onclick="add('${p.id}')">إضافة 🛒</button>
-                    </div>`).join('')}</div>`;
-        } 
-        else if(page === 'cart') {
-            v.innerHTML = `
-                <div class="form-box">
-                    <h3>🛒 محتويات السلة</h3>
-                    <div id="cartItems" style="margin:15px 0;"></div>
-                    <input type="text" id="uName" placeholder="الاسم">
-                    <input type="tel" id="uPhone" placeholder="رقم الموبايل" onkeyup="check(this.value)">
-                    <input type="text" id="uAddr" placeholder="العنوان">
-                    <button class="btn-buy" onclick="order()">تأكيد الطلب ✅</button>
-                </div>`;
-            renderCart();
+    // ريندر المتجر والأقسام
+    function renderCatsSystem() {
+        const homeBar = document.getElementById('catsHome');
+        const adminList = document.getElementById('adminCatsList');
+        const pSelect = document.getElementById('pCatInp');
+
+        homeBar.innerHTML = `<div class="cat-item active">الكل</div>` + allCats.map(c => `<div class="cat-item">${c.name}</div>`).join('');
+        pSelect.innerHTML = allCats.map(c => `<option>${c.name}</option>`).join('');
+        adminList.innerHTML = allCats.map(c => `
+            <div class="list-row">
+                <span>📂 ${c.name}</span>
+                <div>
+                    <button class="btn-danger" style="background:#ffb100; color:#000; margin-left:5px;" onclick="editCat('${c.id}','${c.name}')">تعديل</button>
+                    <button class="btn-danger" onclick="deleteEntry('categories','${c.id}')">حذف</button>
+                </div>
+            </div>`).join('');
+    }
+
+    function renderProdsSystem() {
+        const homeGrid = document.getElementById('productsHome');
+        const adminGrid = document.getElementById('adminProdsList');
+
+        homeGrid.innerHTML = allProds.map(p => `
+            <div class="p-card">
+                <img src="${p.img || 'https://via.placeholder.com/150'}">
+                <h3>${p.title}</h3>
+                <span class="price">${p.price} ج.م</span>
+                <button class="btn btn-primary" style="padding:8px; font-size:0.8rem;" onclick="addToCart('${p.id}')">إضافة 🛒</button>
+            </div>`).join('');
+
+        adminGrid.innerHTML = allProds.map(p => `
+            <div class="list-row">
+                <span style="font-size:0.8rem;">📦 ${p.title} (${p.price} ج)</span>
+                <button class="btn-danger" onclick="deleteEntry('products','${p.id}')">حذف</button>
+            </div>`).join('');
+    }
+
+    function renderOrdersSystem(orders) {
+        document.getElementById('adminOrdersList').innerHTML = orders.map(o => `
+            <div class="admin-card" style="border-right: 5px solid var(--main-color);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <b>👤 ${o.userName}</b>
+                    <small>${new Date(o.createdAt?.toDate()).toLocaleTimeString('ar-EG')}</small>
+                </div>
+                <p style="font-size:0.85rem;">📞 ${o.userPhone} | 📍 ${o.address}</p>
+                <div style="background:#000; padding:10px; border-radius:10px; margin:10px 0; font-size:0.8rem; border:1px solid #222;">
+                    🛒 الأصناف: ${o.items.join(' + ')}
+                </div>
+                <button class="btn btn-danger" style="width:100%" onclick="deleteEntry('orders','${o.id}')">تم التوصيل ومسح الطلب ✅</button>
+            </div>`).join('');
+    }
+
+    // وظائف العمليات
+    async function createNewCat() {
+        const n = document.getElementById('newCatTitle').value;
+        if(n) { await db.collection("categories").add({name: n}); document.getElementById('newCatTitle').value = ""; }
+    }
+
+    async function editCat(id, old) {
+        const n = prompt("تعديل اسم القسم:", old);
+        if(n) await db.collection("categories").doc(id).update({name: n});
+    }
+
+    function processImage(input) {
+        const r = new FileReader(); r.onload = () => base64Img = r.result; r.readAsDataURL(input.files[0]);
+    }
+
+    async function uploadNewProduct() {
+        const t = document.getElementById('pTitleInp').value, p = document.getElementById('pPriceInp').value, c = document.getElementById('pCatInp').value;
+        if(t && p && base64Img) {
+            await db.collection("products").add({ title: t, price: p, cat: c, img: base64Img, createdAt: new Date() });
+            alert("تم النشر!");
+            document.getElementById('pTitleInp').value = ""; document.getElementById('pPriceInp').value = "";
         }
-        else if(page === 'admin') {
-            v.innerHTML = `<div class="form-box">
-                <h3>🛡️ إضافة منتج جديد</h3>
-                <input type="text" id="pTitle" placeholder="اسم المنتج">
-                <input type="number" id="pPrice" placeholder="السعر">
-                <select id="pCat">${categories.map(c=>`<option>${c.name}</option>`).join('')}</select>
-                <input type="file" id="pImg" onchange="encode(this)">
-                <button class="btn-buy" onclick="saveP()">حفظ المنتج</button>
-                <div id="ordersList" style="margin-top:20px;"></div>
-            </div>`;
-            renderOrders();
-        }
     }
 
-    function add(id) { cart.push(products.find(p=>p.id===id)); document.getElementById('cCount').innerText = cart.length; }
-
-    function renderCart() {
-        document.getElementById('cartItems').innerHTML = cart.map((i,x)=>`<div style="padding:10px; background:#000; margin-bottom:5px; border-radius:10px; border:1px solid #333;">${i.title} <span onclick="cart.splice(${x},1); go('cart')" style="color:red; float:left;">❌</span></div>`).join('');
+    function addToCart(id) {
+        const item = allProds.find(p => p.id === id);
+        cart.push(item);
+        alert("تمت الإضافة للسلة!");
+        updateCartUI();
     }
 
-    async function check(ph) {
-        if(ph.length >= 11) {
-            const d = await db.collection("users_stats").doc(ph).get();
-            document.getElementById('giftBar').style.display = (d.exists && d.data().count >= 9) ? 'block' : 'none';
-        }
+    function updateCartUI() {
+        const container = document.getElementById('cartItems');
+        container.innerHTML = cart.map((item, idx) => `
+            <div class="cart-item">
+                <span>${item.title}</span>
+                <b>${item.price} ج.م</b>
+                <button onclick="cart.splice(${idx},1); updateCartUI()" style="background:none; border:none; color:red;">❌</button>
+            </div>`).join('');
+        const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+        document.getElementById('cartTotal').innerText = "الإجمالي: " + total + " ج.م";
     }
 
-    async function order() {
-        const n = document.getElementById('uName').value, ph = document.getElementById('uPhone').value;
-        if(!n || !ph) return alert("البيانات!");
-        await db.collection("orders").add({ userName: n, userPhone: ph, items: cart.map(i=>i.title), status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("*طلب جديد - مصطفى حجازي*\nالعميل: " + n + "\nالطلبات: " + cart.map(i=>i.title).join(", "))}`);
-        cart = []; document.getElementById('cCount').innerText = "0"; go('home');
+    async function confirmOrder() {
+        const n = document.getElementById('custName').value, p = document.getElementById('custPhone').value, a = document.getElementById('custAddr').value;
+        if(n && p && a && cart.length > 0) {
+            await db.collection("orders").add({ userName: n, userPhone: p, address: a, items: cart.map(i=>i.title), createdAt: new Date() });
+            const msg = `طلب جديد - مصطفى حجازي\nالاسم: ${n}\nالطلبات: ${cart.map(i=>i.title).join(' + ')}\nالإجمالي: ${document.getElementById('cartTotal').innerText}`;
+            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+            cart = []; updateCartUI(); navTo('home-page', document.querySelectorAll('.nav-item')[0]);
+        } else { alert("كمل بياناتك وضيف منتجات!"); }
     }
 
-    function renderOrders() {
-        db.collection("orders").where("status","==","pending").onSnapshot(s => {
-            document.getElementById('ordersList').innerHTML = s.docs.map(d => {
-                const o = d.data();
-                return `<div class="card" style="margin-bottom:10px; text-align:right;">
-                    <b>${o.userName}</b> (${o.userPhone})<br><small>${o.items.join(' - ')}</small>
-                    <button class="btn-buy" style="margin-top:10px;" onclick="approve('${d.id}','${o.userPhone}')">تأكيد الأوردر ✅</button>
-                </div>`;
-            }).join('');
-        });
-    }
+    async function deleteEntry(col, id) { if(confirm("حذف نهائي؟")) await db.collection(col).doc(id).delete(); }
 
-    async function approve(id, ph) {
-        await db.collection("orders").doc(id).update({status: "confirmed"});
-        const r = db.collection("users_stats").doc(ph);
-        const u = await r.get();
-        let c = (u.exists ? u.data().count : 0) + 1;
-        await r.set({count: c}, {merge: true});
-        alert("تم التأكيد! العداد الآن: " + c);
-    }
-
-    let tmpImg = ""; 
-    function encode(el) { const r = new FileReader(); r.onload = () => tmpImg = r.result; r.readAsDataURL(el.files[0]); }
-    async function saveP() {
-        await db.collection("products").add({ title: document.getElementById('pTitle').value, price: document.getElementById('pPrice').value, cat: document.getElementById('pCat').value, img: tmpImg, createdAt: new Date() });
-        alert("تم الحفظ!");
-    }
-
-    init();
+    startSync();
 </script>
 </body>
 </html>
