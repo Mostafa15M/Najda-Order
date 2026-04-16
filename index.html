@@ -29,27 +29,21 @@
 
         .search-box { margin: 10px 0; position: relative; }
         .cat-bar { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
-        .cat-chip { background: #222; padding: 6px 15px; border-radius: 20px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; }
+        .cat-chip { background: #222; padding: 6px 15px; border-radius: 20px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; cursor: pointer; }
         .cat-chip.active { background: var(--main); color: #000; border-color: var(--main); font-weight: bold; }
 
         .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .p-card { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid #2c2c2e; position: relative; }
+        .p-card { background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid #2c2c2e; position: relative; padding-bottom: 10px; }
         .p-card img { width: 100%; height: 110px; object-fit: cover; }
+        .p-info { padding: 10px; text-align: center; }
+        .p-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 5px; display: block; }
         
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; align-items: center; justify-content: center; padding: 20px; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 360px; border: 1px solid var(--main); }
         
-        input, textarea, select { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #333; background: #1c1c1e; color: #fff; }
+        input, textarea { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #333; background: #1c1c1e; color: #fff; }
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
         .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: white; }
-        
-        .admin-section { background: #151517; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #333; }
-        .hidden-admin { display: none !important; }
-        .admin-mode .hidden-admin { display: block !important; }
-        .order-card { background: #1c1c1e; border: 1px solid #333; padding: 12px; border-radius: 15px; margin-bottom: 10px; }
-        
-        .admin-prod-item { display: flex; align-items: center; gap: 10px; background: #222; padding: 8px; border-radius: 12px; margin-bottom: 8px; }
-        .admin-prod-item img { width: 40px; height: 40px; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -64,7 +58,7 @@
 <div id="qtyModal" class="modal">
     <div class="modal-content">
         <h3 id="modalTitle">اسم المنتج</h3>
-        <input type="text" id="customQty" placeholder="الكمية (مثلاً: 1 أو نص)" value="1" style="margin-top:15px; text-align:center; font-weight:bold; border-color:var(--main);">
+        <input type="text" id="customQty" value="1" style="margin-top:15px; text-align:center; font-weight:bold; border-color:var(--main);">
         <textarea id="pNote" placeholder="أي ملاحظات إضافية؟"></textarea>
         <button class="btn btn-main" onclick="confirmAdd()">إضافة للسلة ✅</button>
         <p onclick="closeModal()" style="margin-top:10px; color:#8e8e93; text-align:center; cursor:pointer;">إلغاء</p>
@@ -85,9 +79,7 @@
     <input type="text" id="spFrom" placeholder="نقطة الاستلام">
     <input type="text" id="spTo" placeholder="نقطة التسليم (اسم المستلم وعنوانه)">
     <input type="tel" id="spPhone" placeholder="رقم موبايل المستلم">
-    
     <div style="border-top: 1px solid #333; margin: 15px 0; padding-top: 15px;">
-        <p style="font-size: 0.8rem; margin-bottom: 10px; color: var(--main);">بياناتك كطالب للخدمة:</p>
         <input type="text" id="spSenderName" placeholder="اسمك">
         <input type="tel" id="spSenderPhone" placeholder="رقم تليفونك" oninput="checkLoyalty(this.value)">
     </div>
@@ -106,43 +98,10 @@
     <button class="btn btn-main" onclick="confirmFullOrder()">تأكيد وإرسال واتساب 💬</button>
 </div>
 
-<div id="admin-page" class="page">
-    <h3 style="margin: 20px 0; color: var(--main);">⚙️ لوحة التحكم</h3>
-    
-    <div class="admin-section">
-        <h4>📨 الطلبات الجديدة</h4>
-        <div id="adminOrdersList"></div>
-    </div>
-
-    <div class="admin-section">
-        <h4 id="prodFormTitle">✨ إضافة منتج جديد</h4>
-        <input type="hidden" id="editProdId">
-        <input type="text" id="newPTitle" placeholder="اسم المنتج">
-        <select id="newPCat"></select>
-        <p id="imgHint" style="font-size: 0.7rem; color: #8e8e93; margin-bottom: 5px;">صورة المنتج:</p>
-        <input type="file" id="newPImg" accept="image/*">
-        <button class="btn btn-main" id="saveProdBtn" onclick="uploadProduct()">حفظ المنتج</button>
-        <button class="btn" id="cancelEditBtn" style="display:none; margin-top:5px; background:#333;" onclick="resetProdForm()">إلغاء التعديل</button>
-    </div>
-
-    <div class="admin-section">
-        <h4>📦 إدارة المنيو (حذف/تعديل)</h4>
-        <div id="adminInventoryList"></div>
-    </div>
-
-    <div class="admin-section">
-        <h4>📁 الأقسام</h4>
-        <input type="text" id="newCatName" placeholder="قسم جديد">
-        <button class="btn btn-main" onclick="addCategory()">إضافة قسم</button>
-        <div id="catsManagerList" style="margin-top:10px;"></div>
-    </div>
-</div>
-
 <nav>
     <a href="#" class="nav-link active" onclick="go('home', this)"><i>🏠</i><span>الرئيسية</span></a>
     <a href="#" class="nav-link" onclick="go('special', this)"><i>📦</i><span>توصيل</span></a>
     <a href="#" class="nav-link" onclick="go('cart', this)"><i>🛒</i><span>السلة</span></a>
-    <a href="#" class="nav-link hidden-admin" onclick="go('admin-page', this)"><i>⚙️</i><span>الإدارة</span></a>
 </nav>
 
 <script>
@@ -150,82 +109,72 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let cart = [], currentProduct = "", allProducts = [], selectedCat = "الكل", userOrdersCount = 0;
+    let cart = [], allProducts = [], selectedCat = "الكل", userOrdersCount = 0, tempProd = null;
 
-    function toggleAdmin() { if(prompt("الباسورد؟") === "135790") document.body.classList.toggle('admin-mode'); }
+    // جلب البيانات الأساسية
+    db.collection("products").onSnapshot(snap => {
+        allProducts = snap.docs.map(doc => ({id: doc.id, ...doc.data()}));
+        renderCats();
+        filterProducts();
+    });
+
+    function renderCats() {
+        const cats = ["الكل", ...new Set(allProducts.map(p => p.category))];
+        document.getElementById('categoriesFilter').innerHTML = cats.map(c => `
+            <div class="cat-chip ${selectedCat === c ? 'active' : ''}" onclick="selectedCat='${c}'; renderCats(); filterProducts();">${c}</div>
+        `).join('');
+    }
+
+    function filterProducts() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = allProducts.filter(p => 
+            (selectedCat === "الكل" || p.category === selectedCat) && 
+            (p.title.toLowerCase().includes(query))
+        );
+        document.getElementById('prodsHome').innerHTML = filtered.map(p => `
+            <div class="p-card" onclick="openModal('${p.title}')">
+                <img src="${p.image || 'https://via.placeholder.com/150'}">
+                <div class="p-info">
+                    <span class="p-title">${p.title}</span>
+                    <button class="btn btn-main" style="padding: 5px; font-size: 0.8rem;">إضافة</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openModal(title) {
+        tempProd = title;
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('qtyModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('qtyModal').style.display = 'none';
+        document.getElementById('pNote').value = "";
+        document.getElementById('customQty').value = "1";
+    }
+
+    function confirmAdd() {
+        const q = document.getElementById('customQty').value;
+        const n = document.getElementById('pNote').value;
+        cart.push({ t: tempProd, q: q, n: n });
+        renderCart();
+        closeModal();
+    }
 
     function go(id, el) {
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         el.classList.add('active');
-        if(id === 'admin-page') { loadOrders(); renderInventory(); }
-    }
-
-    db.collection("categories").onSnapshot(s => {
-        let cats = [{name:'الكل'}];
-        s.forEach(d => cats.push(d.data()));
-        renderCats(cats);
-    });
-
-    function renderCats(cats) {
-        let h = '', opts = '';
-        cats.forEach(c => {
-            h += `<div class="cat-chip ${selectedCat === c.name ? 'active' : ''}" onclick="filterCat('${c.name}')">${c.name}</div>`;
-            if(c.name !== 'الكل') opts += `<option value="${c.name}">${c.name}</option>`;
-        });
-        document.getElementById('categoriesFilter').innerHTML = h;
-        document.getElementById('newPCat').innerHTML = opts;
-    }
-
-    db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
-        allProducts = [];
-        s.forEach(d => allProducts.push({id: d.id, ...d.data()}));
-        filterProducts();
-        renderInventory();
-    });
-
-    function filterCat(cat) { selectedCat = cat; filterProducts(); }
-
-    function filterProducts() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        let filtered = allProducts.filter(p => {
-            const matchCat = (selectedCat === "الكل" || p.cat === selectedCat);
-            const matchSearch = p.title.toLowerCase().includes(query);
-            return matchCat && matchSearch;
-        });
-        let h = '';
-        filtered.forEach(p => {
-            h += `<div class="p-card">
-                <img src="${p.img}">
-                <div style="padding:10px; text-align:center;">
-                    <p style="font-size:0.85rem; font-weight:bold;">${p.title}</p>
-                    <button class="btn btn-main" style="padding:6px; margin-top:5px; font-size:0.75rem;" onclick="openQtyModal('${p.title}')">اطلب</button>
-                </div>
-            </div>`;
-        });
-        document.getElementById('prodsHome').innerHTML = h;
-    }
-
-    function openQtyModal(title) {
-        currentProduct = title;
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('qtyModal').style.display = 'flex';
-    }
-
-    function closeModal() { document.getElementById('qtyModal').style.display = 'none'; }
-
-    function confirmAdd() {
-        cart.push({ t: currentProduct, q: document.getElementById('customQty').value, n: document.getElementById('pNote').value });
-        closeModal();
-        renderCart();
     }
 
     function renderCart() {
-        document.getElementById('cartList').innerHTML = cart.map((i,idx)=>`
-            <div style="background:#222; padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between;">
-                <span>${i.t} (${i.q})</span>
-                <span onclick="cart.splice(${idx},1);renderCart()" style="color:red;">✕</span>
+        const list = document.getElementById('cartList');
+        list.innerHTML = cart.map((i,idx)=>`
+            <div style="background:#222; padding:10px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
+                <span>${i.t} (${i.q}) ${i.n ? '<br><small style="color:gray">'+i.n+'</small>' : ''}</span>
+                <span onclick="cart.splice(${idx},1);renderCart()" style="color:red; cursor:pointer; font-weight:bold; padding:5px;">✕</span>
             </div>
         `).join('');
     }
@@ -233,9 +182,7 @@
     async function checkLoyalty(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "done").get();
-            let totalDone = snap.size;
-            userOrdersCount = totalDone % 10; 
-            
+            userOrdersCount = snap.size % 10; 
             document.getElementById('loyaltyStatus').style.display = 'block';
             if(userOrdersCount === 9) {
                 document.getElementById('loyaltyMsg').innerHTML = "🎊 مبروك! هذا هو أوردرك العاشر.<br>التوصيل مجاناً بالكامل! 🎁";
@@ -247,150 +194,43 @@
         }
     }
 
-    function formatWhatsAppHeader() {
-        return `*✨ أوردر جديد - نجدة أوردر ✨*\n*بواسطة: مصطفى حجازي ⚡*\n━━━━━━━━━━━━━━\n\n`;
-    }
-
-    function formatLoyaltyFooter() {
-        if (userOrdersCount === 9) {
-            return `\n\n*10Mostafa-Hegazy10*\n*مبروك الاوردر دا توصيله مجانا علشان دا عاشر اوردر ليك* 🎁`;
-        }
-        return "";
-    }
-
     async function confirmFullOrder() {
-        const nInput = document.getElementById('uName'), pInput = document.getElementById('uPhone'), aInput = document.getElementById('uAddress');
-        const n = nInput.value, p = pInput.value, a = aInput.value;
-        
-        if(!n || !p || cart.length === 0) return alert("كمل بياناتك!");
-        
-        let itemsMsg = cart.map(i => `- ${i.t} (${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
-        let finalMsg = formatWhatsAppHeader() + `*📦 محتويات السلة:*\n${itemsMsg}\n\n` + `*👤 صاحب الأوردر:*\n🔸 الاسم: ${n}\n📞 التليفون: ${p}\n🏠 العنوان: ${a}` + formatLoyaltyFooter();
+        const nIn = document.getElementById('uName'), pIn = document.getElementById('uPhone'), aIn = document.getElementById('uAddress');
+        if(!nIn.value || !pIn.value || cart.length === 0) return alert("من فضلك كمل بياناتك وضيف منتجات!");
 
-        await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
-        
-        cart = []; renderCart();
-        nInput.value = ""; pInput.value = ""; aInput.value = "";
-        document.getElementById('loyaltyStatus').style.display = 'none';
+        let itemsMsg = cart.map(i => `- ${i.t} (${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
+        let giftMsg = userOrdersCount === 9 ? "\n\n*🎁 مبروك الاوردر دا توصيله مجانا علشان دا عاشر اوردر ليك (كود: 10Hegazy)*" : "";
+        let finalMsg = `*✨ أوردر جديد - نجدة أوردر ✨*\n\n*📦 السلة:*\n${itemsMsg}\n\n*👤 العميل:*\n🔸 الاسم: ${nIn.value}\n📞 التليفون: ${pIn.value}\n🏠 العنوان: ${aIn.value}${giftMsg}`;
+
+        try {
+            await db.collection("orders").add({ n: nIn.value, p: pIn.value, a: aIn.value, items: cart, status: "pending", createdAt: new Date() });
+            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
+
+            // التصفير الكامل (المسح الكلي)
+            cart = []; 
+            renderCart();
+            nIn.value = ""; pIn.value = ""; aIn.value = "";
+            document.getElementById('loyaltyStatus').style.display = 'none';
+            alert("تم إرسال طلبك بنجاح! ✅");
+        } catch(e) { alert("عفواً، حدث خطأ!"); }
     }
 
     async function sendSpecialOrder() {
         const dIn = document.getElementById('spDetails'), fIn = document.getElementById('spFrom'), tIn = document.getElementById('spTo'), pIn = document.getElementById('spPhone'), snIn = document.getElementById('spSenderName'), spIn = document.getElementById('spSenderPhone');
-        
-        if(!dIn.value || !fIn.value || !tIn.value || !pIn.value || !snIn.value || !spIn.value) return alert("من فضلك كمل كل البيانات");
+        if(!dIn.value || !fIn.value || !snIn.value) return alert("كمل البيانات المطلوبة!");
 
-        let finalMsg = formatWhatsAppHeader() + `*1️⃣ توصيل خاص 🛵*\nالطلب: ${dIn.value}\nمن: ${fIn.value}\nالمستلم: ${tIn.value}\nتليفونه: ${pIn.value}\n----------\n\n*👤 صاحب الأوردر:*\n🔸 الاسم: ${snIn.value}\n📞 التليفون: ${spIn.value}` + formatLoyaltyFooter();
+        let giftMsg = userOrdersCount === 9 ? "\n\n*🎁 مبروك التوصيل مجاني (أوردر رقم 10)*" : "";
+        let finalMsg = `*📦 طلب توصيل خاص*\n\nالطلب: ${dIn.value}\nمن: ${fIn.value}\nإلى: ${tIn.value}\nتليفون المستلم: ${pIn.value}\n\n*👤 الراسل:*\n🔸 الاسم: ${snIn.value}\n📞 التليفون: ${spIn.value}${giftMsg}`;
 
-        await db.collection("orders").add({ n: snIn.value, p: spIn.value, items: [{t: "توصيل خاص", q: dIn.value}], status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
+        try {
+            await db.collection("orders").add({ n: snIn.value, p: spIn.value, items: [{t: "شحن خاص: " + dIn.value}], status: "pending", createdAt: new Date() });
+            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
 
-        dIn.value = ""; fIn.value = ""; tIn.value = ""; pIn.value = ""; snIn.value = ""; spIn.value = "";
-        document.getElementById('loyaltyStatus').style.display = 'none';
+            // تصفير حقول التوصيل الخاص
+            dIn.value = ""; fIn.value = ""; tIn.value = ""; pIn.value = ""; snIn.value = ""; spIn.value = "";
+            document.getElementById('loyaltyStatus').style.display = 'none';
+        } catch(e) { alert("حدث خطأ!"); }
     }
-
-    function loadOrders() {
-        db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
-            let h = '';
-            s.forEach(d => {
-                const o = d.data();
-                h += `<div class="order-card">
-                    <p>👤 <b>${o.n}</b> | 📞 ${o.p}</p>
-                    <p style="font-size:0.8rem; color:var(--main);">${o.items.map(i=>i.t+'('+i.q+')').join(', ')}</p>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button class="btn" style="background:var(--success); color:#000; flex:1;" onclick="updateStatus('${d.id}', 'done')">موافقة ✅</button>
-                        <button class="btn" style="background:var(--danger); flex:1;" onclick="updateStatus('${d.id}', 'canceled')">إلغاء ❌</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('adminOrdersList').innerHTML = h || 'لا يوجد طلبات جديدة';
-        });
-    }
-
-    async function updateStatus(id, status) {
-        await db.collection("orders").doc(id).update({ status: status });
-    }
-
-    function renderInventory() {
-        let h = '';
-        allProducts.forEach(p => {
-            h += `<div class="admin-prod-item">
-                <img src="${p.img}">
-                <div style="flex:1; font-size:0.85rem;"><b>${p.title}</b><br><small>${p.cat}</small></div>
-                <button onclick="editProduct('${p.id}')" style="background:none; border:none; color:var(--main); margin-left:10px;">✏️</button>
-                <button onclick="deleteDoc('products','${p.id}')" style="background:none; border:none; color:var(--danger);">🗑️</button>
-            </div>`;
-        });
-        document.getElementById('adminInventoryList').innerHTML = h || 'المنيو فاضي';
-    }
-
-    function editProduct(id) {
-        const p = allProducts.find(x => x.id === id);
-        document.getElementById('newPTitle').value = p.title;
-        document.getElementById('newPCat').value = p.cat;
-        document.getElementById('editProdId').value = id;
-        document.getElementById('prodFormTitle').innerText = "✏️ تعديل المنتج";
-        document.getElementById('saveProdBtn').innerText = "تحديث البيانات";
-        document.getElementById('cancelEditBtn').style.display = "block";
-    }
-
-    function resetProdForm() {
-        document.getElementById('newPTitle').value = "";
-        document.getElementById('editProdId').value = "";
-        document.getElementById('prodFormTitle').innerText = "✨ إضافة منتج جديد";
-        document.getElementById('saveProdBtn').innerText = "حفظ المنتج";
-        document.getElementById('cancelEditBtn').style.display = "none";
-    }
-
-    async function uploadProduct() {
-        const title = document.getElementById('newPTitle').value;
-        const cat = document.getElementById('newPCat').value;
-        const file = document.getElementById('newPImg').files[0];
-        const editId = document.getElementById('editProdId').value;
-        if(!title) return alert("اكتب اسم المنتج!");
-        if(editId) {
-            let updateData = { title, cat };
-            if(file) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = async (e) => {
-                    updateData.img = e.target.result;
-                    await db.collection("products").doc(editId).update(updateData);
-                    resetProdForm();
-                };
-            } else {
-                await db.collection("products").doc(editId).update(updateData);
-                resetProdForm();
-            }
-        } else {
-            if(!file) return alert("اختار صورة!");
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = async (e) => {
-                await db.collection("products").add({ title, cat, img: e.target.result, createdAt: new Date() });
-                resetProdForm();
-            };
-        }
-    }
-
-    async function addCategory() {
-        const name = document.getElementById('newCatName').value;
-        if(name) await db.collection("categories").add({ name });
-        document.getElementById('newCatName').value = "";
-    }
-
-    db.collection("categories").onSnapshot(s => {
-        let list = '';
-        s.forEach(d => {
-            list += `<div style="display:flex; justify-content:space-between; background:#222; padding:8px; border-radius:8px; margin-bottom:5px;">
-                <span>${d.data().name}</span>
-                <span style="color:red; cursor:pointer;" onclick="deleteDoc('categories','${d.id}')">حذف</span>
-            </div>`;
-        });
-        document.getElementById('catsManagerList').innerHTML = list;
-    });
-
-    function deleteDoc(col, id) { if(confirm("أكيد عاوز تحذف؟")) db.collection(col).doc(id).delete(); }
 </script>
 </body>
 </html>
