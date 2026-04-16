@@ -9,132 +9,156 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --main: #00d2ff; --sec: #bd00ff; --bg: #0a0a0c; --card: #16161a; --danger: #ff3131; --success: #00ff88; --neon: 0 0 10px var(--main); }
+        :root { --main: #00d2ff; --sec: #bd00ff; --bg: #0a0a0c; --card: #1c1c1e; --danger: #ff453a; --success: #32d74b; --neon: 0 0 15px rgba(0, 210, 255, 0.4); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; padding-bottom: 90px; }
+        body { background: var(--bg); color: #fff; padding-bottom: 100px; overflow-x: hidden; }
 
-        header { padding: 15px; background: #000; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3); }
-        .neon-logo { width: 45px; height: 45px; border: 2px solid var(--main); border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: var(--neon); color: var(--main); font-weight: 900; }
-        .neon-name { color: #fff; text-shadow: 0 0 10px var(--sec); font-weight: 900; }
+        /* Header */
+        header { padding: 15px 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 2000; }
+        .logo-text { font-weight: 900; font-size: 1.2rem; background: linear-gradient(var(--main), var(--sec)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .admin-btn { font-size: 0.8rem; opacity: 0.6; }
 
-        .promo-banner { background: linear-gradient(90deg, var(--main), var(--sec)); padding: 10px; text-align: center; font-weight: bold; border-radius: 10px; margin: 10px; font-size: 0.9rem; }
+        /* Banner */
+        .promo-banner { background: linear-gradient(90deg, var(--main), var(--sec)); padding: 12px; text-align: center; font-weight: 700; border-radius: 15px; margin: 15px; box-shadow: var(--neon); font-size: 0.85rem; }
 
-        .cat-chip { background: #222; padding: 8px 18px; border-radius: 20px; white-space: nowrap; border: 1px solid #333; font-size: 0.85rem; color: #bbb; cursor: pointer; transition: 0.3s; margin-bottom: 5px; }
-        .cat-chip.active { background: var(--main); color: #000; font-weight: bold; border-color: var(--main); box-shadow: var(--neon); }
+        /* Categories */
+        .cats-wrapper { display: flex; gap: 10px; overflow-x: auto; padding: 0 15px 15px; scrollbar-width: none; }
+        .cats-wrapper::-webkit-scrollbar { display: none; }
+        .cat-chip { background: #2c2c2e; padding: 8px 20px; border-radius: 25px; white-space: nowrap; font-size: 0.85rem; transition: 0.3s; border: 1px solid transparent; }
+        .cat-chip.active { background: var(--main); color: #000; font-weight: bold; box-shadow: var(--neon); }
 
-        .page { display: none; padding: 15px; animation: fadeIn 0.3s; }
+        /* Grid */
+        .page { display: none; padding: 0 15px; animation: slideUp 0.4s ease; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        input, textarea, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid #222; background: #000; color: #fff; outline: none; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 900; cursor: pointer; }
-        .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; }
-        .btn-outline { background: transparent; border: 1px solid var(--main); color: var(--main); margin-top: 5px; font-size: 0.8rem; padding: 10px; }
+        .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #2c2c2e; transition: 0.3s; position: relative; }
+        .p-card img { width: 100%; height: 130px; object-fit: cover; }
+        .p-info { padding: 10px; text-align: center; }
+        .p-info h5 { font-size: 0.9rem; margin-bottom: 8px; }
 
-        .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .p-card { background: var(--card); padding: 10px; border-radius: 20px; border: 1px solid #222; text-align: center; }
-        .p-card img { width: 100%; height: 110px; border-radius: 15px; object-fit: cover; border: 1px solid #333; }
-
-        nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #222; z-index: 1000; }
-        .nav-link { color: #555; text-decoration: none; text-align: center; font-size: 0.75rem; flex: 1; }
+        /* Form Elements */
+        input, textarea, select { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #333; background: #2c2c2e; color: #fff; outline: none; font-size: 0.95rem; }
+        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 1rem; }
+        .btn:active { transform: scale(0.97); }
+        .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; box-shadow: var(--neon); }
+        
+        /* Bottom Nav */
+        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,12,0.95); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 10px 5px 25px; border-top: 1px solid #2c2c2e; z-index: 3000; }
+        .nav-link { color: #8e8e93; text-decoration: none; text-align: center; font-size: 0.7rem; flex: 1; transition: 0.3s; }
         .nav-link.active { color: var(--main); }
-        .nav-link span { font-size: 1.5rem; display: block; }
+        .nav-link i { font-size: 1.6rem; display: block; margin-bottom: 4px; }
 
-        .admin-item-card { background: #111; padding: 10px; border-radius: 10px; margin-bottom: 8px; border-right: 4px solid var(--main); display: flex; justify-content: space-between; align-items: center; }
-        .hidden-admin { display: none; }
+        /* Admin Dashboard Cards */
+        .order-card { background: var(--card); border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--main); }
+        .order-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.8rem; color: #8e8e93; }
+        .order-actions { display: flex; gap: 10px; margin-top: 15px; }
+
+        /* Modal / Bottom Sheet */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 4000; display: none; align-items: flex-end; }
+        .modal-content { background: var(--card); width: 100%; padding: 30px 20px; border-radius: 30px 30px 0 0; animation: sheetUp 0.3s ease; border-top: 2px solid var(--main); }
+        @keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .hidden-admin { display: none !important; }
         .admin-mode .hidden-admin { display: block !important; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="color:var(--main); font-weight:900;">نجدة أوردر ⚡</div>
-    <div class="neon-logo">⚡</div>
-    <div class="neon-name" id="adminTrigger" onmousedown="startPress()" onmouseup="endPress()" ontouchstart="startPress()" ontouchend="endPress()">مصطفى حجازي</div>
+    <div class="logo-text">نجدة أوردر ⚡</div>
+    <div class="admin-btn" id="adminTrigger" onmousedown="startPress()" onmouseup="endPress()" ontouchstart="startPress()" ontouchend="endPress()">مصطفى حجازي</div>
 </header>
 
-<div class="promo-banner">🔥 اطلب 9 أوردرات والعاشر توصيله مجاناً! 🔥</div>
+<div class="promo-banner">🎁 اطلب 9 أوردرات والعاشر توصيله مجاناً! 🎁</div>
 
 <div id="home" class="page active">
-    <div id="catsHeader" style="display:flex; gap:10px; overflow-x:auto; padding:5px 0 15px;"></div>
+    <div class="cats-wrapper" id="catsHeader"></div>
     <div class="prod-grid" id="prodsHome"></div>
 </div>
 
 <div id="special" class="page">
-    <div style="background:var(--card); padding:20px; border-radius:25px; border:1px solid var(--sec);">
-        <h3 style="color:var(--sec); text-align:center;">📦 توصيل مستلزمات شخصية</h3>
-        <input type="text" id="spDetails" placeholder="تفاصيل الحاجة (مثلاً: مفاتيح، شنطة هدوم)">
-        <input type="text" id="spFrom" placeholder="هجيبها منين؟ (العنوان بالتفصيل)">
-        <input type="text" id="spTo" placeholder="هوديها فين؟ (العنوان بالتفصيل)">
-        <input type="text" id="spReceiver" placeholder="اسم المستلم">
-        <input type="tel" id="spPhone" placeholder="رقم هاتف المستلم">
-        <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال الطلب الآن 🚀</button>
+    <div style="text-align:center; margin-bottom:20px;">
+        <h2 style="color:var(--main)">📦 طلب شحن خاص</h2>
+        <p style="color:#8e8e93; font-size:0.9rem;">توصيل أي حاجة من أي مكان لأي مكان</p>
     </div>
+    <input type="text" id="spDetails" placeholder="إيه الحاجة اللي هنوصلها؟">
+    <input type="text" id="spFrom" placeholder="مكان الاستلام (منين؟)">
+    <input type="text" id="spTo" placeholder="مكان التسليم (لفين؟)">
+    <input type="text" id="spReceiver" placeholder="اسم المستلم">
+    <input type="tel" id="spPhone" placeholder="رقم هاتف المستلم">
+    <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال طلب الشحن 🚀</button>
 </div>
 
 <div id="cart" class="page">
-    <div style="background:var(--card); padding:20px; border-radius:25px; border:1px solid #222;">
-        <h3 style="color:var(--main); text-align:center;">🛒 مراجعة السلة</h3>
-        <div id="cartList" style="margin:15px 0;"></div>
-        <input type="text" id="uName" placeholder="اسمك">
-        <input type="text" id="uAddress" placeholder="عنوانك">
-        <input type="tel" id="uPhone" placeholder="رقم موبايلك" oninput="checkUserHistory(this.value)">
-        <div id="loyaltyInfo" style="text-align:center; margin:10px 0;"></div>
-        <button class="btn btn-main" onclick="confirmFullOrder()">تأكيد وإرسال 💬</button>
-    </div>
+    <h3 style="margin-bottom:15px;">🛒 مراجعة السلة</h3>
+    <div id="cartList" style="margin-bottom:20px;"></div>
+    <div id="cartTotal" style="text-align:left; padding:10px; font-weight:bold; border-top:1px solid #333; margin-bottom:15px;"></div>
+    
+    <input type="text" id="uName" placeholder="الاسم بالكامل">
+    <input type="text" id="uAddress" placeholder="العنوان بالتفصيل">
+    <input type="tel" id="uPhone" placeholder="رقم الموبايل" oninput="checkUserHistory(this.value)">
+    <div id="loyaltyInfo" style="margin-bottom:15px;"></div>
+    
+    <button class="btn btn-main" onclick="confirmFullOrder()">تأكيد وإرسال واتساب 💬</button>
 </div>
 
 <div id="admin" class="page">
-    <div style="background:var(--card); padding:15px; border-radius:20px; border: 1px solid var(--sec);">
-        <h3 style="color:var(--sec); text-align:center;">⚙️ لوحة التحكم</h3>
-        
-        <h4>📈 الطلبات الواردة</h4>
+    <h3 style="color:var(--sec); text-align:center; margin-bottom:20px;">⚙️ لوحة التحكم</h3>
+    
+    <div id="adminSections">
+        <h4 style="margin:15px 0 10px;">📈 الطلبات الواردة</h4>
         <input type="tel" id="searchPhone" placeholder="بحث برقم الهاتف..." oninput="renderOrders(this.value)">
-        <div id="ordersDashboard" style="margin-top:10px; max-height: 400px; overflow-y: auto;"></div>
+        <div id="ordersDashboard"></div>
 
-        <hr style="margin:20px 0; border:0.5px solid #333;">
-
-        <h4>📁 إدارة الأقسام</h4>
-        <input type="text" id="newCatInput" placeholder="اسم القسم الجديد">
-        <button class="btn btn-main" style="padding:10px;" onclick="addCategory()">إضافة قسم +</button>
-        <div id="adminCatsList" style="margin-top:10px;"></div>
-
-        <hr style="margin:20px 0; border:0.5px solid #333;">
-
-        <h4>➕ إضافة منتج</h4>
-        <input type="text" id="pTitle" placeholder="اسم المنتج">
-        <input type="file" id="pImage" accept="image/*" onchange="handleImage(this)">
-        <select id="pCatSelect"></select>
-        <button class="btn btn-main" onclick="saveNewProd()">حفظ المنتج</button>
+        <hr style="border:0.5px solid #333; margin:25px 0;">
         
-        <h4 style="margin-top:15px;">🛒 المنتجات الحالية</h4>
-        <div id="adminProdsList" style="margin-top:10px;"></div>
+        <h4>➕ إضافة منتج جديد</h4>
+        <input type="text" id="pTitle" placeholder="اسم المنتج">
+        <select id="pCatSelect"></select>
+        <div style="background:#2c2c2e; padding:15px; border-radius:15px; text-align:center; margin-bottom:12px; border:1px dashed var(--main);">
+            <label for="pImage">📸 اختر صورة المنتج</label>
+            <input type="file" id="pImage" accept="image/*" style="display:none" onchange="handleImage(this)">
+        </div>
+        <button class="btn btn-main" onclick="saveNewProd()">نشر المنتج</button>
+        
+        <h4 style="margin:20px 0 10px;">📂 إدارة الأقسام</h4>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="newCatInput" placeholder="قسم جديد">
+            <button class="btn btn-main" style="width:100px; padding:0" onclick="addCategory()">إضافة</button>
+        </div>
+        <div id="adminCatsList" style="margin-top:10px;"></div>
     </div>
 </div>
 
-<div id="orderModal" class="modal-overlay">
-    <div class="modal-content">
-        <h3 id="modalTitle" style="color:var(--main);"></h3>
+<div id="orderModal" class="modal-overlay" onclick="if(event.target==this) closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h3 id="modalTitle" style="margin-bottom:20px; color:var(--main);"></h3>
+        <label>الكمية المطلوبة:</label>
         <input type="number" id="modalQty" value="1" min="1">
-        <textarea id="modalNotes" placeholder="أي ملاحظات؟"></textarea>
+        <textarea id="modalNotes" placeholder="أي ملاحظات إضافية؟ (اختياري)"></textarea>
         <button class="btn btn-main" onclick="addToCart()">إضافة للسلة</button>
-        <button class="btn" style="background:transparent;" onclick="closeModal('orderModal')">إلغاء</button>
+        <button class="btn" style="background:transparent; color:#8e8e93;" onclick="closeModal()">إلغاء</button>
     </div>
 </div>
 
 <nav>
-    <a href="#" class="nav-link active" onclick="go('home', this)"><span>🏠</span>الرئيسية</a>
-    <a href="#" class="nav-link" onclick="go('special', this)"><span>📦</span>توصيل خاص</a>
-    <a href="#" class="nav-link" onclick="go('cart', this)"><span>🛒</span>السلة</a>
-    <a href="#" class="nav-link hidden-admin" id="adminLink" onclick="go('admin', this)"><span>⚙️</span>الإدارة</a>
+    <a href="#" class="nav-link active" onclick="go('home', this)"><i>🏠</i>الرئيسية</a>
+    <a href="#" class="nav-link" onclick="go('special', this)"><i>📦</i>طلب خاص</a>
+    <a href="#" class="nav-link" onclick="go('cart', this)"><i>🛒</i>السلة</a>
+    <a href="#" class="nav-link hidden-admin" id="adminLink" onclick="go('admin', this)"><i>⚙️</i>الإدارة</a>
 </nav>
 
 <script>
+    // --- Firebase Setup ---
     const firebaseConfig = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
-    firebase.initializeApp(firebaseConfig); const db = firebase.firestore();
+    firebase.initializeApp(firebaseConfig); 
+    const db = firebase.firestore();
 
-    let cart = [], tempImg = "", pressTimer, ordersCount = 0, selectedCat = "الكل";
+    let cart = [], tempImg = "", pressTimer, ordersCount = 0, selectedCat = "الكل", currentProd = "";
 
+    // --- Navigation & Auth ---
     function startPress() { pressTimer = setTimeout(() => { if(prompt("شفرة الإدارة؟") === "135790") document.body.classList.add('admin-mode'); }, 1500); }
     function endPress() { clearTimeout(pressTimer); }
 
@@ -143,9 +167,10 @@
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         el.classList.add('active');
+        if(id === 'admin') renderOrders();
     }
 
-    // --- إدارة الأقسام ---
+    // --- Categories Logic ---
     function addCategory() {
         const val = document.getElementById('newCatInput').value;
         if(val) db.collection("categories").add({ n: val }).then(() => document.getElementById('newCatInput').value = "");
@@ -153,20 +178,19 @@
 
     db.collection("categories").onSnapshot(s => {
         let chips = `<div class="cat-chip ${selectedCat === 'الكل' ? 'active' : ''}" onclick="filterCat('الكل')">الكل</div>`;
-        let opts = '';
-        let list = '';
+        let opts = '', list = '';
         s.forEach(d => {
             const name = d.data().n;
             chips += `<div class="cat-chip ${selectedCat === name ? 'active' : ''}" onclick="filterCat('${name}')">${name}</div>`;
             opts += `<option value="${name}">${name}</option>`;
-            list += `<div class="admin-item-card"><span>${name}</span><button class="btn" style="background:red; padding:5px; width:auto;" onclick="deleteDoc('categories','${d.id}')">حذف</button></div>`;
+            list += `<div style="background:#2c2c2e; padding:10px; border-radius:10px; margin-bottom:5px; display:flex; justify-content:space-between;"><span>${name}</span><span style="color:red" onclick="deleteDoc('categories','${d.id}')">حذف</span></div>`;
         });
         document.getElementById('catsHeader').innerHTML = chips;
         document.getElementById('pCatSelect').innerHTML = opts;
         document.getElementById('adminCatsList').innerHTML = list;
     });
 
-    // --- إدارة المنتجات ---
+    // --- Products Logic ---
     function handleImage(input) {
         const file = input.files[0];
         const reader = new FileReader();
@@ -180,6 +204,7 @@
                 canvas.width = w; canvas.height = h;
                 canvas.getContext('2d').drawImage(img, 0, 0, w, h);
                 tempImg = canvas.toDataURL('image/jpeg', 0.7);
+                alert("تم تجهيز الصورة بنجاح ✅");
             }
             img.src = e.target.result;
         }
@@ -188,100 +213,129 @@
 
     function saveNewProd() {
         const t = document.getElementById('pTitle').value, c = document.getElementById('pCatSelect').value;
-        if(t && tempImg) db.collection("products").add({ title: t, img: tempImg, cat: c }).then(() => { alert("تم الحفظ!"); tempImg = ""; document.getElementById('pImage').value = ""; });
+        if(!t || !tempImg) return alert("اكتب الاسم واختر الصورة!");
+        db.collection("products").add({ title: t, img: tempImg, cat: c, createdAt: new Date() }).then(() => {
+            alert("تم إضافة المنتج!");
+            document.getElementById('pTitle').value = "";
+            tempImg = "";
+        });
     }
 
     function filterCat(c) { selectedCat = c; renderHomeProds(); }
 
     function renderHomeProds() {
-        db.collection("products").onSnapshot(s => {
-            let h = '', list = '';
+        db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
+            let h = '';
             s.forEach(d => {
                 const p = d.data();
                 if(selectedCat === 'الكل' || p.cat === selectedCat) {
-                    h += `<div class="p-card" onclick="openModal('${p.title}')"><img src="${p.img}"><h5>${p.title}</h5><button class="btn-main" style="padding:5px; font-size:0.7rem;">اطلب</button></div>`;
+                    h += `<div class="p-card" onclick="openModal('${p.title}')">
+                            <img src="${p.img}">
+                            <div class="p-info">
+                                <h5>${p.title}</h5>
+                                <button class="btn btn-main" style="padding:8px; font-size:0.7rem;">اطلب الآن ⚡</button>
+                            </div>
+                          </div>`;
                 }
-                list += `<div class="admin-item-card"><span>${p.title}</span><button class="btn" style="background:red; padding:5px; width:auto;" onclick="deleteDoc('products','${d.id}')">حذف</button></div>`;
             });
-            document.getElementById('prodsHome').innerHTML = h;
-            document.getElementById('adminProdsList').innerHTML = list;
+            document.getElementById('prodsHome').innerHTML = h || '<p style="text-align:center; grid-column:1/3;">لا توجد منتجات حالياً</p>';
         });
     }
     renderHomeProds();
 
-    function deleteDoc(col, id) { if(confirm("هل تريد الحذف نهائياً؟")) db.collection(col).doc(id).delete(); }
+    // --- Order Logic ---
+    function openModal(t) { currentProd = t; document.getElementById('modalTitle').innerText = t; document.getElementById('orderModal').style.display='flex'; }
+    function closeModal() { document.getElementById('orderModal').style.display='none'; }
+    
+    function addToCart() {
+        cart.push({ t: currentProd, q: document.getElementById('modalQty').value, n: document.getElementById('modalNotes').value });
+        alert("تمت الإضافة للسلة 🛒");
+        closeModal();
+        renderCart();
+    }
 
-    // --- إدارة الطلبات والولاء ---
+    function renderCart() {
+        const list = document.getElementById('cartList');
+        if(cart.length === 0) { list.innerHTML = '<p style="color:#8e8e93">السلة فاضية..</p>'; return; }
+        list.innerHTML = cart.map((i, idx) => `
+            <div style="background:#2c2c2e; padding:15px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <strong>${i.t}</strong><br>
+                    <small>الكمية: ${i.q} | ${i.n || 'بدون ملاحظات'}</small>
+                </div>
+                <span style="color:var(--danger); font-size:1.2rem;" onclick="cart.splice(${idx},1);renderCart()">✕</span>
+            </div>
+        `).join('');
+    }
+
     async function checkUserHistory(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).get();
             ordersCount = snap.size;
             const info = document.getElementById('loyaltyInfo');
-            if(ordersCount === 9) info.innerHTML = `<div style="background:var(--success); color:#000; padding:10px; border-radius:10px; font-weight:bold;">🎁 مبروك! الأوردر الجاي مجاني!</div>`;
-            else info.innerHTML = `<span class="cat-chip active">أوردراتك السابقة: ${ordersCount}</span>`;
+            if(ordersCount >= 9) info.innerHTML = `<div style="background:var(--success); color:#000; padding:10px; border-radius:10px; font-weight:bold; font-size:0.8rem;">🎁 مبروك! أوردرك العاشر مجاني!</div>`;
+            else info.innerHTML = `<div style="background:#333; padding:10px; border-radius:10px; font-size:0.8rem;">عدد أوردراتك السابقة: ${ordersCount}</div>`;
         }
     }
 
-    function confirmFullOrder() {
-        const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
-        if(!n || !p || cart.length === 0) return alert("البيانات ناقصة!");
-        sendToWA(n, p, a, cart, false);
-    }
-
-    function sendSpecialOrder() {
+    async function sendSpecialOrder() {
         const det = document.getElementById('spDetails').value, fr = document.getElementById('spFrom').value, to = document.getElementById('spTo').value, rec = document.getElementById('spReceiver').value, ph = document.getElementById('spPhone').value;
-        if(!det || !ph) return alert("كمل البيانات!");
-        sendToWA(rec, ph, to, det, true, fr);
-    }
-
-    async function sendToWA(name, phone, addr, content, isSpecial, from = "") {
-        const isFree = (ordersCount === 9 && !isSpecial);
-        let msg = `⚡ *أوردر جديد من نجدة أوردر*\n\n👤 العميل: ${name}\n📞 الهاتف: ${phone}\n📍 العنوان: ${addr}\n`;
-        if(isSpecial) msg += `📦 طلب خاص: ${content}\n🏠 من: ${from}`;
-        else msg += `🛒 الطلبات:\n` + content.map(i => `- ${i.t} (ج${i.q})`).join('\n');
+        if(!det || !ph) return alert("برجاء إكمال البيانات الأساسية!");
         
-        if(isFree) msg += `\n\n🎁 *هذا هو الأوردر العاشر - مجاني!*\n*10MostafaHegazy10*`;
+        let msg = `📦 *طلب شحن خاص*\n------------------\n`;
+        msg += `📝 الحاجة: ${det}\n🏠 من: ${fr}\n📍 لفين: ${to}\n👤 المستلم: ${rec}\n📞 هاتف: ${ph}`;
 
-        await db.collection("orders").add({ n: name, p: phone, address: addr, items: isSpecial ? null : content, spDetails: isSpecial ? content : null, isFree: isFree, createdAt: new Date() });
+        await db.collection("orders").add({ n: rec, p: ph, spDetails: det, spFrom: fr, spTo: to, type: 'special', createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-        if(!isSpecial) { cart = []; renderCart(); }
     }
 
-    // --- الطلبات في الإدارة ---
+    async function confirmFullOrder() {
+        const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
+        if(!n || !p || cart.length === 0) return alert("كمل بياناتك وضيف منتجات للسلة!");
+        
+        const isFree = (ordersCount >= 9);
+        let msg = `🛒 *أوردر جديد*\n------------------\n👤 العميل: ${n}\n📞 هاتف: ${p}\n📍 العنوان: ${a}\n\n📦 الطلبات:\n`;
+        msg += cart.map(i => `- ${i.t} (عدد: ${i.q}) ${i.n ? '['+i.n+']':''}`).join('\n');
+        
+        if(isFree) msg += `\n\n🎁 *الأوردر العاشر (توصيل مجاني)*\nكود: 10MostafaHegazy10`;
+
+        await db.collection("orders").add({ n, p, a, items: cart, isFree, createdAt: new Date() });
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+        cart = []; renderCart();
+    }
+
+    // --- Admin Dashboard ---
     function renderOrders(filter = "") {
-        db.collection("orders").orderBy("createdAt", "desc").onSnapshot(s => {
+        db.collection("orders").orderBy("createdAt", "desc").limit(20).onSnapshot(s => {
             let h = '';
             s.forEach(d => {
                 const o = d.data();
                 if(!filter || o.p.includes(filter)) {
-                    h += `<div class="admin-order-card" style="border: 1px solid var(--main); padding: 10px; border-radius: 15px; margin-bottom: 10px;">
-                        <small>${o.createdAt?.toDate().toLocaleString('ar-EG')}</small>
-                        <p>👤 ${o.n} | 📞 ${o.p}</p>
-                        <p>📍 ${o.address || o.spTo || 'غير محدد'}</p>
-                        <div style="background:#111; padding:5px; border-radius:5px; margin:5px 0;">
-                            ${o.items ? o.items.map(i=>i.t).join(', ') : '📦 طلب خاص: ' + o.spDetails}
+                    h += `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <span>${o.createdAt?.toDate().toLocaleTimeString('ar-EG')}</span>
+                            <span style="color:var(--main)">${o.type === 'special' ? 'توصيل خاص' : 'أوردر سلة'}</span>
                         </div>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn-outline" style="border-color:var(--success); color:var(--success); flex:1;" onclick="deleteDoc('orders','${d.id}')">تأكيد ✅</button>
-                            <button class="btn-outline" style="border-color:var(--danger); color:var(--danger); flex:1;" onclick="deleteDoc('orders','${d.id}')">حذف 🗑️</button>
+                        <strong>👤 ${o.n}</strong><br>
+                        <small>📞 ${o.p}</small><br>
+                        <small>📍 ${o.a || o.spTo}</small>
+                        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:10px; margin-top:10px; font-size:0.85rem;">
+                            ${o.items ? o.items.map(i=> i.t+' ('+i.q+')').join(' - ') : '📦 ' + o.spDetails}
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn" style="background:var(--success); color:#000; flex:1; padding:10px;" onclick="deleteDoc('orders','${d.id}')">تأكيد ✅</button>
+                            <button class="btn" style="background:var(--danger); color:#fff; flex:1; padding:10px;" onclick="deleteDoc('orders','${d.id}')">حذف 🗑️</button>
                         </div>
                     </div>`;
                 }
             });
-            document.getElementById('ordersDashboard').innerHTML = h || '<p>لا يوجد طلبات</p>';
+            document.getElementById('ordersDashboard').innerHTML = h || '<p style="text-align:center">لا يوجد طلبات حالياً</p>';
         });
     }
-    renderOrders();
 
-    function openModal(t) { currentProd = t; document.getElementById('modalTitle').innerText = t; document.getElementById('orderModal').style.display='flex'; }
-    function closeModal(id) { document.getElementById(id).style.display='none'; }
-    function addToCart() {
-        cart.push({ t: currentProd, q: document.getElementById('modalQty').value, n: document.getElementById('modalNotes').value });
-        closeModal('orderModal'); renderCart();
-    }
-    function renderCart() {
-        document.getElementById('cartList').innerHTML = cart.map((i, idx) => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #333;"><span>${i.t} (ج${i.q})</span><span onclick="cart.splice(${idx},1);renderCart()" style="color:red">✕</span></div>`).join('');
-    }
+    function deleteDoc(col, id) { if(confirm("هل متأكد من الحذف؟")) db.collection(col).doc(id).delete(); }
 </script>
+
 </body>
 </html>
