@@ -13,44 +13,36 @@
         :root {
             --accent: #00f2ff; --bg: #030712; --card: #111827;
             --text: #f9fafb; --dim: #9ca3af; --neon: #ff007a;
-            --gradient: linear-gradient(135deg, #00f2ff 0%, #0066ff 100%);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--bg); color: var(--text); padding-bottom: 110px; overflow-x: hidden; }
 
-        /* أنيميشن الدخول */
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
         header { padding: 30px 20px; text-align: center; border-bottom: 1px solid rgba(0, 242, 255, 0.1); cursor: pointer; }
-        .logo h1 { font-size: 2.4rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-        .hegazy-tag { color: var(--accent); font-weight: 900; font-size: 0.8rem; margin-top: 5px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,242,255,0.3); }
+        .logo h1 { font-size: 2.4rem; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hegazy-tag { color: var(--accent); font-weight: 900; font-size: 0.8rem; margin-top: 5px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,242,255,0.3); }
 
         .hero-action { 
             margin: 20px; padding: 25px; border-radius: 24px; 
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
             border: 1px solid rgba(0, 242, 255, 0.2); cursor: pointer;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: fadeIn 0.8s ease;
         }
 
         .cats-bar { display: flex; gap: 12px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; }
         .pill { 
             padding: 10px 25px; background: var(--card); border-radius: 50px; 
-            font-size: 0.85rem; font-weight: 700; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05); transition: 0.3s;
+            font-size: 0.85rem; font-weight: 700; white-space: nowrap; border: 1px solid rgba(255,255,255,0.05);
         }
         .pill.active { background: var(--accent); color: #000; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 20px; animation: fadeIn 1s ease; }
-        .p-card { background: var(--card); border-radius: 28px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); transition: 0.3s; }
-        .p-card:active { transform: scale(0.95); }
-        .p-card img { width: 100%; height: 150px; object-fit: cover; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px 20px; }
+        .p-card { background: var(--card); border-radius: 28px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
+        .p-card img { width: 100%; height: 150px; object-fit: cover; }
         .p-card-info { padding: 12px; text-align: center; }
-        .p-card-info h4 { font-size: 0.95rem; margin-bottom: 8px; }
 
         .btn-main { 
             width: 100%; padding: 14px; border-radius: 16px; border: none; 
             font-weight: 900; cursor: pointer; background: var(--accent); color: #000;
-            box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
         }
 
         .bottom-nav { 
@@ -70,16 +62,14 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 3000; align-items: flex-end; }
         .modal-content { 
             background: var(--card); width: 100%; border-radius: 32px 32px 0 0; padding: 35px;
-            border-top: 3px solid var(--accent); transform: translateY(0); animation: slideUp 0.4s ease;
+            border-top: 3px solid var(--accent); max-height: 90vh; overflow-y: auto;
         }
-        @keyframes slideUp { from { transform: translateY(100%); } }
 
         input, select, textarea { 
             width: 100%; padding: 16px; border-radius: 16px; background: #000;
             border: 1px solid rgba(255,255,255,0.1); color: #fff; margin-bottom: 12px; outline: none;
         }
 
-        .admin-box { background: #1f2937; padding: 20px; border-radius: 24px; margin-bottom: 25px; border: 1px dashed var(--accent); }
         .item-row { background: #000; padding: 15px; margin-top: 10px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
@@ -95,7 +85,7 @@
     <div id="shopPage" class="page">
         <div class="hero-action" onclick="openSpecial()">
             <h3 style="color:#fff">🚀 مشوار نجدة الخاص</h3>
-            <p style="color:var(--dim); font-size: 0.8rem;">وصل أي حاجة لأي مكان فوري</p>
+            <p style="color:var(--dim); font-size: 0.8rem;">توصيل أمان (مفاتيح - شاحن - طرود)</p>
         </div>
         <div class="cats-bar" id="catsBar"></div>
         <div id="loading" style="text-align:center; padding:30px; color:var(--accent);">برجاء الانتظار... ⌛</div>
@@ -106,82 +96,49 @@
         <h2 style="margin-bottom:25px; font-weight: 900;">سلة طلباتك 🛒</h2>
         <div id="cartList"></div>
         <div id="checkoutForm" style="display:none; margin-top:30px;">
-            <input type="text" id="uName" placeholder="اسم العميل بالكامل">
-            <input type="tel" id="uPhone" placeholder="رقم الموبايل">
-            <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
-            <button class="btn-main" style="padding:20px;" onclick="completeOrder()">إرسال الطلب (WhatsApp) ✅</button>
+            <input type="text" id="uName" placeholder="اسمك (العميل)">
+            <input type="tel" id="uPhone" placeholder="رقم موبايلك">
+            <input type="text" id="uAddr" placeholder="عنوانك الحالي">
+            <button class="btn-main" style="padding:20px;" onclick="completeOrder()">تأكيد و إرسال الطلب ✅</button>
         </div>
-    </div>
-
-    <div id="adminPage" class="page" style="display:none; padding:20px;">
-        <h2 style="color:var(--accent); margin-bottom:25px;">لوحة الإدارة ⚙️</h2>
-        <div class="admin-box">
-            <h4>📁 الأقسام</h4>
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <input type="text" id="newCatName" placeholder="قسم جديد">
-                <button class="btn-main" style="width:100px;" onclick="addCategory()">إضافة</button>
-            </div>
-            <div id="adminCatsList" style="margin-top:10px;"></div>
-        </div>
-        <div class="admin-box">
-            <h4>Pizza إضافة صنف</h4>
-            <input type="text" id="pTitle" placeholder="اسم المنتج">
-            <input type="file" id="pImgInput" accept="image/*" onchange="imgProcess(this)">
-            <select id="pUnit"><option value="كيلو">كيلو</option><option value="قطعة">قطعة</option><option value="ربطة">ربطة</option></select>
-            <select id="pCatSelect"></select>
-            <button class="btn-main" id="saveBtn" onclick="saveProduct()">نشر في السوق ☁️</button>
-        </div>
-        <h4>📦 المنتجات الحالية</h4>
-        <div id="adminProductList"></div>
     </div>
 
     <nav class="bottom-nav">
         <div class="nav-item active" id="btnShop" onclick="nav('shop')">🏠 السوق</div>
         <div class="nav-item" id="btnCart" onclick="nav('cart')">🛒 السلة <div id="badge" class="badge" style="display:none">0</div></div>
-        <div class="nav-item" id="btnAdmin" style="display:none" onclick="nav('admin')">⚙️ الإدارة</div>
     </nav>
 
     <div class="modal" id="modal">
         <div class="modal-content">
             <h2 id="mTitle" style="color:var(--accent); margin-bottom:20px;"></h2>
+            
             <div id="stdFields">
                 <div style="text-align:center; font-size:2.5rem; color:var(--accent); font-weight:900;" id="qtyText">0.25 كيلو</div>
                 <input type="range" id="qtySlider" min="0.25" max="10" step="0.25" oninput="handleSlider(this.value)">
                 <input type="text" id="mSource" placeholder="من مكان محدد؟">
             </div>
+
             <div id="spcFields" style="display:none;">
-                <textarea id="mDesc" placeholder="اكتب تفاصيل الطلب أو المشوار هنا.."></textarea>
+                <p style="color:var(--dim); margin-bottom:10px; font-size:0.9rem;">تفاصيل الاستلام والتسليم:</p>
+                <input type="text" id="mFrom" placeholder="📍 هناخد الحاجة منين؟">
+                <input type="text" id="mToWho" placeholder="👤 هنسلمها لمين؟">
+                <input type="text" id="mToWhere" placeholder="🏠 هنسلمها فين (العنوان)؟">
+                <textarea id="mDesc" placeholder="📦 إيه هي الحاجة؟ (مفاتيح، شاحن، ورق..)"></textarea>
             </div>
+
             <button class="btn-main" onclick="confirmAdd()">إضافة للسلة 🛒</button>
             <button onclick="closeModal()" style="width:100%; background:none; border:none; color:var(--dim); margin-top:20px;">رجوع</button>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY",
-            authDomain: "nagdaorder.firebaseapp.com",
-            projectId: "nagdaorder",
-            storageBucket: "nagdaorder.firebasestorage.app",
-            messagingSenderId: "99058164922",
-            appId: "1:99058164922:web:7063d1686dc82a7ac30e83"
-        };
+        // الكود البرمجي
+        const firebaseConfig = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let products = [], cats = [], cart = [], tempImg = "", selectedItem = null, pressTimer;
+        let products = [], cats = [], cart = [], selectedItem = null;
 
-        // [1] نظام الدخول السري (ضغط مطول على الهيدر)
-        const header = document.getElementById('mainHeader');
-        header.addEventListener('touchstart', startP);
-        header.addEventListener('mousedown', startP);
-        header.addEventListener('mouseup', endP);
-        header.addEventListener('touchend', endP);
-
-        function startP() { pressTimer = setTimeout(() => { if(prompt("كلمة السر يا مصطفى:") === "135790") { document.getElementById('btnAdmin').style.display='block'; nav('admin'); } }, 2000); }
-        function endP() { clearTimeout(pressTimer); }
-
-        // [2] جلب البيانات
         function fetchAll() {
             db.collection("categories").onSnapshot(snap => {
                 cats = []; snap.forEach(d => cats.push({id: d.id, ...d.data()}));
@@ -191,56 +148,26 @@
                 products = []; snap.forEach(d => products.push({id: d.id, ...d.data()}));
                 document.getElementById('loading').style.display = 'none';
                 renderShop();
-                renderAdminProducts();
             });
         }
 
         function renderCats() {
-            const bar = document.getElementById('catsBar'), select = document.getElementById('pCatSelect'), adm = document.getElementById('adminCatsList');
-            bar.innerHTML = `<div class="pill active" id="cat-all" onclick="renderShop('الكل')">الكل</div>` + 
+            const bar = document.getElementById('catsBar');
+            bar.innerHTML = `<div class="pill active" onclick="renderShop('الكل')">الكل</div>` + 
                             cats.map(c => `<div class="pill" onclick="renderShop('${c.name}')">${c.name}</div>`).join('');
-            select.innerHTML = cats.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-            adm.innerHTML = cats.map(c => `<div class="item-row"><span>${c.name}</span><b onclick="db.collection('categories').doc('${c.id}').delete()" style="color:red;cursor:pointer">حذف</b></div>`).join('');
         }
 
         function renderShop(f = 'الكل') {
-            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
             const grid = document.getElementById('shopGrid'); grid.innerHTML = "";
             products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
                 grid.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-card-info"><h4>${p.title}</h4><button class="btn-main" onclick='openModal(${JSON.stringify(p)})'>اطلب</button></div></div>`;
             });
         }
 
-        // [3] إدارة الصور والمنتجات
-        async function imgProcess(el) {
-            const reader = new FileReader(); reader.readAsDataURL(el.files[0]);
-            reader.onload = (e) => {
-                const img = new Image(); img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = 400; canvas.height = img.height * (400/img.width);
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    tempImg = canvas.toDataURL('image/jpeg', 0.6);
-                };
-            };
-        }
-
-        async function saveProduct() {
-            const t = document.getElementById('pTitle').value, c = document.getElementById('pCatSelect').value, u = document.getElementById('pUnit').value;
-            if(!t || !tempImg) return alert("املا البيانات!");
-            document.getElementById('saveBtn').innerText = "جاري الرفع...";
-            await db.collection("products").add({ title: t, cat: c, unit: u, img: tempImg, createdAt: new Date() });
-            document.getElementById('saveBtn').innerText = "نشر في السوق ☁️";
-            document.getElementById('pTitle').value = "";
-            alert("تم النشر بنجاح ✅");
-        }
-
-        // [4] السلة والواتساب
         function openModal(item) {
             selectedItem = item; document.getElementById('mTitle').innerText = item.title;
             document.getElementById('stdFields').style.display='block'; document.getElementById('spcFields').style.display='none';
-            document.getElementById('modal').style.display='flex'; handleSlider(0.25);
+            document.getElementById('modal').style.display='flex';
         }
 
         function openSpecial() {
@@ -252,32 +179,57 @@
         function handleSlider(v) { document.getElementById('qtyText').innerText = v + " " + (selectedItem ? selectedItem.unit : ""); }
 
         function confirmAdd() {
-            const qty = selectedItem ? document.getElementById('qtyText').innerText : "طلب خاص";
-            const src = document.getElementById('mSource').value || "أي مكان";
-            const d = document.getElementById('mDesc').value;
-            cart.push({ name: selectedItem ? selectedItem.title : "مشوار خاص", qty, src, d });
+            let itemData = {};
+            if(selectedItem) {
+                itemData = { 
+                    name: selectedItem.title, 
+                    qty: document.getElementById('qtyText').innerText, 
+                    src: document.getElementById('mSource').value || "غير محدد" 
+                };
+            } else {
+                itemData = { 
+                    name: "🚀 مشوار خاص", 
+                    from: document.getElementById('mFrom').value,
+                    toWho: document.getElementById('mToWho').value,
+                    toWhere: document.getElementById('mToWhere').value,
+                    desc: document.getElementById('mDesc').value
+                };
+            }
+            cart.push(itemData);
             updateBadge(); closeModal(); renderCart();
-            alert("تمت الإضافة ✅");
+            // تصفير الخانات
+            ["mFrom", "mToWho", "mToWhere", "mDesc", "mSource"].forEach(id => document.getElementById(id).value = "");
         }
 
         function updateBadge() { const b = document.getElementById('badge'); b.innerText = cart.length; b.style.display = cart.length ? 'flex' : 'none'; }
 
         function renderCart() {
             const list = document.getElementById('cartList');
-            if(!cart.length) { list.innerHTML = "<p style='text-align:center; color:var(--dim)'>السلة فارغة</p>"; document.getElementById('checkoutForm').style.display='none'; return; }
+            if(!cart.length) { list.innerHTML = "السلة فارغة"; document.getElementById('checkoutForm').style.display='none'; return; }
             document.getElementById('checkoutForm').style.display='block';
-            list.innerHTML = cart.map((i, idx) => `<div class="item-row"><div><b>${i.name}</b><br><small>${i.qty} - ${i.src}</small></div><div onclick="cart.splice(${idx},1); renderCart(); updateBadge();">❌</div></div>`).join('');
+            list.innerHTML = cart.map((i, idx) => `
+                <div class="item-row">
+                    <div><b>${i.name}</b><br><small>${i.qty || 'توصيل مستلزمات'}</small></div>
+                    <div onclick="cart.splice(${idx},1); renderCart(); updateBadge();" style="color:red">❌</div>
+                </div>`).join('');
         }
 
         function completeOrder() {
             const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddr').value;
             if(!n || !p || !a) return alert("كمل بياناتك!");
 
-            let msg = `*✨ نـجـدة أوردر | ELITE 🚀*%0A*بـإشـراف: مـصـطـفى حـجـازي ⚡*%0A━━━━━━━━━━━━━━%0A%0A*📦 تـفـاصـيـل الـطـلـبـيـة:*%0A%0A`;
+            let msg = `*✨ نـجـدة أوردر | ELITE 🚀*\n*بـإشـراف: مـصـطـفى حـجـازي ⚡*\n━━━━━━━━━━━━━━\n\n*📦 تـفـاصـيـل الـطـلـبـيـة:*\n\n`;
+            
             cart.forEach((i, idx) => {
-                msg += `*${idx+1}️⃣ ${i.name}* 🛒%0A⚖️ الكمية: ${i.qty}%0A📍 المصدر: ${i.src}%0A${i.d ? `📝 ملاحظة: ${i.d}%0A` : ''}----------------------------%0A`;
+                if(i.name === "🚀 مشوار خاص") {
+                    msg += `*${idx+1}️⃣ مشوار خاص 🚀*\n📍 الاستلام من: ${i.from}\n👤 التسليم لـ: ${i.toWho}\n🏠 المكان: ${i.toWhere}\n📦 الحاجة: ${i.desc}\n`;
+                } else {
+                    msg += `*${idx+1}️⃣ ${i.name}* 🛒\n⚖️ الكمية: ${i.qty}\n📍 من: ${i.src}\n`;
+                }
+                msg += `----------------------------\n`;
             });
-            msg += `%0A*👤 بـيـانـات الـعـمـيـل:*%0A%0A*📝 الاسـم:* ${n}%0A*📞 الـهـاتـف:* ${p}%0A*📍 الـعـنـوان:* ${a}%0A%0A━━━━━━━━━━━━━━%0A*✅ جاري التجهيز الآن..*`;
+
+            msg += `\n*👤 بـيـانـات الـعـمـيـل:*\n\n*📝 الاسـم:* ${n}\n*📞 الـهـاتـف:* ${p}\n*📍 الـعـنـوان:* ${a}\n\n━━━━━━━━━━━━━━\n*✅ جاري التجهيز الآن..*`;
             
             window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
             cart = []; updateBadge(); nav('shop');
@@ -292,9 +244,6 @@
         }
 
         function closeModal() { document.getElementById('modal').style.display='none'; }
-        function renderAdminProducts() { document.getElementById('adminProductList').innerHTML = products.map(p => `<div class="item-row"><span>${p.title}</span><button onclick="db.collection('products').doc('${p.id}').delete()" style="background:red; color:#fff; border:none; padding:5px 10px; border-radius:8px;">حذف</button></div>`).join(''); }
-        function addCategory() { const n = document.getElementById('newCatName').value; if(n) db.collection("categories").add({ name: n }).then(() => document.getElementById('newCatName').value=""); }
-
         fetchAll();
     </script>
 </body>
