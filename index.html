@@ -15,10 +15,9 @@
         body { background: var(--dark); color: #fff; padding-bottom: 90px; }
 
         header { padding: 15px; background: #000; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        .logo { font-size: 1.2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); cursor: pointer; }
         .owner-name { font-size: 0.8rem; color: var(--royal); border: 1px solid var(--royal); padding: 2px 10px; border-radius: 8px; font-weight: bold; }
 
-        /* شريط العرض المتحرك */
         .promo-bar { background: #1a1a00; color: var(--gold); padding: 5px; font-size: 0.8rem; border-bottom: 1px solid var(--gold); font-weight: bold; }
 
         .hero-fixed { 
@@ -46,6 +45,9 @@
         .bonus-badge { display: none; background: var(--gold); color: #000; padding: 10px; border-radius: 12px; font-weight: 900; margin-bottom: 15px; text-align: center; font-size: 0.9rem; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
 
+        .admin-section { background: #111; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--royal); }
+        .admin-list-item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; }
+
         .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; }
         .nav-link { color: #555; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
         .nav-link.active { color: var(--neon); }
@@ -58,26 +60,7 @@
         <div class="owner-name">مصطفى حجازي ⚡</div>
     </header>
 
-    <div class="promo-bar">
-        <marquee>🔥 اطلب 9 أوردرات وخد العاشر توصيل "مجاني" تماماً من نجدة أوردر - مصطفى حجازي 🔥</marquee>
-    </div>
-
-    <div class="modal" id="promoModal">
-        <div class="modal-box" style="border-color: var(--gold);">
-            <div style="font-size: 3rem;">🎁</div>
-            <h2 style="color: var(--gold); margin-bottom: 10px;">هدية الـ 10 أوردرات!</h2>
-            <p style="font-size: 0.9rem; color: #ccc; margin-bottom: 20px;">جمع 9 أوردرات وخد الأوردر العاشر توصيله هدية مجانية لأي مكان!</p>
-            <button class="btn-order" onclick="closeModal('promoModal')" style="background: var(--gold); color: #000;">عاش.. يلا بينا! 🚀</button>
-        </div>
-    </div>
-
-    <div class="hero-fixed" onclick="openModal('deliveryModal')">
-        <div class="hero-text">
-            <h2>🚀 توصيل مستلزمات شخصية</h2>
-            <p>اطلب وهنوصل لأي حد في أي مكان</p>
-        </div>
-        <button class="btn-order" style="width:auto; padding:8px 15px;">اطلب</button>
-    </div>
+    <div class="promo-bar"><marquee>🔥 اطلب 9 أوردرات وخد العاشر توصيل "مجاني" تماماً من نجدة أوردر 🔥</marquee></div>
 
     <div id="shopPage" class="page">
         <div class="cats-bar" id="catsList"></div>
@@ -90,22 +73,28 @@
         <div id="cartItems"></div>
         <div id="orderForm" style="display:none; margin-top:20px; background:#111; padding:15px; border-radius:15px;">
             <input type="text" id="uName" placeholder="اسمك أنت">
-            <input type="tel" id="uPhone" placeholder="رقم موبايلك (للحصول على الهدية)" oninput="checkUserBonus(this.value)">
+            <input type="tel" id="uPhone" placeholder="رقم موبايلك (للبونص)" oninput="checkUserBonus(this.value)">
             <input type="text" id="uAddr" placeholder="عنوانك بالتفصيل">
-            <p id="pointsInfo" style="font-size: 0.75rem; color: #888; margin-bottom: 10px; text-align: center;"></p>
+            <p id="pointsInfo" style="font-size: 0.75rem; color: #888; text-align: center; margin-bottom: 10px;"></p>
             <button class="btn-order" id="sendBtn" style="padding:15px;" onclick="sendWA()">تأكيد الطلب 🚀</button>
         </div>
     </div>
 
     <div id="adminPage" class="page" style="display:none; padding:15px;">
+        <div class="admin-section" style="border-color: var(--neon);">
+            <h3 style="color:var(--neon); margin-bottom:15px;">📥 طلبات بانتظار التأكيد</h3>
+            <div id="pendingOrdersList"></div>
+        </div>
+
         <div class="admin-section">
             <h3 style="color:var(--royal); margin-bottom:10px;">📂 إدارة الأقسام</h3>
-            <input type="text" id="catInput" placeholder="اسم القسم">
+            <input type="text" id="catInput" placeholder="اسم القسم الجديد">
             <button class="btn-order" onclick="saveCat()">حفظ القسم</button>
-            <div id="adminCatsList" style="margin-top:15px;"></div>
+            <div id="adminCatsList" style="margin-top:10px;"></div>
         </div>
+
         <div class="admin-section">
-            <h3 style="color:var(--neon); margin-bottom:10px;">➕ إدارة المنتجات</h3>
+            <h3 style="color:var(--neon); margin-bottom:10px;">➕ إضافة منتج</h3>
             <input type="text" id="pTitle" placeholder="اسم المنتج">
             <select id="pCatSelect"></select>
             <input type="file" onchange="handleImg(this)">
@@ -120,101 +109,107 @@
         <a href="#" id="adminLink" class="nav-link" style="display:none;" onclick="nav('admin')">⚙️ الإدارة</a>
     </nav>
 
-    <div class="modal" id="deliveryModal">
-        <div class="modal-box">
-            <h3 style="color:var(--neon); margin-bottom:15px;">طلب توصيل خاص</h3>
-            <textarea id="dWhat" placeholder="هنجيب إيه؟"></textarea>
-            <input type="text" id="dFrom" placeholder="هناخده منين؟">
-            <input type="text" id="dTo" placeholder="هنسلمه لمين؟">
-            <input type="text" id="dAddr" placeholder="عنوان المستلم">
-            <input type="tel" id="dPhone" placeholder="رقم تليفون المستلم">
-            <button class="btn-order" onclick="addDelivery()">إضافة للسلة 🛒</button>
-            <button onclick="closeModal('deliveryModal')" style="width:100%; margin-top:10px; color:#555; background:none; border:none;">إلغاء</button>
-        </div>
-    </div>
+    <div class="modal" id="deliveryModal"><div class="modal-box"><h3>توصيل خاص</h3><textarea id="dWhat" placeholder="هنجيب إيه؟"></textarea><input type="text" id="dFrom" placeholder="منين؟"><input type="text" id="dTo" placeholder="لمين؟"><input type="text" id="dAddr" placeholder="العنوان"><input type="tel" id="dPhone" placeholder="التليفون"><button class="btn-order" onclick="addDelivery()">إضافة للسلة</button><button onclick="closeModal('deliveryModal')" style="background:none; border:none; color:gray; margin-top:10px;">إلغاء</button></div></div>
+    <div class="modal" id="pModal"><div class="modal-box"><h3 id="mTitle"></h3><input type="text" id="mQty" placeholder="الكمية؟"><button class="btn-order" onclick="addP()">إضافة للسلة</button><button onclick="closeModal('pModal')" style="background:none; border:none; color:gray; margin-top:10px;">إلغاء</button></div></div>
 
-    <div class="modal" id="pModal">
-        <div class="modal-box">
-            <h3 id="mTitle" style="color:var(--neon); margin-bottom:15px;"></h3>
-            <input type="text" id="mQty" placeholder="الكمية؟">
-            <input type="text" id="mNote" placeholder="ملاحظة">
-            <button class="btn-order" onclick="addP()">إضافة للسلة 🛒</button>
-            <button onclick="closeModal('pModal')" style="width:100%; margin-top:10px; color:#555; background:none; border:none;">إلغاء</button>
-        </div>
-    </div>
+    <div class="hero-fixed" onclick="openModal('deliveryModal')"><div><h2>🚀 توصيل مستلزمات</h2><p>اطلب وهنوصل لأي مكان</p></div><button class="btn-order" style="width:auto; padding:8px 15px;">اطلب</button></div>
 
     <script>
         const conf = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
         firebase.initializeApp(conf); const db = firebase.firestore();
 
-        let cats=[], prods=[], cart=[], tempImg="", userPts=0, isAdmin=false;
+        let cats=[], prods=[], cart=[], tempImg="", userPts=0, isAdmin=false, selectedP=null;
 
-        // دخول الإدارة بضغطة طويلة
+        // تفعيل الإدارة (4 ثواني على اللوجو)
         document.getElementById('logoAdmin').addEventListener('touchstart',()=>{
             let t=setTimeout(()=>{ if(prompt("Pass?")==="135790"){ isAdmin=true; document.getElementById('adminLink').style.display='block'; nav('admin'); } },4000);
             document.getElementById('logoAdmin').addEventListener('touchend',()=>clearTimeout(t));
         });
 
         function init() {
-            openModal('promoModal'); // الإعلان أول ما يفتح
             db.collection("categories").onSnapshot(s => { cats=[]; s.forEach(d=>cats.push({id:d.id, ...d.data()})); renderCats(); });
             db.collection("products").orderBy("createdAt","desc").onSnapshot(s => { prods=[]; s.forEach(d=>prods.push({id:d.id, ...d.data()})); renderProducts(); renderAdminProducts(); });
+            renderAdminOrders();
         }
 
         async function checkUserBonus(phone) {
             if(phone.length < 11) return;
             const doc = await db.collection("users_stats").doc(phone).get();
             userPts = doc.exists ? doc.data().count : 0;
-            const msg = document.getElementById('bonusMsg');
-            const info = document.getElementById('pointsInfo');
-            
-            if(userPts >= 9) {
-                msg.style.display = 'block';
-                info.innerText = "أنت دلوقتي في أوردر الهدية! التوصيل مجاني ✅";
-            } else {
-                msg.style.display = 'none';
-                info.innerText = `رصيدك: ${userPts} أوردرات. باقي ${9 - userPts} للهدية!`;
-            }
+            document.getElementById('bonusMsg').style.display = (userPts >= 9) ? 'block' : 'none';
+            document.getElementById('pointsInfo').innerText = `رصيدك: ${userPts} أوردرات. باقي ${9-userPts} للهدية!`;
         }
 
         async function sendWA() {
             const btn = document.getElementById('sendBtn');
             const n=document.getElementById('uName').value, ph=document.getElementById('uPhone').value, ad=document.getElementById('uAddr').value;
-            if(!n || ph.length < 11 || !ad) return alert("كمل بياناتك صح!");
+            if(!n || ph.length < 11 || !ad) return alert("البيانات ناقصة!");
 
             btn.disabled = true; btn.innerText = "جاري الحفظ...";
-
-            const isBonus = (userPts >= 9);
             const orderID = "NAG-" + Math.random().toString(36).substring(7).toUpperCase();
-            const time = new Date().toLocaleTimeString('ar-EG');
 
-            // تحديث فايربيز (تصفير العداد لو بونص أو زيادة 1)
-            let nextCount = isBonus ? 0 : userPts + 1;
-            await db.collection("users_stats").doc(ph).set({ count: nextCount, lastID: orderID }, { merge: true });
+            try {
+                // حفظ الطلب للمراجعة بدلاً من زيادة العداد تلقائياً
+                await db.collection("orders").add({ orderID, userName: n, userPhone: ph, address: ad, items: cart, status: "pending", createdAt: new Date() });
+                
+                let msg = `*✨ أوردر جديد - نجدة أوردر ✨*\n*رقم العملية:* \`${orderID}\`\n━━━━━━━━━━━━━━\n`;
+                cart.forEach((i, x) => msg += `*${x+1}️⃣ ${i.type==='delivery'?'توصيل':'منتج'}:* ${i.t || i.w}\n`);
+                msg += `\n*👤 العميل:* ${n}\n📞 تليفونه: ${ph}\n🏠 عنوانه: ${ad}`;
 
-            let msg = `*✨ أوردر جديد - نجدة أوردر ✨*\n*رقم العملية:* \`${orderID}\`\n*الوقت:* \`${time}\`\n`;
-            if(isBonus) msg += `\n*🎁 [ هديــــة الـ 10 أوردرات ] 🎁*\n*كود التحقق:* \`GIFT-${orderID}\`\n`;
-            msg += `━━━━━━━━━━━━━━\n\n`;
-
-            cart.forEach((i, x) => {
-                if(i.type==='delivery') msg += `*${x+1}️⃣ توصيل:* ${i.w}\nمن: ${i.f} | للمستلم: ${i.t}\n----------\n`;
-                else msg += `*${x+1}️⃣ منتج:* ${i.t}\nكمية: ${i.q}\n----------\n`;
-            });
-            msg += `\n*👤 العميل:* ${n}\n📞 تليفونه: ${ph}\n🏠 العنوان: ${ad}`;
-
-            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-            cart=[]; nav('shop');
+                window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+                cart=[]; nav('shop');
+            } catch(e) { alert("حدث خطأ!"); }
             btn.disabled = false; btn.innerText = "تأكيد الطلب 🚀";
         }
 
-        // --- باقي وظائف العرض (كما هي في كودك) ---
+        function renderAdminOrders() {
+            db.collection("orders").where("status", "==", "pending").orderBy("createdAt", "desc").onSnapshot(s => {
+                const list = document.getElementById('pendingOrdersList');
+                list.innerHTML = "";
+                s.forEach(doc => {
+                    const o = doc.data();
+                    list.innerHTML += `
+                        <div class="admin-list-item">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <b style="color:var(--neon);">${o.userName}</b>
+                                <small>${o.orderID}</small>
+                            </div>
+                            <p style="font-size:0.8rem; color:#ccc;">📞 ${o.userPhone} | 📍 ${o.address}</p>
+                            <div style="display:flex; gap:10px; margin-top:10px;">
+                                <button onclick="confirmOrder('${doc.id}', '${o.userPhone}', '${o.orderID}')" style="flex:2; background:var(--neon); border:none; padding:8px; border-radius:5px; font-weight:bold;">✅ تأكيد وبونص</button>
+                                <button onclick="cancelOrder('${doc.id}')" style="flex:1; background:#ff4444; border:none; padding:8px; border-radius:5px; font-weight:bold; color:#fff;">❌ إلغاء</button>
+                            </div>
+                        </div>`;
+                });
+                if(s.empty) list.innerHTML = "<p style='text-align:center; color:gray;'>مفيش طلبات جديدة</p>";
+            });
+        }
+
+        async function confirmOrder(docId, phone, lastID) {
+            if(!confirm("أكدت التوصيل وعايز تزود بونص؟")) return;
+            const userRef = db.collection("users_stats").doc(phone);
+            const userDoc = await userRef.get();
+            let currentCount = userDoc.exists ? userDoc.data().count : 0;
+            let nextCount = (currentCount >= 9) ? 0 : currentCount + 1;
+            await userRef.set({ count: nextCount, lastID: lastID }, { merge: true });
+            await db.collection("orders").doc(docId).update({ status: "confirmed" });
+            alert("تم التأكيد! العداد زاد للزبون ✅");
+        }
+
+        async function cancelOrder(docId) {
+            if(!confirm("عايز تلغي الأوردر ده؟ (مش هيأثر على بونص الزبون)")) return;
+            await db.collection("orders").doc(docId).update({ status: "cancelled" });
+            alert("تم الإلغاء 🗑️");
+        }
+
+        // --- وظائف العرض الأساسية ---
         function renderCats() {
             document.getElementById('catsList').innerHTML = `<div class="cat-item active" onclick="filter('الكل',this)">الكل</div>` + cats.map(c=>`<div class="cat-item" onclick="filter('${c.name}',this)">${c.name}</div>`).join('');
             document.getElementById('pCatSelect').innerHTML = cats.map(c=>`<option>${c.name}</option>`).join('');
-            document.getElementById('adminCatsList').innerHTML = cats.map(c=>`<div class="admin-list-item"><span>${c.name}</span><button onclick="delDoc('categories','${c.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
+            document.getElementById('adminCatsList').innerHTML = cats.map(c=>`<div class="admin-list-item" style="display:flex; justify-content:space-between;">${c.name} <button onclick="delDoc('categories','${c.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
         }
         function renderAdminProducts() {
-            document.getElementById('adminProdsList').innerHTML = prods.map(p=>`<div class="admin-list-item"><span>${p.title}</span><button onclick="delDoc('products','${p.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
+            document.getElementById('adminProdsList').innerHTML = prods.map(p=>`<div class="admin-list-item" style="display:flex; justify-content:space-between;">${p.title} <button onclick="delDoc('products','${p.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
         }
         function renderProducts(f='الكل') {
             const g = document.getElementById('productsGrid'); g.innerHTML="";
@@ -243,7 +238,7 @@
         }
         function renderCart() {
             const list = document.getElementById('cartItems');
-            list.innerHTML = cart.map((i,x)=>`<div style="background:#1a1a1a; padding:15px; border-radius:10px; margin-bottom:10px;">${i.type==='delivery'?'🚀 توصيل خاص':'📦 منتج: '+i.t} <button onclick="cart.splice(${x},1); renderCart()" style="float:left; color:red; background:none; border:none;">حذف</button></div>`).join('');
+            list.innerHTML = cart.map((i,x)=>`<div class="admin-list-item">${i.type==='delivery'?'🚀 توصيل':'📦 '+i.t} <button onclick="cart.splice(${x},1); renderCart()" style="float:left; color:red; background:none; border:none;">حذف</button></div>`).join('');
             document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none';
         }
         async function saveCat() { const n=document.getElementById('catInput').value; if(n) await db.collection("categories").add({name:n}); document.getElementById('catInput').value=""; }
@@ -253,8 +248,9 @@
             if(t) await db.collection("products").add({title:t, cat:c, img:tempImg, createdAt: new Date()});
             document.getElementById('pTitle').value=""; tempImg="";
         }
-        async function delDoc(col,id){ if(confirm("حذف؟")) await db.collection(col).doc(id).delete(); }
+        async function delDoc(col,id){ if(confirm("حذف نهائي؟")) await db.collection(col).doc(id).delete(); }
         function filter(n,el){ document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); renderProducts(n); }
+        
         init();
     </script>
 </body>
