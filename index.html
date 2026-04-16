@@ -17,7 +17,6 @@
         .logo-text { font-weight: 900; font-size: 1.1rem; background: linear-gradient(var(--main), var(--sec)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .admin-btn { font-size: 0.75rem; opacity: 0.6; cursor: pointer; }
 
-        /* Navigation - Optimized Size */
         nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,12,0.98); border-top: 1px solid #2c2c2e; display: flex; justify-content: space-around; padding: 8px 0 20px; z-index: 3000; }
         .nav-link { color: #8e8e93; text-decoration: none; text-align: center; flex: 1; transition: 0.3s; }
         .nav-link i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
@@ -38,9 +37,7 @@
         .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
         .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; }
         
-        .order-card { background: var(--card); border-radius: 15px; padding: 12px; margin-bottom: 12px; border-right: 4px solid var(--main); animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+        .order-card { background: var(--card); border-radius: 15px; padding: 12px; margin-bottom: 12px; border-right: 4px solid var(--main); }
         .cat-item { display: flex; justify-content: space-between; background: #222; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-size: 0.9rem; }
         .hidden-admin { display: none !important; }
         .admin-mode .hidden-admin { display: block !important; }
@@ -60,22 +57,22 @@
 <div id="special" class="page">
     <h3 style="text-align:center; margin: 15px 0;">📦 طلب توصيل خاص</h3>
     <input type="text" id="spDetails" placeholder="إيه الحاجة اللي هنوصلها؟">
-    <input type="text" id="spFrom" placeholder="مكان الاستلام">
-    <input type="text" id="spTo" placeholder="مكان التسليم">
-    <input type="tel" id="spPhone" placeholder="رقم هاتف المستلم">
-    <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال الطلب 🚀</button>
+    <input type="text" id="spFrom" placeholder="مكان الاستلام (منين؟)">
+    <input type="text" id="spTo" placeholder="مكان التسليم (لفين؟)">
+    <input type="tel" id="spPhone" placeholder="رقم موبايل المستلم">
+    <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال طلب التوصيل 🚀</button>
 </div>
 
 <div id="cart" class="page">
     <h3 style="margin: 15px 0;">🛒 السلة</h3>
     <div id="cartList" style="margin-bottom: 15px;"></div>
     <input type="text" id="uName" placeholder="الاسم">
-    <input type="text" id="uAddress" placeholder="العنوان">
+    <input type="text" id="uAddress" placeholder="العنوان بالتفصيل">
     <input type="tel" id="uPhone" placeholder="رقم الموبايل" oninput="checkUserHistory(this.value)">
     <div id="loyaltySection" style="display:none; background:#1c1c1e; padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid #333;">
-        <p id="loyaltyText" style="font-size:0.85rem;"></p>
+        <p id="loyaltyText" style="font-size:0.85rem; font-weight: bold;"></p>
     </div>
-    <button class="btn btn-main" id="confirmBtn" onclick="confirmFullOrder()">تأكيد الطلب 💬</button>
+    <button class="btn btn-main" id="confirmBtn" onclick="confirmFullOrder()">تأكيد وإرسال واتساب 💬</button>
 </div>
 
 <div id="admin-orders" class="page">
@@ -124,7 +121,6 @@
         if(id === 'admin-orders') renderOrders();
     }
 
-    // --- نظام الولاء ---
     async function checkUserHistory(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "confirmed").get();
@@ -133,6 +129,7 @@
             const txt = document.getElementById('loyaltyText');
             sec.style.display = 'block';
             txt.innerHTML = ordersCount >= 9 ? "🎁 مبروك! ده الأوردر العاشر (هدية)" : `عدد أوردراتك السابقة: ${ordersCount}`;
+            txt.style.color = ordersCount >= 9 ? "var(--success)" : "#fff";
         }
     }
 
@@ -143,23 +140,24 @@
             const batch = db.batch();
             snap.forEach(doc => batch.update(doc.ref, { status: "archived" }));
             await batch.commit();
+            alert("تم إتمام الأوردر العاشر وتصفير عداد العميل! 🎁");
+        } else {
+            alert("تم التأكيد! رصيد العميل: " + snap.size);
         }
-        alert("تم التأكيد بنجاح ✅");
     }
 
-    // --- الإدارة (تم إصلاح العرض) ---
     function renderOrders() {
-        // حذفنا الترتيب الزمني مؤقتاً للتأكد من ظهور البيانات بدون مشاكل Indexing
         db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
             let h = '';
             s.forEach(d => {
                 const o = d.data();
                 h += `<div class="order-card">
                     <p>👤 <b>${o.n}</b> | 📞 ${o.p}</p>
-                    <p style="font-size:0.8rem; color:var(--main);">📦 ${o.items ? o.items.map(i=>i.t).join(', ') : o.spDetails}</p>
+                    <p style="font-size:0.8rem; color:var(--main); margin-top:5px;">📦 ${o.items ? o.items.map(i=>i.t).join(', ') : o.spDetails}</p>
+                    <p style="font-size:0.75rem; color:#8e8e93;">📍 ${o.a || 'توصيل خاص'}</p>
                     <div style="display:flex; gap:10px; margin-top:8px;">
-                        <button class="btn" style="background:var(--success); color:#000; padding:8px; flex:1;" onclick="updateOrderStatus('${d.id}', '${o.p}')">تأكيد</button>
-                        <button class="btn" style="background:var(--danger); padding:8px; flex:1;" onclick="deleteDoc('orders','${d.id}')">حذف</button>
+                        <button class="btn" style="background:var(--success); color:#000; padding:8px; flex:1;" onclick="updateOrderStatus('${d.id}', '${o.p}')">تأكيد ✅</button>
+                        <button class="btn" style="background:var(--danger); padding:8px; flex:1;" onclick="deleteDoc('orders','${d.id}')">حذف 🗑️</button>
                     </div>
                 </div>`;
             });
@@ -211,17 +209,37 @@
 
     async function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
-        if(!n || !p || cart.length === 0) return alert("كمل البيانات!");
+        if(!n || !p || cart.length === 0) return alert("كمل البيانات والطلبات يا درش!");
+        
+        let itemsList = cart.map((i, index) => `${index + 1}- ${i.t}`).join('\n');
+        let giftText = ordersCount >= 9 ? "\n\n🎁 *هذا الطلب العاشر: هدية توصيل مجاني!*" : "";
+        
+        let msg = `⚡ *أوردر جديد من نجدة أوردر*\n\n` +
+                  `👤 *الاسم:* ${n}\n` +
+                  `📞 *الموبايل:* ${p}\n` +
+                  `📍 *العنوان:* ${a}\n\n` +
+                  `📦 *الطلبات:*\n${itemsList}` +
+                  giftText;
+
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("طلب جديد من " + n)}`);
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
         cart = []; renderCart();
     }
 
     async function sendSpecialOrder() {
-        const det = document.getElementById('spDetails').value, ph = document.getElementById('spPhone').value;
-        if(!det || !ph) return alert("اكتب التفاصيل!");
-        await db.collection("orders").add({ n: "توصيل خاص", p: ph, spDetails: det, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("طلب شحن: " + det)}`);
+        const det = document.getElementById('spDetails').value, ph = document.getElementById('spPhone').value, 
+              from = document.getElementById('spFrom').value, to = document.getElementById('spTo').value;
+        
+        if(!det || !ph || !from || !to) return alert("اكتب كل تفاصيل التوصيل!");
+        
+        let msg = `📦 *طلب شحن خاص*\n\n` +
+                  `📝 *الحاجة:* ${det}\n` +
+                  `🏠 *من:* ${from}\n` +
+                  `📍 *إلى:* ${to}\n` +
+                  `📞 *رقم المستلم:* ${ph}`;
+
+        await db.collection("orders").add({ n: "توصيل خاص", p: ph, spDetails: det, spFrom: from, spTo: to, status: "pending", createdAt: new Date() });
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
     }
 </script>
 </body>
