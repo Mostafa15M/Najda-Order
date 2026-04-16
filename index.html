@@ -35,12 +35,7 @@
 
         .btn-order { width: 100%; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(45deg, var(--neon), var(--royal)); color: #fff; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
 
-        /* ستايل لوحة الإدارة */
         .admin-section { background: #111; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--royal); }
-        .admin-list-item { display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; padding: 10px; border-radius: 10px; margin-bottom: 8px; border: 1px solid #222; }
-        .admin-list-item img { width: 40px; height: 40px; border-radius: 5px; object-fit: cover; }
-        .admin-actions button { background: none; border: none; font-size: 0.75rem; font-weight: bold; cursor: pointer; margin-right: 10px; }
-        
         .order-card { background: #000; border: 1px solid #222; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-right: 4px solid var(--neon); }
         .order-card.done { border-right-color: var(--success); opacity: 0.6; }
 
@@ -79,31 +74,26 @@
             <input type="text" id="uName" placeholder="اسمك أنت">
             <input type="tel" id="uPhone" placeholder="رقم موبايلك">
             <input type="text" id="uAddr" placeholder="عنوانك بالتفصيل">
-            <button class="btn-order" style="padding:15px;" onclick="confirmOrder()">تأكيد الطلب (واتساب + نظام) 🚀</button>
+            <button class="btn-order" style="padding:15px;" onclick="confirmOrder()">تأكيد الطلب 🚀</button>
         </div>
     </div>
 
     <div id="adminPage" class="page" style="display:none; padding:15px;">
         <div class="admin-section">
-            <h3 style="color:var(--neon); margin-bottom:15px;">🔔 طلبات تحتاج مراجعة</h3>
+            <h3 style="color:var(--neon); margin-bottom:15px;">🔔 إدارة الطلبات</h3>
+            <button class="btn-order" style="background: #444; margin-bottom: 15px; border: 1px solid red; font-size: 0.75rem;" onclick="clearAllConfirmedOrders()">🗑️ مسح كل السجل المؤكد</button>
             <div id="adminOrdersList"></div>
         </div>
 
         <div class="admin-section">
-            <h3 style="color:var(--royal); margin-bottom:10px;">📂 إدارة الأقسام</h3>
-            <input type="text" id="catInput" placeholder="اسم القسم">
-            <button class="btn-order" id="catBtn" onclick="saveCat()">حفظ القسم</button>
-            <div id="adminCatsList" style="margin-top:15px;"></div>
-        </div>
-
-        <div class="admin-section">
-            <h3 style="color:var(--neon); margin-bottom:10px;" id="pFormTitle">➕ إدارة المنتجات</h3>
+            <h3 style="color:var(--royal); margin-bottom:10px;">📂 الإعدادات</h3>
+            <input type="text" id="catInput" placeholder="اسم القسم الجديد">
+            <button class="btn-order" onclick="saveCat()">حفظ القسم</button>
+            <hr style="margin:15px 0; border-color:#222;">
             <input type="text" id="pTitle" placeholder="اسم المنتج">
             <select id="pCatSelect"></select>
             <input type="file" onchange="handleImg(this)">
-            <button class="btn-order" id="prodBtn" onclick="saveProd()">حفظ المنتج</button>
-            <button id="pCancel" style="display:none; width:100%; margin-top:10px; color:grey; background:none; border:none;" onclick="resetProdForm()">إلغاء</button>
-            <div id="adminProdsList" style="margin-top:15px;"></div>
+            <button class="btn-order" onclick="saveProd()">حفظ المنتج</button>
         </div>
     </div>
 
@@ -113,192 +103,86 @@
         <a href="#" id="adminLink" class="nav-link" style="display:none;" onclick="nav('admin')">⚙️ الإدارة</a>
     </nav>
 
-    <div class="modal" id="deliveryModal">
-        <div class="modal-box">
-            <h3 style="color:var(--neon); text-align:center; margin-bottom:15px;">طلب توصيل خاص</h3>
-            <textarea id="dWhat" placeholder="هنجيب إيه؟"></textarea>
-            <input type="text" id="dFrom" placeholder="هناخده منين؟">
-            <input type="text" id="dTo" placeholder="هنسلمه لمين؟">
-            <input type="text" id="dAddr" placeholder="عنوان المستلم">
-            <input type="tel" id="dPhone" placeholder="رقم تليفون المستلم">
-            <button class="btn-order" onclick="addDelivery()">إضافة للسلة 🛒</button>
-            <button onclick="closeModal('deliveryModal')" style="width:100%; margin-top:10px; color:#555; background:none; border:none;">إلغاء</button>
-        </div>
-    </div>
-
-    <div class="modal" id="pModal">
-        <div class="modal-box">
-            <h3 id="mTitle" style="color:var(--neon); text-align:center; margin-bottom:15px;"></h3>
-            <input type="text" id="mQty" placeholder="الكمية؟">
-            <input type="text" id="mNote" placeholder="ملاحظة">
-            <button class="btn-order" onclick="addP()">إضافة للسلة 🛒</button>
-            <button onclick="closeModal('pModal')" style="width:100%; margin-top:10px; color:#555; background:none; border:none;">إلغاء</button>
-        </div>
-    </div>
+    <div class="modal" id="deliveryModal"><div class="modal-box"><h3>توصيل خاص</h3><textarea id="dWhat" placeholder="هنجيب إيه؟"></textarea><input type="text" id="dFrom" placeholder="منين؟"><input type="text" id="dTo" placeholder="لمين؟"><input type="text" id="dAddr" placeholder="العنوان"><input type="tel" id="dPhone" placeholder="التليفون"><button class="btn-order" onclick="addDelivery()">إضافة للسلة</button><button onclick="closeModal('deliveryModal')">إلغاء</button></div></div>
+    <div class="modal" id="pModal"><div class="modal-box"><h3 id="mTitle"></h3><input type="text" id="mQty" placeholder="الكمية"><input type="text" id="mNote" placeholder="ملاحظة"><button class="btn-order" onclick="addP()">إضافة للسلة</button><button onclick="closeModal('pModal')">إلغاء</button></div></div>
 
     <script>
         const conf = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
         firebase.initializeApp(conf); const db = firebase.firestore();
+        let cats=[], prods=[], cart=[], tempImg="", selectedP=null, isAdmin=false;
 
-        let cats=[], prods=[], cart=[], tempImg="", editPId=null, editCId=null, selectedP=null, isAdmin=false;
-
-        // الدخول للإدارة (ضغطة طويلة 4 ثواني على اللوجو)
-        let timer;
-        const logo = document.getElementById('logoAdmin');
-        logo.addEventListener('touchstart', () => timer = setTimeout(checkAdmin, 4000));
-        logo.addEventListener('touchend', () => clearTimeout(timer));
-
-        function checkAdmin() {
-            if(prompt("كلمة السر؟") === "135790") {
-                isAdmin = true;
-                document.getElementById('adminLink').style.display = 'block';
-                nav('admin');
-            }
-        }
+        // الدخول للإدارة
+        let timer; document.getElementById('logoAdmin').addEventListener('touchstart',()=> timer=setTimeout(()=>{if(prompt("Pass?")==="135790"){isAdmin=true; document.getElementById('adminLink').style.display='block'; nav('admin');}},4000));
+        document.getElementById('logoAdmin').addEventListener('touchend',()=>clearTimeout(timer));
 
         function init() {
-            db.collection("categories").onSnapshot(s => { cats=[]; s.forEach(d=>cats.push({id:d.id, ...d.data()})); renderCats(); });
-            db.collection("products").orderBy("createdAt","desc").onSnapshot(s => { prods=[]; s.forEach(d=>prods.push({id:d.id, ...d.data()})); renderProducts(); renderAdminProducts(); });
-            db.collection("orders").orderBy("createdAt","desc").onSnapshot(s => renderAdminOrders(s));
+            db.collection("categories").onSnapshot(s=>{cats=[]; s.forEach(d=>cats.push({id:d.id, ...d.data()})); renderCats();});
+            db.collection("products").orderBy("createdAt","desc").onSnapshot(s=>{prods=[]; s.forEach(d=>prods.push({id:d.id, ...d.data()})); renderProducts();});
+            db.collection("orders").orderBy("createdAt","desc").onSnapshot(s=>renderAdminOrders(s));
         }
 
-        function renderCats() {
-            document.getElementById('catsList').innerHTML = `<div class="cat-item active" onclick="filter('الكل',this)">الكل</div>` + cats.map(c=>`<div class="cat-item" onclick="filter('${c.name}',this)">${c.name}</div>`).join('');
-            document.getElementById('pCatSelect').innerHTML = cats.map(c=>`<option>${c.name}</option>`).join('');
-            document.getElementById('adminCatsList').innerHTML = cats.map(c=>`
-                <div class="admin-list-item"><span>${c.name}</span>
-                <div class="admin-actions"><button onclick='startEditCat(${JSON.stringify(c)})' style="color:orange;">تعديل</button>
-                <button onclick="delDoc('categories','${c.id}')" style="color:red;">حذف</button></div></div>`).join('');
-        }
-
-        function renderProducts(f='الكل') {
-            const g = document.getElementById('productsGrid'); g.innerHTML="";
-            prods.filter(p=> f==='الكل' || p.cat===f).forEach(p=>{
-                g.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-info"><h4>${p.title}</h4><button class="btn-order" onclick='openPModal(${JSON.stringify(p)})'>طلب</button></div></div>`;
-            });
-        }
-
-        function renderAdminProducts() {
-            document.getElementById('adminProdsList').innerHTML = prods.map(p=>`
-                <div class="admin-list-item"><div style="display:flex; align-items:center; gap:10px;"><img src="${p.img}"><span>${p.title}</span></div>
-                <div class="admin-actions"><button onclick='startEditProd(${JSON.stringify(p)})' style="color:orange;">تعديل</button>
-                <button onclick="delDoc('products','${p.id}')" style="color:red;">حذف</button></div></div>`).join('');
-        }
-
-        // إدارة الطلبات (الصح والغلط)
         function renderAdminOrders(snap) {
-            const list = document.getElementById('adminOrdersList');
-            list.innerHTML = "";
+            const list = document.getElementById('adminOrdersList'); list.innerHTML = "";
             snap.forEach(doc => {
-                const o = doc.data();
-                const isDone = o.status === 'confirmed';
-                list.innerHTML += `
-                    <div class="order-card ${isDone ? 'done' : ''}">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                            <b>👤 ${o.userName}</b>
-                            <span style="color:var(--neon); font-size:0.7rem;">${o.createdAt?.toDate().toLocaleTimeString('ar-EG')}</span>
-                        </div>
-                        <div style="font-size:0.8rem; background:#111; padding:8px; border-radius:8px;">
-                            ${o.items.map(i => i.type==='delivery' ? `🛵 توصيل: ${i.w}` : `📦 منتج: ${i.t} (ج:${i.q})`).join('<br>')}
-                        </div>
-                        <p style="font-size:0.7rem; color:#888; margin-top:5px;">📍 ${o.address} | 📞 ${o.userPhone}</p>
-                        ${!isDone ? `
-                            <div style="display:flex; gap:10px; margin-top:10px;">
-                                <button class="btn-order" style="background:var(--success); color:#000;" onclick="approveOrder('${doc.id}', '${o.userPhone}')">صح ✅</button>
-                                <button class="btn-order" style="background:red;" onclick="delDoc('orders','${doc.id}')">حذف ❌</button>
-                            </div>
-                        ` : `<button class="btn-order" style="background:#333;" onclick="delDoc('orders','${doc.id}')">مسح السجل 🗑️</button>`}
-                    </div>`;
+                const o = doc.data(); const isDone = o.status === 'confirmed';
+                list.innerHTML += `<div class="order-card ${isDone?'done':''}">
+                    <b>👤 ${o.userName}</b> | <small>${o.createdAt?.toDate().toLocaleTimeString('ar-EG')}</small>
+                    <div style="font-size:0.8rem; margin:10px 0;">${o.items.map(i=>i.type==='delivery'?`🛵 توصيل: ${i.w}`:`📦 ${i.t} (ج:${i.q})`).join('<br>')}</div>
+                    <p style="font-size:0.7rem; color:#888;">📍 ${o.address} | 📞 ${o.userPhone}</p>
+                    ${!isDone ? `<div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="btn-order" style="background:var(--success); color:#000;" onclick="approveOrder('${doc.id}', '${o.userPhone}', '${o.userName}')">صح ✅</button>
+                        <button class="btn-order" style="background:red;" onclick="delDoc('orders','${doc.id}')">حذف ❌</button>
+                    </div>` : `<button class="btn-order" style="background:#333;" onclick="delDoc('orders','${doc.id}')">مسح من السجل</button>`}
+                </div>`;
             });
         }
 
-        async function approveOrder(id, phone) {
+        async function approveOrder(id, phone, name) {
             await db.collection("orders").doc(id).update({ status: "confirmed" });
             const ref = db.collection("users_stats").doc(phone);
             const doc = await ref.get();
-            let c = doc.exists ? (doc.data().count || 0) : 0;
-            await ref.set({ count: c + 1, lastID: "NAG-"+Math.random().toString(36).substr(2,5).toUpperCase() }, { merge: true });
-            alert("تم التأكيد وبونص العميل زاد! ✅");
+            let newCount = (doc.exists ? (doc.data().count || 0) : 0) + 1;
+            await ref.set({ count: newCount }, { merge: true });
+
+            if(newCount % 10 === 0) {
+                let msg = `*🎊 مبروك يا ${name}! 🎊*\n\nأنت كملت ${newCount} أوردرات مع *نجدة أوردر* ⚡\nوليك عندنا هدية مجانية بمناسبة أوردرك رقم 10! 🎁\n\nابعت الرسالة دي عشان نفعل الهدية.`;
+                window.open(`https://wa.me/20${phone}?text=${encodeURIComponent(msg)}`);
+                alert("تم التأكيد! العميل وصل للهدية والواتساب فتح بالرسالة ✅");
+            } else { alert(`تم التأكيد! العميل أتم ${newCount} أوردرات.`); }
         }
 
-        // إرسال الأوردر (فايربيز + واتساب)
+        async function clearAllConfirmedOrders() {
+            if(confirm("مسح كل السجل المؤكد؟ (مش بيأثر على عدد أوردرات العملاء)")) {
+                const snap = await db.collection("orders").where("status","==","confirmed").get();
+                const b = db.batch(); snap.forEach(d=>b.delete(d.ref)); await b.commit();
+                alert("تم تنظيف السجل! 🧹");
+            }
+        }
+
         async function confirmOrder() {
             const n=document.getElementById('uName').value, ph=document.getElementById('uPhone').value, ad=document.getElementById('uAddr').value;
-            if(!n || !ph || !ad) return alert("كمل بياناتك يا بطل!");
-
-            try {
-                // 1. الحفظ في الفايربيز
-                await db.collection("orders").add({
-                    userName: n, userPhone: ph, address: ad,
-                    items: cart, status: "pending",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                // 2. واتساب
-                let msg = `*✨ أوردر جديد - نجدة أوردر ⚡*\n\n`;
-                cart.forEach((i, x) => {
-                    msg += i.type==='delivery' ? `*${x+1}️⃣ توصيل:* ${i.w}\n📍 من: ${i.f}\n👤 للمستلم: ${i.t}\n` : `*${x+1}️⃣ منتج:* ${i.t}\n⚖️ كمية: ${i.q}\n`;
-                });
-                msg += `\n*العميل:* ${n}\n📞 تليفون: ${ph}\n🏠 عنوان: ${ad}`;
-                window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-
-                cart=[]; alert("طلبك وصل وهنتكلم معاك حالاً! ✅"); nav('shop');
-            } catch(e) { alert("خطأ في الشبكة!"); }
+            if(!n || !ph || !ad) return alert("كمل بياناتك!");
+            await db.collection("orders").add({ userName:n, userPhone:ph, address:ad, items:cart, status:"pending", createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+            let msg = `*✨ أوردر جديد - نجدة أوردر ⚡*\n\n${cart.map(i=>i.type==='delivery'?`🛵 توصيل: ${i.w}`:`📦 منتج: ${i.t} (ج:${i.q})`).join('\n')}\n\n*العميل:* ${n}\n📞 تليفون: ${ph}`;
+            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+            cart=[]; nav('shop');
         }
 
-        // باقي الوظائف (نفس اللي بعتها مع تعديلات الحفظ)
+        // باقي الوظائف
+        function renderCats() { document.getElementById('catsList').innerHTML = `<div class="cat-item active" onclick="filter('الكل',this)">الكل</div>` + cats.map(c=>`<div class="cat-item" onclick="filter('${c.name}',this)">${c.name}</div>`).join(''); document.getElementById('pCatSelect').innerHTML = cats.map(c=>`<option>${c.name}</option>`).join(''); }
+        function renderProducts(f='الكل') { const g = document.getElementById('productsGrid'); g.innerHTML=""; prods.filter(p=> f==='الكل' || p.cat===f).forEach(p=>{ g.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-info"><h4>${p.title}</h4><button class="btn-order" onclick='openPModal(${JSON.stringify(p)})'>طلب</button></div></div>`; }); }
         function openModal(id){ document.getElementById(id).style.display='flex'; }
         function closeModal(id){ document.getElementById(id).style.display='none'; }
         function openPModal(p){ selectedP=p; document.getElementById('mTitle').innerText=p.title; openModal('pModal'); }
-        function addDelivery() {
-            const w=document.getElementById('dWhat').value, f=document.getElementById('dFrom').value, t=document.getElementById('dTo').value, a=document.getElementById('dAddr').value, p=document.getElementById('dPhone').value;
-            if(!w || !f || !t) return; cart.push({type:'delivery', w, f, t, a, p}); closeModal('deliveryModal'); updateCartBadge();
-        }
-        function addP() {
-            const q=document.getElementById('mQty').value, n=document.getElementById('mNote').value;
-            if(!q) return; cart.push({type:'product', t:selectedP.title, q, n}); closeModal('pModal'); updateCartBadge();
-        }
-        function updateCartBadge(){ alert("أضيف للسلة ✅"); }
-
-        function nav(id) {
-            document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-            document.getElementById(id+'Page').style.display='block';
-            document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
-            if(id!=='admin') document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');
-            if(id==='cart') renderCart();
-        }
-
-        function renderCart() {
-            const list = document.getElementById('cartItems');
-            list.innerHTML = cart.map((i,x)=>`
-                <div style="background:#1a1a1a; padding:15px; border-radius:12px; margin-bottom:10px; border-right:4px solid ${i.type==='delivery'?'var(--royal)':'var(--neon)'}; position:relative;">
-                    ${i.type==='delivery'? `<b>🛵 توصيل خاص</b><br><small>${i.w}</small>` : `<b>📦 منتج: ${i.t}</b><br><small>كمية: ${i.q}</small>`}
-                    <button onclick="cart.splice(${x},1); renderCart()" style="position:absolute; left:10px; top:15px; background:none; border:none; color:red;">حذف</button>
-                </div>`).join('');
-            document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none';
-        }
-
-        async function saveCat() {
-            const n=document.getElementById('catInput').value; if(!n) return;
-            if(editCId) await db.collection("categories").doc(editCId).update({name:n});
-            else await db.collection("categories").add({name:n});
-            document.getElementById('catInput').value=""; editCId=null;
-        }
-        function startEditCat(c){ editCId=c.id; document.getElementById('catInput').value=c.name; }
-
+        function addDelivery() { cart.push({type:'delivery', w:document.getElementById('dWhat').value}); closeModal('deliveryModal'); alert("تم ✅"); }
+        function addP() { cart.push({type:'product', t:selectedP.title, q:document.getElementById('mQty').value}); closeModal('pModal'); alert("تم ✅"); }
+        function nav(id) { document.querySelectorAll('.page').forEach(p=>p.style.display='none'); document.getElementById(id+'Page').style.display='block'; document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); if(id!=='admin') document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active'); if(id==='cart') renderCart(); }
+        function renderCart() { const list = document.getElementById('cartItems'); list.innerHTML = cart.map((i,x)=>`<div style="background:#1a1a1a; padding:10px; margin-bottom:5px;">${i.type==='delivery'?`🛵 توصيل: ${i.w}`:`📦 ${i.t} (ج:${i.q})`}<button onclick="cart.splice(${x},1); renderCart()" style="float:left; color:red; background:none; border:none;">X</button></div>`).join(''); document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none'; }
+        async function saveCat() { await db.collection("categories").add({name:document.getElementById('catInput').value}); }
         function handleImg(el){ const r=new FileReader(); r.readAsDataURL(el.files[0]); r.onload=(e)=>tempImg=e.target.result; }
-        async function saveProd() {
-            const t=document.getElementById('pTitle').value, c=document.getElementById('pCatSelect').value;
-            if(!t) return; const data = {title:t, cat:c, createdAt: new Date()}; if(tempImg) data.img = tempImg;
-            if(editPId) await db.collection("products").doc(editPId).update(data);
-            else await db.collection("products").add(data);
-            resetProdForm();
-        }
-        function resetProdForm(){ editPId=null; document.getElementById('pTitle').value=""; tempImg=""; document.getElementById('pCancel').style.display='none'; }
-        function startEditProd(p){ editPId=p.id; document.getElementById('pTitle').value=p.title; document.getElementById('pCancel').style.display='block'; window.scrollTo(0,0); }
+        async function saveProd() { await db.collection("products").add({title:document.getElementById('pTitle').value, cat:document.getElementById('pCatSelect').value, img:tempImg, createdAt: new Date()}); alert("تم الحفظ ✅"); }
         async function delDoc(col,id){ if(confirm("حذف؟")) await db.collection(col).doc(id).delete(); }
         function filter(n,el){ document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); renderProducts(n); }
-
         init();
     </script>
 </body>
