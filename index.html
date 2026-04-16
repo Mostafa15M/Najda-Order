@@ -11,38 +11,37 @@
     <style>
         :root { --main: #00d2ff; --sec: #bd00ff; --bg: #0a0a0c; --card: #1c1c1e; --danger: #ff453a; --success: #32d74b; --neon: 0 0 15px rgba(0, 210, 255, 0.4); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; padding-bottom: 120px; overflow-x: hidden; }
+        body { background: var(--bg); color: #fff; padding-bottom: 90px; overflow-x: hidden; }
 
         header { padding: 15px 20px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 2000; }
-        .logo-text { font-weight: 900; font-size: 1.2rem; background: linear-gradient(var(--main), var(--sec)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .admin-btn { font-size: 0.8rem; opacity: 0.6; cursor: pointer; }
+        .logo-text { font-weight: 900; font-size: 1.1rem; background: linear-gradient(var(--main), var(--sec)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .admin-btn { font-size: 0.75rem; opacity: 0.6; cursor: pointer; }
 
-        /* Navigation - Enhanced Size */
-        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,12,0.98); border-top: 1px solid #2c2c2e; display: flex; justify-content: space-around; padding: 15px 0 30px; z-index: 3000; }
+        /* Navigation - Optimized Size */
+        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10,10,12,0.98); border-top: 1px solid #2c2c2e; display: flex; justify-content: space-around; padding: 8px 0 20px; z-index: 3000; }
         .nav-link { color: #8e8e93; text-decoration: none; text-align: center; flex: 1; transition: 0.3s; }
-        .nav-link i { font-size: 2rem; display: block; margin-bottom: 5px; }
-        .nav-link span { font-size: 1rem; font-weight: 700; }
+        .nav-link i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
+        .nav-link span { font-size: 0.8rem; font-weight: 700; }
         .nav-link.active { color: var(--main); }
 
         .page { display: none; padding: 0 15px; animation: slideUp 0.4s ease; }
         .page.active { display: block; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Products UI */
-        .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #2c2c2e; position: relative; }
-        .p-card img { width: 100%; height: 130px; object-fit: cover; }
-        .delete-p-btn { position: absolute; top: 5px; left: 5px; background: var(--danger); border-radius: 50%; width: 28px; height: 28px; display: none; align-items: center; justify-content: center; font-weight: bold; z-index: 10; }
+        .prod-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .p-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #2c2c2e; position: relative; }
+        .p-card img { width: 100%; height: 110px; object-fit: cover; }
+        .delete-p-btn { position: absolute; top: 5px; left: 5px; background: var(--danger); border-radius: 50%; width: 24px; height: 24px; display: none; align-items: center; justify-content: center; font-size: 0.8rem; z-index: 10; }
         .admin-mode .delete-p-btn { display: flex; }
 
-        /* General UI Elements */
-        input, textarea, select { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; border: 1px solid #333; background: #2c2c2e; color: #fff; outline: none; }
-        .btn { width: 100%; padding: 16px; border-radius: 15px; border: none; font-weight: 700; cursor: pointer; }
-        .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; box-shadow: var(--neon); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid #333; background: #2c2c2e; color: #fff; font-size: 0.9rem; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; font-size: 0.95rem; }
+        .btn-main { background: linear-gradient(45deg, var(--main), var(--sec)); color: #fff; }
         
-        .order-card { background: var(--card); border-radius: 20px; padding: 15px; margin-bottom: 15px; border-right: 5px solid var(--main); }
-        .cat-item { display: flex; justify-content: space-between; background: #222; padding: 12px; border-radius: 12px; margin-bottom: 8px; }
+        .order-card { background: var(--card); border-radius: 15px; padding: 12px; margin-bottom: 12px; border-right: 4px solid var(--main); animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        .cat-item { display: flex; justify-content: space-between; background: #222; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-size: 0.9rem; }
         .hidden-admin { display: none !important; }
         .admin-mode .hidden-admin { display: block !important; }
     </style>
@@ -51,7 +50,7 @@
 
 <header>
     <div class="logo-text">نجدة أوردر ⚡</div>
-    <div class="admin-btn" id="adminTrigger" ondblclick="toggleAdmin()">مصطفى حجازي</div>
+    <div class="admin-btn" ondblclick="toggleAdmin()">مصطفى حجازي</div>
 </header>
 
 <div id="home" class="page active">
@@ -59,50 +58,45 @@
 </div>
 
 <div id="special" class="page">
-    <h3 style="text-align:center; margin: 20px 0;">📦 طلب توصيل خاص</h3>
+    <h3 style="text-align:center; margin: 15px 0;">📦 طلب توصيل خاص</h3>
     <input type="text" id="spDetails" placeholder="إيه الحاجة اللي هنوصلها؟">
     <input type="text" id="spFrom" placeholder="مكان الاستلام">
     <input type="text" id="spTo" placeholder="مكان التسليم">
     <input type="tel" id="spPhone" placeholder="رقم هاتف المستلم">
-    <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال الطلب عبر واتساب 🚀</button>
+    <button class="btn btn-main" onclick="sendSpecialOrder()">إرسال الطلب 🚀</button>
 </div>
 
 <div id="cart" class="page">
-    <h3 style="margin: 20px 0;">🛒 مراجعة السلة</h3>
-    <div id="cartList" style="margin-bottom: 20px;"></div>
-    <input type="text" id="uName" placeholder="الاسم بالكامل">
-    <input type="text" id="uAddress" placeholder="العنوان بالتفصيل">
+    <h3 style="margin: 15px 0;">🛒 السلة</h3>
+    <div id="cartList" style="margin-bottom: 15px;"></div>
+    <input type="text" id="uName" placeholder="الاسم">
+    <input type="text" id="uAddress" placeholder="العنوان">
     <input type="tel" id="uPhone" placeholder="رقم الموبايل" oninput="checkUserHistory(this.value)">
-    
-    <div id="loyaltySection" style="display:none; background:#1c1c1e; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #333;">
-        <p id="loyaltyText" style="font-size:0.9rem; font-weight:bold;"></p>
+    <div id="loyaltySection" style="display:none; background:#1c1c1e; padding:12px; border-radius:12px; margin-bottom:12px; border:1px solid #333;">
+        <p id="loyaltyText" style="font-size:0.85rem;"></p>
     </div>
-
-    <button class="btn btn-main" id="confirmBtn" onclick="confirmFullOrder()">تأكيد وإرسال واتساب 💬</button>
+    <button class="btn btn-main" id="confirmBtn" onclick="confirmFullOrder()">تأكيد الطلب 💬</button>
 </div>
 
 <div id="admin-orders" class="page">
-    <h3 style="text-align:center; margin: 20px 0; color: var(--main);">📈 الطلبات الواردة</h3>
+    <h3 style="text-align:center; margin: 15px 0; color: var(--main);">📈 الطلبات الجديدة</h3>
     <div id="ordersDashboard"></div>
 </div>
 
 <div id="admin-settings" class="page">
-    <h3 style="text-align:center; margin: 20px 0; color: var(--sec);">⚙️ إعدادات المنيو</h3>
-    
-    <h4>📂 إدارة الأقسام</h4>
-    <div style="display:flex; gap:5px; margin-bottom:15px;">
+    <h3 style="text-align:center; margin: 15px 0; color: var(--sec);">⚙️ الإدارة</h3>
+    <h4>📂 الأقسام</h4>
+    <div style="display:flex; gap:5px; margin-bottom:10px;">
         <input type="text" id="newCatName" placeholder="اسم القسم" style="margin:0;">
-        <button class="btn btn-main" style="width:100px; padding:0;" onclick="addCategory()">+ إضافة</button>
+        <button class="btn btn-main" style="width:80px; padding:0;" onclick="addCategory()">+</button>
     </div>
     <div id="catsListAdmin"></div>
-
-    <hr style="border:0.5px solid #333; margin:25px 0;">
-
-    <h4>🍕 إضافة منتج جديد</h4>
+    <hr style="border:0.5px solid #333; margin:20px 0;">
+    <h4>🍕 إضافة منتج</h4>
     <input type="text" id="pTitle" placeholder="اسم المنتج">
     <select id="pCatSelect"></select>
     <input type="file" id="pImage" accept="image/*" onchange="handleImage(this)">
-    <button class="btn btn-main" onclick="saveNewProd()">نشر المنتج ✅</button>
+    <button class="btn btn-main" onclick="saveNewProd()">حفظ ✅</button>
 </div>
 
 <nav>
@@ -130,7 +124,7 @@
         if(id === 'admin-orders') renderOrders();
     }
 
-    // --- نظام الولاء المطور (10 أوردرات) ---
+    // --- نظام الولاء ---
     async function checkUserHistory(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "confirmed").get();
@@ -138,53 +132,38 @@
             const sec = document.getElementById('loyaltySection');
             const txt = document.getElementById('loyaltyText');
             sec.style.display = 'block';
-            if(ordersCount >= 9) {
-                txt.innerHTML = "🎁 مبروك! هذا هو الأوردر العاشر (توصيل مجاني)";
-                txt.style.color = "var(--success)";
-            } else {
-                txt.innerHTML = `عدد أوردراتك المؤكدة: ${ordersCount} (فاضلك ${10 - ordersCount} على الهدية)`;
-                txt.style.color = "#fff";
-            }
+            txt.innerHTML = ordersCount >= 9 ? "🎁 مبروك! ده الأوردر العاشر (هدية)" : `عدد أوردراتك السابقة: ${ordersCount}`;
         }
     }
 
-    async function updateOrderStatus(orderId, phone) {
-        try {
-            // تأكيد الأوردر الحالي
-            await db.collection("orders").doc(orderId).update({ status: "confirmed" });
-
-            // فحص العدد الكلي للمؤكد
-            const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "confirmed").get();
-            
-            if(snap.size >= 10) {
-                // تصفير العداد بالأرشفة
-                const batch = db.batch();
-                snap.forEach(doc => batch.update(doc.ref, { status: "archived" }));
-                await batch.commit();
-                alert("تم إتمام الأوردر العاشر وتصفير عداد العميل بنجاح! 🎁");
-            } else {
-                alert("تم التأكيد! رصيد العميل الحالي: " + snap.size);
-            }
-        } catch(e) { console.error(e); }
+    async function updateOrderStatus(id, phone) {
+        await db.collection("orders").doc(id).update({ status: "confirmed" });
+        const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "confirmed").get();
+        if(snap.size >= 10) {
+            const batch = db.batch();
+            snap.forEach(doc => batch.update(doc.ref, { status: "archived" }));
+            await batch.commit();
+        }
+        alert("تم التأكيد بنجاح ✅");
     }
 
-    // --- الإدارة ---
+    // --- الإدارة (تم إصلاح العرض) ---
     function renderOrders() {
-        db.collection("orders").where("status", "==", "pending").orderBy("createdAt", "desc").onSnapshot(s => {
+        // حذفنا الترتيب الزمني مؤقتاً للتأكد من ظهور البيانات بدون مشاكل Indexing
+        db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
             let h = '';
             s.forEach(d => {
                 const o = d.data();
                 h += `<div class="order-card">
                     <p>👤 <b>${o.n}</b> | 📞 ${o.p}</p>
-                    <p style="font-size:0.85rem; color:#8e8e93;">📍 ${o.a || o.spTo || 'توصيل خاص'}</p>
-                    <p style="color:var(--main); margin:8px 0;">📦 ${o.items ? o.items.map(i=>i.t).join(', ') : o.spDetails}</p>
-                    <div style="display:flex; gap:10px;">
-                        <button class="btn" style="background:var(--success); color:#000; padding:10px; flex:1;" onclick="updateOrderStatus('${d.id}', '${o.p}')">تأكيد ✅</button>
-                        <button class="btn" style="background:var(--danger); color:#fff; padding:10px; flex:1;" onclick="deleteDoc('orders','${d.id}')">حذف 🗑️</button>
+                    <p style="font-size:0.8rem; color:var(--main);">📦 ${o.items ? o.items.map(i=>i.t).join(', ') : o.spDetails}</p>
+                    <div style="display:flex; gap:10px; margin-top:8px;">
+                        <button class="btn" style="background:var(--success); color:#000; padding:8px; flex:1;" onclick="updateOrderStatus('${d.id}', '${o.p}')">تأكيد</button>
+                        <button class="btn" style="background:var(--danger); padding:8px; flex:1;" onclick="deleteDoc('orders','${d.id}')">حذف</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('ordersDashboard').innerHTML = h || '<p style="text-align:center">لا توجد طلبات جديدة</p>';
+            document.getElementById('ordersDashboard').innerHTML = h || '<p style="text-align:center; padding:20px;">لا توجد طلبات معلقة</p>';
         });
     }
 
@@ -198,59 +177,51 @@
         s.forEach(d => {
             const name = d.data().n;
             opts += `<option value="${name}">${name}</option>`;
-            list += `<div class="cat-item"><span>${name}</span><button style="color:red; background:none; border:none;" onclick="deleteDoc('categories','${d.id}')">حذف</button></div>`;
+            list += `<div class="cat-item"><span>${name}</span><span style="color:red;" onclick="deleteDoc('categories','${d.id}')">حذف</span></div>`;
         });
         document.getElementById('pCatSelect').innerHTML = opts;
         document.getElementById('catsListAdmin').innerHTML = list;
     });
 
-    // --- المنتجات والسلة ---
     function handleImage(input) { const reader = new FileReader(); reader.onload = (e) => tempImg = e.target.result; reader.readAsDataURL(input.files[0]); }
-
     function saveNewProd() {
         const t = document.getElementById('pTitle').value, c = document.getElementById('pCatSelect').value;
-        if(t && tempImg) db.collection("products").add({ title: t, img: tempImg, cat: c, createdAt: new Date() }).then(()=>alert("تم النشر ✅"));
+        if(t && tempImg) db.collection("products").add({ title: t, img: tempImg, cat: c, createdAt: new Date() }).then(()=>alert("تم الحفظ"));
     }
+    function deleteDoc(col, id) { if(confirm("حذف؟")) db.collection(col).doc(id).delete(); }
 
-    function deleteDoc(col, id) { if(confirm("هل أنت متأكد من الحذف؟")) db.collection(col).doc(id).delete(); }
-
-    db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
+    db.collection("products").onSnapshot(s => {
         let h = '';
         s.forEach(d => {
             const p = d.data();
             h += `<div class="p-card">
                     <div class="delete-p-btn" onclick="deleteDoc('products','${d.id}')">✕</div>
                     <img src="${p.img}">
-                    <div style="padding:10px;">
-                        <h5 style="margin-bottom:8px;">${p.title}</h5>
-                        <button class="btn btn-main" style="padding:8px; font-size:0.8rem;" onclick="addToCart('${p.title}')">أطلب ⚡</button>
+                    <div style="padding:8px; text-align:center;">
+                        <p style="font-size:0.85rem; margin-bottom:5px;">${p.title}</p>
+                        <button class="btn btn-main" style="padding:6px; font-size:0.75rem;" onclick="addToCart('${p.title}')">إضافة</button>
                     </div>
                 </div>`;
         });
         document.getElementById('prodsHome').innerHTML = h;
     });
 
-    function addToCart(t) { cart.push({ t, q: 1 }); renderCart(); alert("تمت الإضافة للسلة 🛒"); }
-    function renderCart() { document.getElementById('cartList').innerHTML = cart.map((i,idx)=>`<div style="padding:15px; background:#222; margin-bottom:8px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;"><span>${i.t}</span><span style="color:red; font-weight:bold;" onclick="cart.splice(${idx},1);renderCart()">✕</span></div>`).join(''); }
+    function addToCart(t) { cart.push({ t }); renderCart(); }
+    function renderCart() { document.getElementById('cartList').innerHTML = cart.map((i,idx)=>`<div class="cat-item"><span>${i.t}</span><span onclick="cart.splice(${idx},1);renderCart()">✕</span></div>`).join(''); }
 
     async function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
-        if(!n || !p || cart.length === 0) return alert("البيانات ناقصة يا درش!");
-        
-        let msg = `🛒 *أوردر جديد*\n👤 العميل: ${n}\n📞 الهاتف: ${p}\n📍 العنوان: ${a}\n📦 الطلبات:\n` + cart.map(i => `- ${i.t}`).join('\n');
-        if(ordersCount >= 9) msg += `\n\n🎁 *أوردر هدية العاشر (توصيل مجاني)*\nكود: 10MostafaHegazy10`;
-
+        if(!n || !p || cart.length === 0) return alert("كمل البيانات!");
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("طلب جديد من " + n)}`);
         cart = []; renderCart();
     }
 
     async function sendSpecialOrder() {
         const det = document.getElementById('spDetails').value, ph = document.getElementById('spPhone').value;
-        if(!det || !ph) return alert("البيانات ناقصة!");
-        let msg = `📦 *طلب شحن خاص*\n📝 الحاجة: ${det}\n🏠 من: ${document.getElementById('spFrom').value}\n📍 لفين: ${document.getElementById('spTo').value}\n📞 هاتف: ${ph}`;
+        if(!det || !ph) return alert("اكتب التفاصيل!");
         await db.collection("orders").add({ n: "توصيل خاص", p: ph, spDetails: det, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("طلب شحن: " + det)}`);
     }
 </script>
 </body>
