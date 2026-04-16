@@ -3,60 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم نجدة أوردر - Nagda Order</title>
-    
+    <title>نجدة أوردر - النظام الشامل</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <style>
-        :root { --main-color: #00adb5; --bg-dark: #121212; --card-bg: #1e1e1e; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-dark); color: white; margin: 0; padding: 20px; }
-        h2 { color: var(--main-color); border-bottom: 2px solid var(--main-color); padding-bottom: 10px; }
-        .container { max-width: 600px; margin: auto; }
-        .card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; box-sizing: border-box; }
-        input, select { background: #252525; color: white; }
-        button { cursor: pointer; border: none; font-weight: bold; transition: 0.3s; }
-        .save-btn { background-color: var(--main-color); color: white; }
-        .save-btn:hover { background-color: #008f96; }
-        .delete-btn { background-color: #ff4d4d; color: white; width: auto; padding: 5px 15px; }
-        .product-item { background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-        .product-info { display: flex; align-items: center; gap: 15px; }
-        .product-img { width: 60px; height: 60px; object-fit: cover; border-radius: 5px; background: #444; }
-        .loader { color: #888; text-align: center; }
+        :root { --primary: #00adb5; --dark: #121212; --card: #1e1e1e; --text: #eeeeee; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--dark); color: var(--text); margin: 0; padding: 15px; }
+        .section { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 25px; border: 1px solid #333; }
+        h2 { color: var(--primary); border-right: 4px solid var(--primary); padding-right: 10px; margin-top: 0; }
+        input, select, button { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; background: #2a2a2a; color: white; outline: none; }
+        button { background: var(--primary); font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { opacity: 0.8; }
+        .del-btn { background: #ff4d4d; width: auto; padding: 5px 15px; font-size: 12px; margin-top: 5px; }
+        /* تصميم السوق (المشتري) */
+        .market-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .market-card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #333; transition: transform 0.2s; }
+        .market-card:hover { transform: translateY(-5px); }
+        .market-card img { width: 100%; height: 130px; object-fit: cover; background: #2a2a2a; }
+        .card-body { padding: 12px; text-align: center; }
+        .price-tag { color: var(--primary); font-weight: bold; font-size: 1.1em; display: block; margin: 5px 0; }
+        .cat-badge { background: #444; font-size: 10px; padding: 3px 8px; border-radius: 20px; }
+        /* تابات الأقسام */
+        .tag { display: inline-block; background: #333; padding: 5px 12px; border-radius: 8px; margin: 5px; border: 1px solid var(--primary); font-size: 14px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🚀 إضافة منتج لـ نجدة أوردر</h2>
-    <div class="card">
-        <input type="text" id="pName" placeholder="اسم المنتج (مثلاً: بصل أحمر)">
-        <input type="number" id="pPrice" placeholder="السعر (ج.م)">
-        
-        <select id="pUnit">
-            <option value="كيلو">كيلو</option>
-            <option value="قطعة">قطعة</option>
-            <option value="ربطة">ربطة</option>
-            <option value="كرتونة">كرتونة</option>
-        </select>
+<div style="max-width: 900px; margin: auto;">
+    
+    <div class="section">
+        <h2>📂 إضافة الأقسام</h2>
+        <div style="display: flex; gap: 10px;">
+            <input type="text" id="catInput" placeholder="اسم القسم (مثلاً: مجمدات)">
+            <button style="width: 120px;" onclick="addCategory()">إضافة</button>
+        </div>
+        <div id="categoriesList" style="margin-top: 15px;"></div>
+    </div>
 
-        <input type="text" id="pCategory" placeholder="القسم (مثلاً: خضروات)">
-        
-        <label style="font-size: 12px; color: #aaa;">صورة المنتج (بتتصغر تلقائي):</label>
+    <div class="section">
+        <h2>✨ إضافة منتج جديد</h2>
+        <input type="text" id="pName" placeholder="اسم المنتج">
+        <div style="display: flex; gap: 10px;">
+            <input type="number" id="pPrice" placeholder="السعر">
+            <select id="pUnit" style="width: 150px;">
+                <option value="كيلو">كيلو</option>
+                <option value="قطعة">قطعة</option>
+                <option value="علبة">علبة</option>
+            </select>
+        </div>
+        <select id="pCategorySelect"><option value="">اختر القسم المضاف أولاً..</option></select>
+        <label style="font-size: 12px; color: #888;">صورة المنتج (بتتصغر أوتوماتيك):</label>
         <input type="file" id="pImage" accept="image/*">
-        
-        <button class="save-btn" id="saveBtn" onclick="handleSave()">حفظ في جوجل ☁️</button>
+        <button onclick="saveProduct()" id="saveBtn">نشر المنتج في السوق 🚀</button>
     </div>
 
-    <h2>📦 المنتجات الموجودة (مسح وتعديل)</h2>
-    <div id="productsDisplay">
-        <p class="loader">جارِ جلب المنتجات من السيرفر...</p>
+    <h2>🛒 سوق نجدة أوردر (المشتري)</h2>
+    <div id="marketGrid" class="market-grid">
+        <p style="text-align: center; color: #888;">جارِ تحميل السوق...</p>
     </div>
+
 </div>
 
 <script>
-    // إعدادات Firebase الخاصة بمشروعك
+    // الإعدادات الخاصة بـ Firebase NagdaOrder
     const firebaseConfig = {
         apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY",
         authDomain: "nagdaorder.firebaseapp.com",
@@ -65,112 +74,93 @@
         messagingSenderId: "99058164922",
         appId: "1:99058164922:web:7063d1686dc82a7ac30e83"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // دالة سحرية لضغط الصورة عشان جوجل ما يرفضهاش
-    async function processImage(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
+    // وظائف الأقسام
+    function addCategory() {
+        const name = document.getElementById('catInput').value;
+        if (!name) return;
+        db.collection("categories").add({ name }).then(() => {
+            document.getElementById('catInput').value = "";
+        });
+    }
+
+    db.collection("categories").onSnapshot(snap => {
+        const list = document.getElementById('categoriesList');
+        const select = document.getElementById('pCategorySelect');
+        list.innerHTML = "";
+        select.innerHTML = '<option value="">اختر القسم..</option>';
+        snap.forEach(doc => {
+            const cat = doc.data().name;
+            list.innerHTML += `<span class="tag">${cat} <span onclick="deleteCat('${doc.id}')" style="color:red; cursor:pointer; margin-right:5px;">×</span></span>`;
+            select.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+    });
+
+    function deleteCat(id) { if(confirm("حذف القسم ده؟")) db.collection("categories").doc(id).delete(); }
+
+    // ضغط الصور
+    async function compressImage(file) {
+        return new Promise(res => {
+            const reader = new FileReader(); reader.readAsDataURL(file);
+            reader.onload = e => {
+                const img = new Image(); img.src = e.target.result;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const MAX_WIDTH = 300; 
-                    const scale = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scale;
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.6)); // جودة 60% عشان الحجم يبقى صغير
+                    const width = 350; const scale = width / img.width;
+                    canvas.width = width; canvas.height = img.height * scale;
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    res(canvas.toDataURL('image/jpeg', 0.6));
                 };
             };
         });
     }
 
     // حفظ المنتج
-    async function handleSave() {
+    async function saveProduct() {
         const name = document.getElementById('pName').value;
         const price = document.getElementById('pPrice').value;
+        const cat = document.getElementById('pCategorySelect').value;
         const unit = document.getElementById('pUnit').value;
-        const category = document.getElementById('pCategory').value;
-        const imageFile = document.getElementById('pImage').files[0];
+        const imgFile = document.getElementById('pImage').files[0];
         const btn = document.getElementById('saveBtn');
 
-        if (!name || !price) {
-            alert("يا درش لازم تكتب الاسم والسعر!");
-            return;
-        }
+        if (!name || !price || !cat) { alert("املا الخانات كلها يا مصطفى!"); return; }
+        
+        btn.disabled = true; btn.innerText = "جاري الحفظ...";
+        let imgData = imgFile ? await compressImage(imgFile) : "";
 
-        btn.disabled = true;
-        btn.innerText = "جاري الحفظ...";
-
-        try {
-            let finalImg = "";
-            if (imageFile) {
-                finalImg = await processImage(imageFile);
-            }
-
-            await db.collection("products").add({
-                name: name,
-                price: price,
-                unit: unit,
-                category: category || "عام",
-                img: finalImg,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
-            alert("تم الحفظ في قلب جوجل بنجاح! ✅");
+        db.collection("products").add({
+            name, price, cat, unit, img: imgData, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => {
+            alert("المنتج نزل السوق! ✅");
+            btn.disabled = false; btn.innerText = "نشر المنتج في السوق 🚀";
             document.getElementById('pName').value = "";
             document.getElementById('pPrice').value = "";
-            document.getElementById('pImage').value = "";
-        } catch (error) {
-            alert("حصل غلط: " + error.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "حفظ في جوجل ☁️";
-        }
+        }).catch(e => alert(e.message));
     }
 
-    // عرض المنتجات والمسح (Live Update)
-    db.collection("products").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-        const display = document.getElementById('productsDisplay');
-        display.innerHTML = "";
-        
-        if (snapshot.empty) {
-            display.innerHTML = "<p style='text-align:center;'>مفيش منتجات لسه..</p>";
-            return;
-        }
-
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            display.innerHTML += `
-                <div class="product-item">
-                    <div class="product-info">
-                        ${data.img ? `<img src="${data.img}" class="product-img">` : `<div class="product-img"></div>`}
-                        <div>
-                            <strong>${data.name}</strong><br>
-                            <span style="color:var(--main-color)">${data.price} ج.م / ${data.unit}</span>
-                        </div>
+    // عرض المشتري + خيار المسح للأدمن
+    db.collection("products").orderBy("createdAt", "desc").onSnapshot(snap => {
+        const grid = document.getElementById('marketGrid');
+        grid.innerHTML = "";
+        snap.forEach(doc => {
+            const p = doc.data();
+            grid.innerHTML += `
+                <div class="market-card">
+                    <img src="${p.img || 'https://via.placeholder.com/300x150?text=No+Image'}">
+                    <div class="card-body">
+                        <strong>${p.name}</strong>
+                        <span class="price-tag">${p.price} ج.م / ${p.unit}</span>
+                        <span class="cat-badge">${p.cat}</span>
+                        <button class="del-btn" onclick="deleteProduct('${doc.id}')">مسح من السوق 🗑️</button>
                     </div>
-                    <button class="delete-btn" onclick="deleteItem('${doc.id}')">مسح 🗑️</button>
-                </div>
-            `;
+                </div>`;
         });
     });
 
-    // دالة المسح
-    function deleteItem(id) {
-        if (confirm("هتمسح المنتج ده خالص من السيرفر؟")) {
-            db.collection("products").doc(id).delete()
-            .then(() => console.log("Deleted"))
-            .catch(err => alert("متمسحش ليه؟: " + err.message));
-        }
-    }
+    function deleteProduct(id) { if(confirm("هتمسحه من الموقع؟")) db.collection("products").doc(id).delete(); }
 </script>
-
 </body>
 </html>
