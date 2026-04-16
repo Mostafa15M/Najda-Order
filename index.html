@@ -3,77 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نجدة أوردر | Mostafa</title>
+    <title>نجدة أوردر | مصطفى حجازي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
 
     <style>
-        :root { --neon: #00f2ff; --royal: #bc13fe; --dark-bg: #050505; --card-bg: #111; }
+        :root { --neon: #00f2ff; --royal: #bc13fe; --dark: #050505; --card: #121212; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--dark-bg); color: #fff; padding-bottom: 90px; overflow-x: hidden; }
+        body { background: var(--dark); color: #fff; padding-bottom: 90px; overflow-x: hidden; }
 
-        /* الهيدر الرئيسي */
-        header { padding: 15px; background: #000; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; text-align: center; }
-        .logo { font-size: 1.5rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); cursor: pointer; }
+        /* الهيدر */
+        header { padding: 15px; background: #000; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        .owner-name { font-size: 0.8rem; color: var(--royal); border: 1px solid var(--royal); padding: 2px 10px; border-radius: 8px; font-weight: bold; }
 
-        /* القسم المفضل المثبت (توصيل مستلزمات شخصية) */
+        /* قسم التوصيل المثبت */
         .hero-fixed { 
-            margin: 15px; padding: 20px; 
-            background: linear-gradient(135deg, #121212, #000);
-            border: 2px solid var(--royal);
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
-            display: flex; justify-content: space-between; align-items: center;
-            position: relative; overflow: hidden;
+            margin: 15px; padding: 20px; background: linear-gradient(135deg, #121212, #000);
+            border: 2px solid var(--royal); border-radius: 20px; box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
         }
-        .hero-fixed::after { content: "خدمة مميزة"; position: absolute; top: 10px; left: -30px; background: var(--royal); color: #fff; font-size: 0.6rem; padding: 2px 30px; transform: rotate(-45deg); font-weight: bold; }
-        .hero-text h2 { font-size: 1.1rem; color: #fff; margin-bottom: 5px; }
-        .hero-text p { font-size: 0.8rem; color: #aaa; }
+        .hero-text h2 { font-size: 1rem; color: #fff; margin-bottom: 5px; }
+        .hero-text p { font-size: 0.75rem; color: #888; }
 
-        /* بار الأقسام (لحوم، دواجن، بقالة) */
+        /* الأقسام */
         .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; background: #080808; position: sticky; top: 60px; z-index: 999; scrollbar-width: none; }
-        .cats-bar::-webkit-scrollbar { display: none; }
-        .cat-item { padding: 8px 22px; background: #1a1a1a; border-radius: 50px; white-space: nowrap; font-weight: 700; border: 1px solid #333; color: #777; transition: 0.4s; font-size: 0.85rem; }
-        .cat-item.active { background: var(--neon); color: #000; border-color: var(--neon); box-shadow: 0 0 15px var(--neon); }
+        .cat-item { padding: 8px 18px; background: #1a1a1a; border-radius: 50px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; color: #777; transition: 0.3s; }
+        .cat-item.active { background: var(--neon); color: #000; border-color: var(--neon); font-weight: bold; box-shadow: 0 0 10px var(--neon); }
 
-        /* شبكة المنتجات */
+        /* المنتجات */
         .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
-        .p-card { background: var(--card-bg); border-radius: 25px; overflow: hidden; border: 1px solid #222; transition: 0.3s; position: relative; }
-        .p-card img { width: 100%; height: 130px; object-fit: cover; border-bottom: 2px solid #222; }
-        .p-info { padding: 12px; text-align: center; }
-        .p-info h4 { font-size: 0.9rem; margin-bottom: 10px; height: 40px; overflow: hidden; font-weight: 700; }
+        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #222; position: relative; }
+        .p-card img { width: 100%; height: 120px; object-fit: cover; }
+        .p-info { padding: 10px; text-align: center; }
+        .p-info h4 { font-size: 0.85rem; height: 35px; overflow: hidden; margin-bottom: 10px; }
 
-        .btn-order { width: 100%; padding: 12px; border-radius: 15px; border: none; background: linear-gradient(45deg, var(--neon), var(--royal)); color: #fff; font-weight: 900; font-size: 0.9rem; cursor: pointer; transition: 0.3s; }
-        .btn-order:active { transform: scale(0.95); }
-        .btn-delete { position: absolute; top: 10px; left: 10px; background: rgba(255,0,0,0.8); border: none; color: #fff; width: 28px; height: 28px; border-radius: 50%; font-weight: bold; z-index: 10; display: none; }
+        .btn-order { width: 100%; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(45deg, var(--neon), var(--royal)); color: #fff; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
+        .admin-btns { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; }
+        .btn-mini { padding: 4px 8px; border-radius: 5px; border: none; font-size: 10px; font-weight: bold; color: white; cursor: pointer; }
 
-        /* الناف بار السفلي */
-        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; z-index: 1000; }
-        .nav-link { color: #555; text-decoration: none; font-weight: 700; font-size: 0.9rem; transition: 0.3s; }
-        .nav-link.active { color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        /* المودالات */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: #0a0a0a; width: 100%; border-radius: 25px; padding: 25px; border: 1px solid var(--royal); max-width: 400px; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; margin-bottom: 10px; outline: none; font-size: 1rem; }
+        textarea { height: 70px; resize: none; }
 
-        /* مودال الطلب */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; align-items: flex-end; }
-        .modal-content { background: #111; width: 100%; border-radius: 30px 30px 0 0; padding: 30px; border-top: 3px solid var(--royal); animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        input { width: 100%; padding: 15px; border-radius: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; margin-bottom: 15px; outline: none; font-size: 1rem; text-align: center; }
-
-        /* لوحة الإدارة */
-        .admin-box { background: #080808; padding: 15px; border-radius: 20px; border: 1px dashed #444; margin-bottom: 20px; }
+        /* الإدارة */
+        .admin-section { background: #111; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--royal); }
+        
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; }
+        .nav-link { color: #555; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
+        .nav-link.active { color: var(--neon); }
     </style>
 </head>
 <body>
 
-    <header><div class="logo" id="adminTrigger">نجدة أوردر</div></header>
+    <header>
+        <div class="logo" id="logoAdmin">نجدة أوردر</div>
+        <div class="owner-name">مصطفى حجازي ⚡</div>
+    </header>
 
-    <div class="hero-fixed" onclick="quickOrder('توصيل مستلزمات شخصية 🛵')">
+    <div class="hero-fixed" onclick="openModal('deliveryModal')">
         <div class="hero-text">
-            <h2>توصيل مستلزمات شخصية 🚀</h2>
-            <p>اطلب أي حاجة خاصة وهنجيبهالك فوراً</p>
+            <h2>🚀 توصيل مستلزمات شخصية</h2>
+            <p>اكتب طلبك والمكان وهنجيلك فوراً</p>
         </div>
-        <button class="btn-order" style="width: auto; padding: 10px 20px;">اطلب الآن</button>
+        <button class="btn-order" style="width:auto; padding:8px 15px;">اطلب</button>
     </div>
 
     <div id="shopPage" class="page">
@@ -81,149 +78,173 @@
         <div class="products-grid" id="productsGrid"></div>
     </div>
 
-    <div id="cartPage" class="page" style="display:none; padding:20px;">
-        <h2 style="color:var(--neon); margin-bottom:20px; text-align:center;">طلباتك المختارة 🛒</h2>
+    <div id="cartPage" class="page" style="display:none; padding:15px;">
+        <h2 style="color:var(--neon); margin-bottom:15px; text-align:center;">سلة الطلبات 🛒</h2>
         <div id="cartItems"></div>
-        <div id="orderForm" style="display:none; margin-top:20px;">
-            <input type="text" id="uName" placeholder="اكتب اسمك">
+        <div id="orderForm" style="display:none; margin-top:20px; background:#111; padding:15px; border-radius:15px;">
+            <input type="text" id="uName" placeholder="الاسم بالكامل">
+            <input type="tel" id="uPhone" placeholder="رقم التليفون">
             <input type="text" id="uAddr" placeholder="العنوان بالتفصيل">
-            <button class="btn-order" style="padding:18px; font-size:1.1rem;" onclick="sendToWA()">إرسال الطلب لنجدة ⚡</button>
+            <button class="btn-order" style="padding:15px;" onclick="sendWA()">تأكيد الطلب (واتساب) 🚀</button>
         </div>
     </div>
 
-    <div id="adminPage" class="page" style="display:none; padding:20px;">
-        <h2 style="color:var(--royal); margin-bottom:15px;">لوحة الإدارة 🛠</h2>
-        <div class="admin-box">
-            <input type="text" id="pTitle" placeholder="اسم المنتج">
-            <select id="pCatSelect" style="width:100%; padding:15px; background:#1a1a1a; color:#fff; border-radius:15px; margin-bottom:15px; border:1px solid #333;"></select>
-            <input type="file" id="pImg" accept="image/*" onchange="handleImg(this)">
-            <button class="btn-order" onclick="saveNewProd()">نشر في الموقع 🚀</button>
+    <div id="adminPage" class="page" style="display:none; padding:15px;">
+        <div class="admin-section">
+            <h3 style="color:var(--royal); margin-bottom:10px;">📂 الأقسام</h3>
+            <input type="text" id="newCat" placeholder="اسم قسم جديد">
+            <button class="btn-order" onclick="addCat()">إضافة قسم</button>
+            <div id="adminCats" style="margin-top:10px; font-size:0.8rem;"></div>
         </div>
-        <div id="adminDocs"></div>
+        <div class="admin-section">
+            <h3 id="formTitle" style="color:var(--neon); margin-bottom:10px;">➕ منتج جديد</h3>
+            <input type="text" id="pTitle" placeholder="اسم المنتج">
+            <select id="pCatSelect"></select>
+            <input type="file" onchange="handleImg(this)">
+            <button class="btn-order" id="saveBtn" onclick="saveP()">حفظ المنتج</button>
+            <button id="cancelBtn" style="display:none; width:100%; margin-top:10px; background:none; border:none; color:#555;" onclick="resetAdmin()">إلغاء التعديل</button>
+        </div>
     </div>
 
     <nav class="nav-bottom">
-        <a href="#" class="nav-link active" onclick="nav('shop', this)">🏠 المتجر</a>
-        <a href="#" class="nav-link" onclick="nav('cart', this)">🛒 السلة</a>
+        <a href="#" class="nav-link active" id="btnShop" onclick="nav('shop')">🏠 المتجر</a>
+        <a href="#" class="nav-link" id="btnCart" onclick="nav('cart')">🛒 السلة</a>
+        <a href="#" id="adminLink" class="nav-link" style="display:none;" onclick="nav('admin')">⚙️ الإدارة</a>
     </nav>
 
-    <div class="modal" id="orderModal">
-        <div class="modal-content">
-            <h3 id="mTitle" style="color:var(--neon); margin-bottom:20px; text-align:center; font-size:1.4rem;"></h3>
-            <input type="text" id="mQty" placeholder="الكمية؟ (مثلاً: 2 كيلو أو علبة)">
-            <input type="text" id="mNote" placeholder="ملاحظة إضافية (اختياري)">
-            <button class="btn-order" style="padding:18px;" onclick="addToCart()">إضافة للسلة 🛒</button>
-            <button onclick="closeModal()" style="width:100%; background:none; border:none; color:#555; margin-top:15px; font-weight:bold;">إلغاء</button>
+    <div class="modal" id="deliveryModal">
+        <div class="modal-box">
+            <h3 style="color:var(--neon); text-align:center; margin-bottom:15px;">طلب توصيل خاص</h3>
+            <textarea id="dWhat" placeholder="عايز تشتري إيه؟"></textarea>
+            <input type="text" id="dFrom" placeholder="نجيب الحاجة منين؟">
+            <input type="text" id="dTo" placeholder="نوصلها فين؟">
+            <button class="btn-order" onclick="addDelivery()">إضافة للسلة 🛒</button>
+            <button onclick="closeModal('deliveryModal')" style="width:100%; margin-top:10px; background:none; border:none; color:#555;">إلغاء</button>
+        </div>
+    </div>
+
+    <div class="modal" id="pModal">
+        <div class="modal-box">
+            <h3 id="mTitle" style="color:var(--neon); text-align:center; margin-bottom:15px;"></h3>
+            <input type="text" id="mQty" placeholder="الكمية؟">
+            <input type="text" id="mNote" placeholder="ملاحظة إضافية">
+            <button class="btn-order" onclick="addP()">إضافة للسلة 🛒</button>
+            <button onclick="closeModal('pModal')" style="width:100%; margin-top:10px; background:none; border:none; color:#555;">إلغاء</button>
         </div>
     </div>
 
     <script>
-        const config = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
-        firebase.initializeApp(config);
+        const conf = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
+        firebase.initializeApp(conf);
         const db = firebase.firestore();
 
-        let cats = [], products = [], cart = [], selectedP = null, tempImg = "", isAdmin = false;
+        let cats=[], prods=[], cart=[], tempImg="", editId=null, selectedP=null, isAdmin=false;
 
-        // تفعيل الإدارة (ضغط مطول 4 ثواني على اللوجو)
-        let timer;
-        document.getElementById('adminTrigger').addEventListener('touchstart', () => {
-            timer = setTimeout(() => { if(prompt("Pass?")==="135790") { isAdmin=true; nav('admin'); } }, 4000);
+        // الدخول للإدارة (4 ثواني على اللوجو)
+        let t; document.getElementById('logoAdmin').addEventListener('touchstart',()=>{
+            t=setTimeout(()=>{ if(prompt("Pass?")==="135790"){ isAdmin=true; document.getElementById('adminLink').style.display='block'; nav('admin'); } },4000);
         });
 
         function init() {
             db.collection("categories").onSnapshot(s => {
-                cats = []; s.forEach(d => cats.push({id: d.id, ...d.data()}));
-                if(cats.length === 0) seed(); 
+                cats=[]; s.forEach(d=>cats.push({id:d.id, ...d.data()}));
                 renderCats();
             });
-            db.collection("products").orderBy("createdAt", "desc").onSnapshot(s => {
-                products = []; s.forEach(d => products.push({id: d.id, ...d.data()}));
+            db.collection("products").orderBy("createdAt","desc").onSnapshot(s => {
+                prods=[]; s.forEach(d=>prods.push({id:d.id, ...d.data()}));
                 renderProducts();
             });
         }
 
-        // دالة الفرش التلقائي (Seed)
-        async function seed() {
-            const initialCats = ["لحوم", "دواجن", "بقالة", "خضروات"];
-            for(let name of initialCats) await db.collection("categories").add({name});
-            
-            const initialProds = [
-                {t:"لحم شمبري بلدي 🥩", c:"لحوم", i:"https://images.unsplash.com/photo-1544022613-e87ca75a784a"},
-                {t:"فرخة بيضاء مجهزة 🍗", c:"دواجن", i:"https://images.unsplash.com/photo-1587593810167-a84920ea0781"},
-                {t:"أرز مصري فاخر 🌾", c:"بقالة", i:"https://images.unsplash.com/photo-1586201375761-83865001e31c"},
-                {t:"طماطم درجة أولى 🍅", c:"خضروات", i:"https://images.unsplash.com/photo-1546069901-ba9599a7e63c"}
-            ];
-            for(let p of initialProds) await db.collection("products").add({...p, createdAt: new Date()});
-        }
-
         function renderCats() {
-            document.getElementById('catsList').innerHTML = `<div class="cat-item active" onclick="filter('الكل', this)">الكل</div>` + 
-                cats.map(c => `<div class="cat-item" onclick="filter('${c.name}', this)">${c.name}</div>`).join('');
-            document.getElementById('pCatSelect').innerHTML = cats.map(c => `<option>${c.name}</option>`).join('');
+            document.getElementById('catsList').innerHTML = `<div class="cat-item active" onclick="filter('الكل',this)">الكل</div>` + 
+                cats.map(c=>`<div class="cat-item" onclick="filter('${c.name}',this)">${c.name}</div>`).join('');
+            document.getElementById('pCatSelect').innerHTML = cats.map(c=>`<option>${c.name}</option>`).join('');
+            document.getElementById('adminCats').innerHTML = cats.map(c=>`<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${c.name}</span><button onclick="delDoc('categories','${c.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
         }
 
-        function renderProducts(f = 'الكل') {
-            const g = document.getElementById('productsGrid'); g.innerHTML = "";
-            products.filter(p => f === 'الكل' || p.cat === f).forEach(p => {
+        function renderProducts(f='الكل') {
+            const g = document.getElementById('productsGrid'); g.innerHTML="";
+            prods.filter(p=> f==='الكل' || p.cat===f).forEach(p=>{
                 g.innerHTML += `<div class="p-card">
-                    ${isAdmin ? `<button class="btn-delete" style="display:block" onclick="del('${p.id}')">X</button>` : ''}
-                    <img src="${p.img}">
-                    <div class="p-info"><h4>${p.title}</h4><button class="btn-order" onclick='openModal(${JSON.stringify(p)})'>اطلب الآن</button></div>
+                    ${isAdmin ? `<div class="admin-btns"><button class="btn-mini" style="background:orange" onclick='startEdit(${JSON.stringify(p)})'>تعديل</button><button class="btn-mini" style="background:red" onclick="delDoc('products','${p.id}')">حذف</button></div>`:''}
+                    <img src="${p.img}"><div class="p-info"><h4>${p.title}</h4><button class="btn-order" onclick='openPModal(${JSON.stringify(p)})'>اطلب</button></div>
                 </div>`;
             });
         }
 
-        function filter(name, el) {
-            document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active'); renderProducts(name);
+        function openModal(id){ document.getElementById(id).style.display='flex'; }
+        function closeModal(id){ document.getElementById(id).style.display='none'; }
+        function openPModal(p){ selectedP=p; document.getElementById('mTitle').innerText=p.title; openModal('pModal'); }
+
+        function addDelivery() {
+            const w=document.getElementById('dWhat').value, f=document.getElementById('dFrom').value, t=document.getElementById('dTo').value;
+            if(!w || !f || !t) return alert("كمل بيانات التوصيل!");
+            cart.push({type:'delivery', w, f, t});
+            closeModal('deliveryModal'); alert("تمت الإضافة ✅");
+            document.getElementById('dWhat').value=""; document.getElementById('dFrom').value=""; document.getElementById('dTo').value="";
         }
 
-        function openModal(p) { selectedP = p; document.getElementById('mTitle').innerText = p.title; document.getElementById('orderModal').style.display='flex'; }
-        function quickOrder(service) { openModal({title: service}); }
-        function closeModal() { document.getElementById('orderModal').style.display='none'; }
-
-        function addToCart() {
-            cart.push({ t: selectedP.title, q: document.getElementById('mQty').value, n: document.getElementById('mNote').value });
-            document.getElementById('mQty').value = ""; document.getElementById('mNote').value = "";
-            closeModal(); alert("تمت الإضافة للسلة ✅");
+        function addP() {
+            const q=document.getElementById('mQty').value, n=document.getElementById('mNote').value;
+            if(!q) return alert("اكتب الكمية!");
+            cart.push({type:'product', t:selectedP.title, q, n});
+            closeModal('pModal'); alert("تمت الإضافة ✅");
+            document.getElementById('mQty').value=""; document.getElementById('mNote').value="";
         }
 
-        function sendToWA() {
-            const name = document.getElementById('uName').value, addr = document.getElementById('uAddr').value;
-            if(!name || !addr) return alert("اكتب اسمك وعنوانك!");
-            
-            let msg = `*✨ أوردر جديد من نجدة أوردر ✨*\n*بواسطة: مصطفى حجازي ⚡*\n━━━━━━━━━━━━━━\n\n`;
-            cart.forEach(i => msg += `• *${i.t}*\n⚖️ الكمية: ${i.q}\n📍 ملاحظة: ${i.n || 'لا يوجد'}\n----------------\n`);
-            msg += `\n*👤 بيانات المستلم:*\n🔸 الاسم: ${name}\n🏠 العنوان: ${addr}`;
-            
-            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
-            cart = []; nav('shop');
-        }
-
-        function nav(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.style.display='none');
+        function nav(id) {
+            document.querySelectorAll('.page').forEach(p=>p.style.display='none');
             document.getElementById(id+'Page').style.display='block';
-            if(el) { document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); el.classList.add('active'); }
-            if(id === 'cart') {
-                const list = document.getElementById('cartItems');
-                list.innerHTML = cart.length ? cart.map((i, idx) => `<div style="background:#1a1a1a; padding:15px; border-radius:15px; margin-bottom:10px; border-right:4px solid var(--royal); display:flex; justify-content:space-between;">
-                    <div><b>${i.t}</b><br><small>${i.q}</small></div>
-                    <button onclick="cart.splice(${idx},1); nav('cart')" style="background:none; border:none; color:red;">حذف</button>
-                </div>`).join('') : "<p style='text-align:center; color:#555;'>السلة فاضية..</p>";
-                document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none';
-            }
+            document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+            if(id!=='admin') document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');
+            if(id==='cart') renderCart();
         }
 
-        function handleImg(el) { const r = new FileReader(); r.readAsDataURL(el.files[0]); r.onload = (e) => tempImg = e.target.result; }
-        
-        async function saveNewProd() {
-            const title = document.getElementById('pTitle').value;
-            if(!title || !tempImg) return alert("كمل البيانات!");
-            await db.collection("products").add({ title, cat: document.getElementById('pCatSelect').value, img: tempImg, createdAt: new Date() });
-            alert("تم النشر ✅"); nav('shop');
+        function renderCart() {
+            const list = document.getElementById('cartItems');
+            list.innerHTML = cart.map((i,x)=>`
+                <div style="background:#1a1a1a; padding:15px; border-radius:12px; margin-bottom:10px; border-right:4px solid ${i.type==='delivery'?'var(--royal)':'var(--neon)'}; position:relative;">
+                    ${i.type==='delivery'? `<b>🚀 خدمة توصيل</b><br><small>الطلب: ${i.w}</small><br><small>من: ${i.f} | إلى: ${i.t}</small>` : `<b>📦 منتج: ${i.t}</b><br><small>الكمية: ${i.q} | ملاحظة: ${i.n || '-'}</small>`}
+                    <button onclick="cart.splice(${x},1); renderCart()" style="position:absolute; left:10px; top:15px; background:none; border:none; color:red;">حذف</button>
+                </div>`).join('');
+            document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none';
         }
+
+        function sendWA() {
+            const name = document.getElementById('uName').value, phone = document.getElementById('uPhone').value, addr = document.getElementById('uAddr').value;
+            if(!name || !phone || !addr) return alert("كمل بياناتك!");
+            let msg = `*✨ أوردر جديد - نجدة أوردر ✨*\n*بواسطة: مصطفى حجازي ⚡*\n━━━━━━━━━━━━━━\n\n`;
+            cart.forEach((i, x) => {
+                if(i.type==='delivery') msg += `*${x+1}️⃣ توصيل 🛵*\nطلب: ${i.w}\nمن: ${i.f}\nإلى: ${i.t}\n----------\n`;
+                else msg += `*${x+1}️⃣ منتج 📦*\nصنف: ${i.t}\nكمية: ${i.q}\nملاحظة: ${i.n || '-'}\n----------\n`;
+            });
+            msg += `\n*👤 بيانات المستلم:*\n🔸 الاسم: ${name}\n📞 الهاتف: ${phone}\n🏠 العنوان: ${addr}`;
+            window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
+            cart=[]; nav('shop');
+        }
+
+        async function addCat() { const n=document.getElementById('newCat').value; if(n) await db.collection("categories").add({name:n}); document.getElementById('newCat').value=""; }
+        function handleImg(el){ const r=new FileReader(); r.readAsDataURL(el.files[0]); r.onload=(e)=>tempImg=e.target.result; }
         
-        async function del(id) { if(confirm("حذف؟")) await db.collection("products").doc(id).delete(); }
+        async function saveP() {
+            const t=document.getElementById('pTitle').value, c=document.getElementById('pCatSelect').value;
+            const data = {title:t, cat:c, createdAt: new Date()};
+            if(tempImg) data.img = tempImg;
+            if(editId) await db.collection("products").doc(editId).update(data);
+            else await db.collection("products").add(data);
+            resetAdmin(); alert("تم ✅");
+        }
+
+        function startEdit(p) {
+            nav('admin'); editId=p.id; document.getElementById('formTitle').innerText="📝 تعديل منتج";
+            document.getElementById('pTitle').value=p.title; document.getElementById('pCatSelect').value=p.cat;
+            document.getElementById('cancelBtn').style.display='block';
+        }
+
+        function resetAdmin() { editId=null; document.getElementById('formTitle').innerText="➕ منتج جديد"; document.getElementById('pTitle').value=""; document.getElementById('cancelBtn').style.display='none'; tempImg=""; }
+        async function delDoc(col,id){ if(confirm("حذف؟")) await db.collection(col).doc(id).delete(); }
+        function filter(n,el){ document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); renderProducts(n); }
 
         init();
     </script>
