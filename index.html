@@ -11,44 +11,27 @@
 
     <style>
         :root { --neon: #00f2ff; --royal: #bc13fe; --dark: #050505; --card: #121212; --gold: #ffd700; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
         body { background: var(--dark); color: #fff; padding-bottom: 90px; }
-
-        header { padding: 15px; background: #000; border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 1.2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); cursor: pointer; }
-        .owner-name { font-size: 0.8rem; color: var(--royal); border: 1px solid var(--royal); padding: 2px 10px; border-radius: 8px; font-weight: bold; }
-
-        .promo-bar { background: #1a1a00; color: var(--gold); padding: 5px; font-size: 0.8rem; border-bottom: 1px solid var(--gold); font-weight: bold; }
-
-        .hero-fixed { 
-            margin: 15px; padding: 20px; background: linear-gradient(135deg, #121212, #000);
-            border: 2px solid var(--royal); border-radius: 20px; box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
-            display: flex; justify-content: space-between; align-items: center; cursor: pointer;
-        }
-
-        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; background: #080808; position: sticky; top: 85px; z-index: 999; scrollbar-width: none; }
-        .cat-item { padding: 8px 18px; background: #1a1a1a; border-radius: 50px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; color: #777; transition: 0.3s; }
+        header { padding: 15px; background: #000; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        .logo { font-size: 1.2rem; font-weight: 900; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+        .owner-name { font-size: 0.8rem; color: var(--royal); border: 1px solid var(--royal); padding: 2px 10px; border-radius: 8px; }
+        .promo-bar { background: #1a1a00; color: var(--gold); padding: 5px; font-size: 0.8rem; border-bottom: 1px solid var(--gold); text-align: center; font-weight: bold; }
+        .hero-fixed { margin: 15px; padding: 20px; background: #121212; border: 2px solid var(--royal); border-radius: 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .cats-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; background: #080808; position: sticky; top: 85px; z-index: 999; }
+        .cat-item { padding: 8px 18px; background: #1a1a1a; border-radius: 50px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; color: #777; }
         .cat-item.active { background: var(--neon); color: #000; border-color: var(--neon); font-weight: bold; }
-
         .products-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 12px; }
-        .p-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid #222; position: relative; }
+        .p-card { background: var(--card); border-radius: 20px; border: 1px solid #222; overflow: hidden; }
         .p-card img { width: 100%; height: 120px; object-fit: cover; }
-        .p-info { padding: 10px; text-align: center; }
-        
-        .btn-order { width: 100%; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(45deg, var(--neon), var(--royal)); color: #fff; font-weight: 900; font-size: 0.85rem; cursor: pointer; }
-        .btn-order:disabled { opacity: 0.5; cursor: not-allowed; }
-
+        .btn-order { width: 100%; padding: 12px; border-radius: 12px; border: none; background: linear-gradient(45deg, var(--neon), var(--royal)); color: #fff; font-weight: 900; cursor: pointer; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: #0a0a0a; width: 100%; border-radius: 25px; padding: 25px; border: 1px solid var(--royal); max-width: 400px; text-align: center; }
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; margin-bottom: 10px; outline: none; text-align: right; }
-
-        .bonus-badge { display: none; background: var(--gold); color: #000; padding: 10px; border-radius: 12px; font-weight: 900; margin-bottom: 15px; text-align: center; font-size: 0.9rem; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
-
+        .modal-box { background: #0a0a0a; width: 100%; border-radius: 25px; padding: 25px; border: 1px solid var(--royal); max-width: 400px; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; background: #1a1a1a; border: 1px solid #333; color: #fff; margin-bottom: 10px; text-align: right; }
         .admin-section { background: #111; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--royal); }
         .admin-list-item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #333; }
-
-        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.95); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; }
+        .order-detail-box { background: #000; padding: 10px; border-radius: 8px; margin: 10px 0; border: 1px solid #444; font-size: 0.85rem; }
+        .nav-bottom { position: fixed; bottom: 0; left: 0; right: 0; background: #000; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #222; }
         .nav-link { color: #555; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
         .nav-link.active { color: var(--neon); }
     </style>
@@ -60,7 +43,7 @@
         <div class="owner-name">مصطفى حجازي ⚡</div>
     </header>
 
-    <div class="promo-bar"><marquee>🔥 اطلب 9 أوردرات وخد العاشر توصيل "مجاني" تماماً من نجدة أوردر 🔥</marquee></div>
+    <div class="promo-bar"><marquee>🔥 اطلب 9 أوردرات وخد العاشر توصيل "مجاني" تماماً 🔥</marquee></div>
 
     <div id="shopPage" class="page">
         <div class="cats-bar" id="catsList"></div>
@@ -68,38 +51,31 @@
     </div>
 
     <div id="cartPage" class="page" style="display:none; padding:15px;">
-        <h2 style="color:var(--neon); margin-bottom:15px; text-align:center;">سلة الطلبات 🛒</h2>
-        <div id="bonusMsg" class="bonus-badge">🎊 مبروك! ده الأوردر الهدية (التوصيل مجاني) 🎊</div>
+        <h2 style="color:var(--neon); text-align:center; margin-bottom:15px;">سلة الطلبات 🛒</h2>
         <div id="cartItems"></div>
-        <div id="orderForm" style="display:none; margin-top:20px; background:#111; padding:15px; border-radius:15px;">
-            <input type="text" id="uName" placeholder="اسمك أنت">
-            <input type="tel" id="uPhone" placeholder="رقم موبايلك (للبونص)" oninput="checkUserBonus(this.value)">
-            <input type="text" id="uAddr" placeholder="عنوانك بالتفصيل">
-            <p id="pointsInfo" style="font-size: 0.75rem; color: #888; text-align: center; margin-bottom: 10px;"></p>
-            <button class="btn-order" id="sendBtn" style="padding:15px;" onclick="sendWA()">تأكيد الطلب 🚀</button>
+        <div id="orderForm" style="display:none; margin-top:20px;">
+            <input type="text" id="uName" placeholder="اسمك">
+            <input type="tel" id="uPhone" placeholder="رقم الموبايل" oninput="checkUserBonus(this.value)">
+            <input type="text" id="uAddr" placeholder="عنوان التوصيل">
+            <p id="pointsInfo" style="color:var(--gold); text-align:center; margin-bottom:10px;"></p>
+            <button class="btn-order" id="sendBtn" onclick="sendWA()">تأكيد وإرسال الطلب 🚀</button>
         </div>
     </div>
 
     <div id="adminPage" class="page" style="display:none; padding:15px;">
-        <div class="admin-section" style="border-color: var(--neon);">
-            <h3 style="color:var(--neon); margin-bottom:15px;">📥 طلبات بانتظار التأكيد</h3>
+        <div class="admin-section" style="border-color:var(--neon);">
+            <h3 style="color:var(--neon); margin-bottom:15px;">📥 طلبات تحتاج مراجعة</h3>
             <div id="pendingOrdersList"></div>
         </div>
-
+        
         <div class="admin-section">
-            <h3 style="color:var(--royal); margin-bottom:10px;">📂 إدارة الأقسام</h3>
-            <input type="text" id="catInput" placeholder="اسم القسم الجديد">
-            <button class="btn-order" onclick="saveCat()">حفظ القسم</button>
-            <div id="adminCatsList" style="margin-top:10px;"></div>
-        </div>
-
-        <div class="admin-section">
-            <h3 style="color:var(--neon); margin-bottom:10px;">➕ إضافة منتج</h3>
+            <h3>📂 إدارة المحتوى</h3>
+            <input type="text" id="catInput" placeholder="قسم جديد">
+            <button class="btn-order" style="margin-bottom:15px;" onclick="saveCat()">إضافة قسم</button>
             <input type="text" id="pTitle" placeholder="اسم المنتج">
             <select id="pCatSelect"></select>
             <input type="file" onchange="handleImg(this)">
             <button class="btn-order" onclick="saveProd()">حفظ المنتج</button>
-            <div id="adminProdsList" style="margin-top:10px;"></div>
         </div>
     </div>
 
@@ -109,112 +85,95 @@
         <a href="#" id="adminLink" class="nav-link" style="display:none;" onclick="nav('admin')">⚙️ الإدارة</a>
     </nav>
 
-    <div class="modal" id="deliveryModal"><div class="modal-box"><h3>توصيل خاص</h3><textarea id="dWhat" placeholder="هنجيب إيه؟"></textarea><input type="text" id="dFrom" placeholder="منين؟"><input type="text" id="dTo" placeholder="لمين؟"><input type="text" id="dAddr" placeholder="العنوان"><input type="tel" id="dPhone" placeholder="التليفون"><button class="btn-order" onclick="addDelivery()">إضافة للسلة</button><button onclick="closeModal('deliveryModal')" style="background:none; border:none; color:gray; margin-top:10px;">إلغاء</button></div></div>
-    <div class="modal" id="pModal"><div class="modal-box"><h3 id="mTitle"></h3><input type="text" id="mQty" placeholder="الكمية؟"><button class="btn-order" onclick="addP()">إضافة للسلة</button><button onclick="closeModal('pModal')" style="background:none; border:none; color:gray; margin-top:10px;">إلغاء</button></div></div>
+    <div class="modal" id="deliveryModal"><div class="modal-box"><h3>توصيل خاص 🚀</h3><textarea id="dWhat" placeholder="عايز إيه؟ (مثلاً: دواء، أكل، كيس بقالة)"></textarea><input type="text" id="dFrom" placeholder="منين؟ (اسم المحل أو المكان)"><input type="text" id="dTo" placeholder="لمين؟ (اسم الشخص)"><input type="text" id="dAddr" placeholder="العنوان بالتفصيل"><input type="tel" id="dPhone" placeholder="رقم التليفون للتواصل"><button class="btn-order" onclick="addDelivery()">إضافة للسلة</button><button onclick="closeModal('deliveryModal')" style="background:none; border:none; color:gray; margin-top:10px; width:100%;">إلغاء</button></div></div>
+    <div class="modal" id="pModal"><div class="modal-box"><h3 id="mTitle"></h3><input type="number" id="mQty" placeholder="الكمية؟"><button class="btn-order" onclick="addP()">إضافة للسلة</button></div></div>
 
-    <div class="hero-fixed" onclick="openModal('deliveryModal')"><div><h2>🚀 توصيل مستلزمات</h2><p>اطلب وهنوصل لأي مكان</p></div><button class="btn-order" style="width:auto; padding:8px 15px;">اطلب</button></div>
+    <div class="hero-fixed" onclick="openModal('deliveryModal')"><div><h2>🚀 طلب توصيل خاص</h2><p>هنجيبلك اللي محتاجه من أي مكان</p></div><button class="btn-order" style="width:auto; padding:8px 15px;">اطلب</button></div>
 
     <script>
+        // إعدادات فايربيز (تأكد إنها صحيحة لمشروعك)
         const conf = { apiKey: "AIzaSyC9ieBxgZ31LMk9AP2IH0mbi8YzQLk2WXY", authDomain: "nagdaorder.firebaseapp.com", projectId: "nagdaorder", storageBucket: "nagdaorder.firebasestorage.app", messagingSenderId: "99058164922", appId: "1:99058164922:web:7063d1686dc82a7ac30e83" };
         firebase.initializeApp(conf); const db = firebase.firestore();
 
-        let cats=[], prods=[], cart=[], tempImg="", userPts=0, isAdmin=false, selectedP=null;
+        let cats=[], prods=[], cart=[], tempImg="", selectedP=null;
 
-        // تفعيل الإدارة (4 ثواني على اللوجو)
+        // تفعيل لوحة الإدارة
         document.getElementById('logoAdmin').addEventListener('touchstart',()=>{
-            let t=setTimeout(()=>{ if(prompt("Pass?")==="135790"){ isAdmin=true; document.getElementById('adminLink').style.display='block'; nav('admin'); } },4000);
+            let t=setTimeout(()=>{ if(prompt("Pass?")==="135790"){ document.getElementById('adminLink').style.display='block'; nav('admin'); } },4000);
             document.getElementById('logoAdmin').addEventListener('touchend',()=>clearTimeout(t));
         });
 
         function init() {
             db.collection("categories").onSnapshot(s => { cats=[]; s.forEach(d=>cats.push({id:d.id, ...d.data()})); renderCats(); });
-            db.collection("products").orderBy("createdAt","desc").onSnapshot(s => { prods=[]; s.forEach(d=>prods.push({id:d.id, ...d.data()})); renderProducts(); renderAdminProducts(); });
+            db.collection("products").orderBy("createdAt","desc").onSnapshot(s => { prods=[]; s.forEach(d=>prods.push({id:d.id, ...d.data()})); renderProducts(); });
             renderAdminOrders();
         }
 
         async function checkUserBonus(phone) {
             if(phone.length < 11) return;
             const doc = await db.collection("users_stats").doc(phone).get();
-            userPts = doc.exists ? doc.data().count : 0;
-            document.getElementById('bonusMsg').style.display = (userPts >= 9) ? 'block' : 'none';
-            document.getElementById('pointsInfo').innerText = `رصيدك: ${userPts} أوردرات. باقي ${9-userPts} للهدية!`;
+            let pts = doc.exists ? doc.data().count : 0;
+            document.getElementById('pointsInfo').innerText = `رصيد بونص العميل: ${pts} أوردرات.`;
         }
 
         async function sendWA() {
-            const btn = document.getElementById('sendBtn');
             const n=document.getElementById('uName').value, ph=document.getElementById('uPhone').value, ad=document.getElementById('uAddr').value;
-            if(!n || ph.length < 11 || !ad) return alert("البيانات ناقصة!");
-
-            btn.disabled = true; btn.innerText = "جاري الحفظ...";
-            const orderID = "NAG-" + Math.random().toString(36).substring(7).toUpperCase();
-
+            if(!n || ph.length < 11 || !ad) return alert("كمل البيانات!");
+            const id = "NAG-" + Math.random().toString(36).substring(7).toUpperCase();
             try {
-                // حفظ الطلب للمراجعة بدلاً من زيادة العداد تلقائياً
-                await db.collection("orders").add({ orderID, userName: n, userPhone: ph, address: ad, items: cart, status: "pending", createdAt: new Date() });
-                
-                let msg = `*✨ أوردر جديد - نجدة أوردر ✨*\n*رقم العملية:* \`${orderID}\`\n━━━━━━━━━━━━━━\n`;
-                cart.forEach((i, x) => msg += `*${x+1}️⃣ ${i.type==='delivery'?'توصيل':'منتج'}:* ${i.t || i.w}\n`);
-                msg += `\n*👤 العميل:* ${n}\n📞 تليفونه: ${ph}\n🏠 عنوانه: ${ad}`;
-
+                await db.collection("orders").add({ orderID:id, userName:n, userPhone:ph, address:ad, items:cart, status:"pending", createdAt:new Date() });
+                let msg = `*✨ أوردر جديد - نجدة أوردر ✨*\n*رقم العملية:* \`${id}\`\n\n`;
+                cart.forEach(i => msg += i.type==='delivery' ? `🚀 *توصيل خاص:* ${i.w} (من ${i.f})\n` : `📦 *منتج:* ${i.t} (كمية: ${i.q})\n`);
+                msg += `\n👤 *العميل:* ${n}\n📞 *تليفون:* ${ph}\n📍 *عنوان:* ${ad}`;
                 window.open(`https://wa.me/201140293628?text=${encodeURIComponent(msg)}`);
                 cart=[]; nav('shop');
-            } catch(e) { alert("حدث خطأ!"); }
-            btn.disabled = false; btn.innerText = "تأكيد الطلب 🚀";
+            } catch(e) { alert("عطل!"); }
         }
 
         function renderAdminOrders() {
             db.collection("orders").where("status", "==", "pending").orderBy("createdAt", "desc").onSnapshot(s => {
-                const list = document.getElementById('pendingOrdersList');
-                list.innerHTML = "";
+                const list = document.getElementById('pendingOrdersList'); list.innerHTML = "";
                 s.forEach(doc => {
                     const o = doc.data();
+                    let itemsHtml = o.items.map(i => i.type==='delivery' ? 
+                        `<div style='color:var(--gold)'>🚀 ${i.w}<br><small>من: ${i.f} | لمين: ${i.t}<br>تليفون المستلم: ${i.p}</small></div>` : 
+                        `<div>📦 ${i.t} (كمية: ${i.q})</div>`).join('<hr style="border:0.1px solid #333; margin:5px 0">');
+                    
                     list.innerHTML += `
                         <div class="admin-list-item">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <b style="color:var(--neon);">${o.userName}</b>
-                                <small>${o.orderID}</small>
-                            </div>
-                            <p style="font-size:0.8rem; color:#ccc;">📞 ${o.userPhone} | 📍 ${o.address}</p>
+                            <b style="color:var(--neon)">${o.userName} (${o.userPhone})</b>
+                            <div class="order-detail-box">${itemsHtml}</div>
+                            <p style="font-size:0.8rem; margin:5px 0">📍 العنوان: ${o.address}</p>
                             <div style="display:flex; gap:10px; margin-top:10px;">
                                 <button onclick="confirmOrder('${doc.id}', '${o.userPhone}', '${o.orderID}')" style="flex:2; background:var(--neon); border:none; padding:8px; border-radius:5px; font-weight:bold;">✅ تأكيد وبونص</button>
-                                <button onclick="cancelOrder('${doc.id}')" style="flex:1; background:#ff4444; border:none; padding:8px; border-radius:5px; font-weight:bold; color:#fff;">❌ إلغاء</button>
+                                <button onclick="cancelOrder('${doc.id}')" style="flex:1; background:#ff4444; color:#fff; border:none; padding:8px; border-radius:5px;">❌ إلغاء</button>
                             </div>
                         </div>`;
                 });
-                if(s.empty) list.innerHTML = "<p style='text-align:center; color:gray;'>مفيش طلبات جديدة</p>";
+                if(s.empty) list.innerHTML = "<p style='text-align:center; color:gray'>لا يوجد طلبات جديدة</p>";
             });
         }
 
         async function confirmOrder(docId, phone, lastID) {
-            if(!confirm("أكدت التوصيل وعايز تزود بونص؟")) return;
             const userRef = db.collection("users_stats").doc(phone);
             const userDoc = await userRef.get();
-            let currentCount = userDoc.exists ? userDoc.data().count : 0;
-            let nextCount = (currentCount >= 9) ? 0 : currentCount + 1;
+            let nextCount = ((userDoc.exists ? userDoc.data().count : 0) >= 9) ? 0 : (userDoc.exists ? userDoc.data().count + 1 : 1);
             await userRef.set({ count: nextCount, lastID: lastID }, { merge: true });
             await db.collection("orders").doc(docId).update({ status: "confirmed" });
-            alert("تم التأكيد! العداد زاد للزبون ✅");
+            alert("تم التأكيد بنجاح ✅");
         }
 
-        async function cancelOrder(docId) {
-            if(!confirm("عايز تلغي الأوردر ده؟ (مش هيأثر على بونص الزبون)")) return;
-            await db.collection("orders").doc(docId).update({ status: "cancelled" });
-            alert("تم الإلغاء 🗑️");
-        }
+        async function cancelOrder(docId) { if(confirm("إلغاء الطلب؟")) await db.collection("orders").doc(docId).update({ status: "cancelled" }); }
 
-        // --- وظائف العرض الأساسية ---
-        function renderCats() {
+        // --- دوال المتجر ---
+        function renderCats() { 
             document.getElementById('catsList').innerHTML = `<div class="cat-item active" onclick="filter('الكل',this)">الكل</div>` + cats.map(c=>`<div class="cat-item" onclick="filter('${c.name}',this)">${c.name}</div>`).join('');
             document.getElementById('pCatSelect').innerHTML = cats.map(c=>`<option>${c.name}</option>`).join('');
-            document.getElementById('adminCatsList').innerHTML = cats.map(c=>`<div class="admin-list-item" style="display:flex; justify-content:space-between;">${c.name} <button onclick="delDoc('categories','${c.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
-        }
-        function renderAdminProducts() {
-            document.getElementById('adminProdsList').innerHTML = prods.map(p=>`<div class="admin-list-item" style="display:flex; justify-content:space-between;">${p.title} <button onclick="delDoc('products','${p.id}')" style="color:red; background:none; border:none;">حذف</button></div>`).join('');
         }
         function renderProducts(f='الكل') {
             const g = document.getElementById('productsGrid'); g.innerHTML="";
             prods.filter(p=> f==='الكل' || p.cat===f).forEach(p=>{
-                g.innerHTML += `<div class="p-card"><img src="${p.img}"><div class="p-info"><h4>${p.title}</h4><button class="btn-order" onclick='openPModal(${JSON.stringify(p)})'>طلب</button></div></div>`;
+                g.innerHTML += `<div class="p-card"><img src="${p.img}"><div style="padding:10px; text-align:center;"><h4>${p.title}</h4><button class="btn-order" onclick='openPModal(${JSON.stringify(p)})'>طلب</button></div></div>`;
             });
         }
         function openModal(id){ document.getElementById(id).style.display='flex'; }
@@ -222,35 +181,23 @@
         function openPModal(p){ selectedP=p; document.getElementById('mTitle').innerText=p.title; openModal('pModal'); }
         function addDelivery() {
             const w=document.getElementById('dWhat').value, f=document.getElementById('dFrom').value, t=document.getElementById('dTo').value, a=document.getElementById('dAddr').value, p=document.getElementById('dPhone').value;
-            if(!w || !f || !t || !a || !p) return alert("بيانات ناقصة!");
-            cart.push({type:'delivery', w, f, t, a, p}); closeModal('deliveryModal');
+            if(!w) return; cart.push({type:'delivery', w, f, t, a, p}); closeModal('deliveryModal');
         }
-        function addP() {
-            const q=document.getElementById('mQty').value; if(!q) return alert("الكمية؟");
-            cart.push({type:'product', t:selectedP.title, q}); closeModal('pModal');
-        }
+        function addP() { const q=document.getElementById('mQty').value; if(!q) return; cart.push({type:'product', t:selectedP.title, q}); closeModal('pModal'); }
         function nav(id) {
-            document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-            document.getElementById(id+'Page').style.display='block';
+            document.querySelectorAll('.page').forEach(p=>p.style.display='none'); document.getElementById(id+'Page').style.display='block';
             document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
             if(id!=='admin') document.getElementById('btn'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');
             if(id==='cart') renderCart();
         }
         function renderCart() {
-            const list = document.getElementById('cartItems');
-            list.innerHTML = cart.map((i,x)=>`<div class="admin-list-item">${i.type==='delivery'?'🚀 توصيل':'📦 '+i.t} <button onclick="cart.splice(${x},1); renderCart()" style="float:left; color:red; background:none; border:none;">حذف</button></div>`).join('');
+            document.getElementById('cartItems').innerHTML = cart.map((i,x)=>`<div class="admin-list-item">${i.type==='delivery'?'🚀 توصيل خاص':'📦 '+i.t} <button onclick="cart.splice(${x},1); renderCart()" style="float:left; color:red; border:none; background:none;">حذف</button></div>`).join('');
             document.getElementById('orderForm').style.display = cart.length ? 'block' : 'none';
         }
-        async function saveCat() { const n=document.getElementById('catInput').value; if(n) await db.collection("categories").add({name:n}); document.getElementById('catInput').value=""; }
+        async function saveCat() { const n=document.getElementById('catInput').value; if(n) await db.collection("categories").add({name:n}); }
         function handleImg(el){ const r=new FileReader(); r.readAsDataURL(el.files[0]); r.onload=(e)=>tempImg=e.target.result; }
-        async function saveProd() {
-            const t=document.getElementById('pTitle').value, c=document.getElementById('pCatSelect').value;
-            if(t) await db.collection("products").add({title:t, cat:c, img:tempImg, createdAt: new Date()});
-            document.getElementById('pTitle').value=""; tempImg="";
-        }
-        async function delDoc(col,id){ if(confirm("حذف نهائي؟")) await db.collection(col).doc(id).delete(); }
+        async function saveProd() { const t=document.getElementById('pTitle').value, c=document.getElementById('pCatSelect').value; if(t) await db.collection("products").add({title:t, cat:c, img:tempImg, createdAt:new Date()}); }
         function filter(n,el){ document.querySelectorAll('.cat-item').forEach(i=>i.classList.remove('active')); el.classList.add('active'); renderProducts(n); }
-        
         init();
     </script>
 </body>
