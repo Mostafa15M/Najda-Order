@@ -27,9 +27,7 @@
         .page.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* البحث والأقسام */
         .search-box { margin: 10px 0; position: relative; }
-        .search-box input { padding-right: 40px; margin-bottom: 5px; }
         .cat-bar { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0; scrollbar-width: none; }
         .cat-chip { background: #222; padding: 6px 15px; border-radius: 20px; white-space: nowrap; font-size: 0.85rem; border: 1px solid #333; }
         .cat-chip.active { background: var(--main); color: #000; border-color: var(--main); font-weight: bold; }
@@ -49,6 +47,9 @@
         .hidden-admin { display: none !important; }
         .admin-mode .hidden-admin { display: block !important; }
         .order-card { background: #1c1c1e; border: 1px solid #333; padding: 12px; border-radius: 15px; margin-bottom: 10px; }
+        
+        .admin-prod-item { display: flex; align-items: center; gap: 10px; background: #222; padding: 8px; border-radius: 12px; margin-bottom: 8px; }
+        .admin-prod-item img { width: 40px; height: 40px; border-radius: 8px; }
     </style>
 </head>
 <body>
@@ -108,11 +109,19 @@
     </div>
 
     <div class="admin-section">
-        <h4>✨ إضافة منتج</h4>
+        <h4 id="prodFormTitle">✨ إضافة منتج جديد</h4>
+        <input type="hidden" id="editProdId">
         <input type="text" id="newPTitle" placeholder="اسم المنتج">
         <select id="newPCat"></select>
+        <p id="imgHint" style="font-size: 0.7rem; color: #8e8e93; margin-bottom: 5px;">صورة المنتج:</p>
         <input type="file" id="newPImg" accept="image/*">
-        <button class="btn btn-main" onclick="uploadProduct()">حفظ</button>
+        <button class="btn btn-main" id="saveProdBtn" onclick="uploadProduct()">حفظ المنتج</button>
+        <button class="btn" id="cancelEditBtn" style="display:none; margin-top:5px; background:#333;" onclick="resetProdForm()">إلغاء التعديل</button>
+    </div>
+
+    <div class="admin-section">
+        <h4>📦 إدارة المنيو (حذف/تعديل)</h4>
+        <div id="adminInventoryList"></div>
     </div>
 
     <div class="admin-section">
@@ -135,7 +144,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    let cart = [], currentProduct = "", allProducts = [], selectedCat = "الكل";
+    let cart = [], currentProduct = "", allProducts = [], selectedCat = "الكل", userOrdersCount = 0;
 
     function toggleAdmin() { if(prompt("الباسورد؟") === "135790") document.body.classList.toggle('admin-mode'); }
 
@@ -144,10 +153,9 @@
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
         el.classList.add('active');
-        if(id === 'admin-page') loadOrders();
+        if(id === 'admin-page') { loadOrders(); renderInventory(); }
     }
 
-    // جلب المنتجات والأقسام
     db.collection("categories").onSnapshot(s => {
         let cats = [{name:'الكل'}];
         s.forEach(d => cats.push(d.data()));
@@ -168,6 +176,7 @@
         allProducts = [];
         s.forEach(d => allProducts.push({id: d.id, ...d.data()}));
         filterProducts();
+        renderInventory();
     });
 
     function filterCat(cat) { selectedCat = cat; filterProducts(); }
@@ -179,11 +188,9 @@
             const matchSearch = p.title.toLowerCase().includes(query);
             return matchCat && matchSearch;
         });
-
         let h = '';
         filtered.forEach(p => {
             h += `<div class="p-card">
-                <div class="admin-mode" style="position:absolute; top:5px; left:5px; display:none;" onclick="deleteDoc('products','${p.id}')">🗑️</div>
                 <img src="${p.img}">
                 <div style="padding:10px; text-align:center;">
                     <p style="font-size:0.85rem; font-weight:bold;">${p.title}</p>
@@ -220,21 +227,33 @@
     async function checkLoyalty(phone) {
         if(phone.length >= 11) {
             const snap = await db.collection("orders").where("p", "==", phone).where("status", "==", "done").get();
-            const count = snap.size;
+            userOrdersCount = snap.size;
             document.getElementById('loyaltyStatus').style.display = 'block';
-            document.getElementById('loyaltyMsg').innerText = count >= 9 ? "🎁 مبروك! الأوردر ده هدية توصيل مجاني" : `عندك ${count} أوردرات ناجحة. فاضلك ${9-count} للهدية!`;
+            if(userOrdersCount >= 9) {
+                document.getElementById('loyaltyMsg').innerHTML = "🎊 مبروك! عندك 9 أوردرات ناجحة. فاضلك 0 للهدية!<br>أوردرك العاشر التوصيل مجاناً 🎁";
+                document.getElementById('loyaltyMsg').style.color = "var(--success)";
+            } else {
+                document.getElementById('loyaltyMsg').innerText = `عندك ${userOrdersCount} أوردرات ناجحة. فاضلك ${9-userOrdersCount} للهدية!`;
+                document.getElementById('loyaltyMsg').style.color = "#fff";
+            }
         }
     }
 
     async function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
         if(!n || !p || cart.length === 0) return alert("كمل بياناتك!");
+        
+        let itemsMsg = cart.map(i => `- ${i.t} (${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
+        let giftText = userOrdersCount >= 9 ? "\n\n*10Mostafa-Hegazy10*\n🎁 *مبروك! هذا الأوردر العاشر: التوصيل مجاني!*" : "";
+        
+        let finalMsg = `أوردر جديد من: ${n}\n📞 رقم الهاتف: ${p}\n📍 العنوان: ${a}\n\n📦 الطلبات:\n${itemsMsg}${giftText}`;
+
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
-        window.open(`https://wa.me/201140293628?text=${encodeURIComponent("أوردر جديد من: " + n)}`);
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
         cart = []; renderCart();
     }
 
-    // الإدارة
+    // الإدارة - جلب الطلبات
     function loadOrders() {
         db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
             let h = '';
@@ -255,26 +274,93 @@
 
     async function updateStatus(id, status) {
         await db.collection("orders").doc(id).update({ status: status });
-        alert(status === 'done' ? "تمت الموافقة والحفظ في سجل العميل" : "تم إلغاء الطلب");
+    }
+
+    // الإدارة - جلب المنيو للحذف والتعديل
+    function renderInventory() {
+        let h = '';
+        allProducts.forEach(p => {
+            h += `<div class="admin-prod-item">
+                <img src="${p.img}">
+                <div style="flex:1; font-size:0.85rem;"><b>${p.title}</b><br><small>${p.cat}</small></div>
+                <button onclick="editProduct('${p.id}')" style="background:none; border:none; color:var(--main); margin-left:10px;">✏️</button>
+                <button onclick="deleteDoc('products','${p.id}')" style="background:none; border:none; color:var(--danger);">🗑️</button>
+            </div>`;
+        });
+        document.getElementById('adminInventoryList').innerHTML = h || 'المنيو فاضي';
+    }
+
+    function editProduct(id) {
+        const p = allProducts.find(x => x.id === id);
+        document.getElementById('newPTitle').value = p.title;
+        document.getElementById('newPCat').value = p.cat;
+        document.getElementById('editProdId').value = id;
+        document.getElementById('prodFormTitle').innerText = "✏️ تعديل المنتج";
+        document.getElementById('saveProdBtn').innerText = "تحديث البيانات";
+        document.getElementById('cancelEditBtn').style.display = "block";
+        document.getElementById('imgHint').innerText = "تغيير الصورة (اختياري):";
+    }
+
+    function resetProdForm() {
+        document.getElementById('newPTitle').value = "";
+        document.getElementById('editProdId').value = "";
+        document.getElementById('prodFormTitle').innerText = "✨ إضافة منتج جديد";
+        document.getElementById('saveProdBtn').innerText = "حفظ المنتج";
+        document.getElementById('cancelEditBtn').style.display = "none";
+        document.getElementById('imgHint').innerText = "صورة المنتج:";
     }
 
     async function uploadProduct() {
-        const title = document.getElementById('newPTitle').value, cat = document.getElementById('newPCat').value, file = document.getElementById('newPImg').files[0];
-        if(!title || !file) return alert("اختار صورة واسم");
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = async (e) => {
-            await db.collection("products").add({ title, cat, img: e.target.result, createdAt: new Date() });
-            alert("تم الحفظ");
+        const title = document.getElementById('newPTitle').value;
+        const cat = document.getElementById('newPCat').value;
+        const file = document.getElementById('newPImg').files[0];
+        const editId = document.getElementById('editProdId').value;
+
+        if(!title) return alert("اكتب اسم المنتج!");
+
+        if(editId) {
+            let updateData = { title, cat };
+            if(file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = async (e) => {
+                    updateData.img = e.target.result;
+                    await db.collection("products").doc(editId).update(updateData);
+                    resetProdForm();
+                };
+            } else {
+                await db.collection("products").doc(editId).update(updateData);
+                resetProdForm();
+            }
+        } else {
+            if(!file) return alert("لازم تختار صورة للمنتج الجديد!");
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async (e) => {
+                await db.collection("products").add({ title, cat, img: e.target.result, createdAt: new Date() });
+                resetProdForm();
+            };
         }
     }
 
     async function addCategory() {
         const name = document.getElementById('newCatName').value;
         if(name) await db.collection("categories").add({ name });
+        document.getElementById('newCatName').value = "";
     }
 
-    function deleteDoc(col, id) { if(confirm("حذف؟")) db.collection(col).doc(id).delete(); }
+    db.collection("categories").onSnapshot(s => {
+        let list = '';
+        s.forEach(d => {
+            list += `<div style="display:flex; justify-content:space-between; background:#222; padding:8px; border-radius:8px; margin-bottom:5px;">
+                <span>${d.data().name}</span>
+                <span style="color:red; cursor:pointer;" onclick="deleteDoc('categories','${d.id}')">حذف</span>
+            </div>`;
+        });
+        document.getElementById('catsManagerList').innerHTML = list;
+    });
+
+    function deleteDoc(col, id) { if(confirm("أكيد عاوز تحذف؟")) db.collection(col).doc(id).delete(); }
 </script>
 </body>
 </html>
