@@ -83,8 +83,14 @@
     <h3 style="text-align:center; margin: 20px 0;">📦 شحن وتوصيل خاص</h3>
     <input type="text" id="spDetails" placeholder="الأغراض المطلوب نقلها">
     <input type="text" id="spFrom" placeholder="نقطة الاستلام">
-    <input type="text" id="spTo" placeholder="نقطة التسليم">
-    <input type="tel" id="spPhone" placeholder="رقم الموبايل">
+    <input type="text" id="spTo" placeholder="نقطة التسليم (اسم المستلم وعنوانه)">
+    <input type="tel" id="spPhone" placeholder="رقم موبايل المستلم">
+    
+    <div style="border-top: 1px solid #333; margin: 15px 0; padding-top: 15px;">
+        <p style="font-size: 0.8rem; margin-bottom: 10px; color: var(--main);">بياناتك كطالب للخدمة:</p>
+        <input type="text" id="spSenderName" placeholder="اسمك">
+        <input type="tel" id="spSenderPhone" placeholder="رقم تليفونك" oninput="checkLoyalty(this.value)">
+    </div>
     <button class="btn btn-main" onclick="sendSpecialOrder()">طلب مندوب شحن 🚀</button>
 </div>
 
@@ -239,21 +245,61 @@
         }
     }
 
+    // تنسيق الرسالة الموحد
+    function formatWhatsAppHeader() {
+        return `*✨ أوردر جديد - نجدة أوردر ✨*\n*بواسطة: مصطفى حجازي ⚡*\n━━━━━━━━━━━━━━\n\n`;
+    }
+
+    function formatLoyaltyFooter() {
+        if (userOrdersCount >= 9) {
+            return `\n\n*10Mostafa-Hegazy10*\n*مبروك الاوردر دا توصيله مجانا علشان دا عاشر اوردر ليك* 🎁`;
+        }
+        return "";
+    }
+
     async function confirmFullOrder() {
         const n = document.getElementById('uName').value, p = document.getElementById('uPhone').value, a = document.getElementById('uAddress').value;
         if(!n || !p || cart.length === 0) return alert("كمل بياناتك!");
         
         let itemsMsg = cart.map(i => `- ${i.t} (${i.q}) ${i.n ? '['+i.n+']' : ''}`).join('\n');
-        let giftText = userOrdersCount >= 9 ? "\n\n*10Mostafa-Hegazy10*\n🎁 *مبروك! هذا الأوردر العاشر: التوصيل مجاني!*" : "";
         
-        let finalMsg = `أوردر جديد من: ${n}\n📞 رقم الهاتف: ${p}\n📍 العنوان: ${a}\n\n📦 الطلبات:\n${itemsMsg}${giftText}`;
+        let finalMsg = formatWhatsAppHeader() + 
+                       `*📦 محتويات السلة:*\n${itemsMsg}\n\n` +
+                       `*👤 صاحب الأوردر:*\n🔸 الاسم: ${n}\n📞 التليفون: ${p}\n🏠 العنوان: ${a}` + 
+                       formatLoyaltyFooter();
 
         await db.collection("orders").add({ n, p, a, items: cart, status: "pending", createdAt: new Date() });
         window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
         cart = []; renderCart();
     }
 
-    // الإدارة - جلب الطلبات
+    async function sendSpecialOrder() {
+        const details = document.getElementById('spDetails').value;
+        const from = document.getElementById('spFrom').value;
+        const to = document.getElementById('spTo').value;
+        const phone = document.getElementById('spPhone').value;
+        const sName = document.getElementById('spSenderName').value;
+        const sPhone = document.getElementById('spSenderPhone').value;
+
+        if(!details || !from || !to || !phone || !sName || !sPhone) return alert("من فضلك كمل كل البيانات");
+
+        let finalMsg = formatWhatsAppHeader() +
+                       `*1️⃣ توصيل خاص 🛵*\n` +
+                       `الطلب: ${details}\n` +
+                       `من: ${from}\n` +
+                       `المستلم: ${to}\n` +
+                       `تليفونه: ${phone}\n` +
+                       `----------\n\n` +
+                       `*👤 صاحب الأوردر:*\n` +
+                       `🔸 الاسم: ${sName}\n` +
+                       `📞 التليفون: ${sPhone}` +
+                       formatLoyaltyFooter();
+
+        await db.collection("orders").add({ n: sName, p: sPhone, items: [{t: "توصيل خاص", q: details}], status: "pending", createdAt: new Date() });
+        window.open(`https://wa.me/201140293628?text=${encodeURIComponent(finalMsg)}`);
+    }
+
+    // الإدارة
     function loadOrders() {
         db.collection("orders").where("status", "==", "pending").onSnapshot(s => {
             let h = '';
@@ -276,7 +322,6 @@
         await db.collection("orders").doc(id).update({ status: status });
     }
 
-    // الإدارة - جلب المنيو للحذف والتعديل
     function renderInventory() {
         let h = '';
         allProducts.forEach(p => {
@@ -298,7 +343,6 @@
         document.getElementById('prodFormTitle').innerText = "✏️ تعديل المنتج";
         document.getElementById('saveProdBtn').innerText = "تحديث البيانات";
         document.getElementById('cancelEditBtn').style.display = "block";
-        document.getElementById('imgHint').innerText = "تغيير الصورة (اختياري):";
     }
 
     function resetProdForm() {
@@ -307,7 +351,6 @@
         document.getElementById('prodFormTitle').innerText = "✨ إضافة منتج جديد";
         document.getElementById('saveProdBtn').innerText = "حفظ المنتج";
         document.getElementById('cancelEditBtn').style.display = "none";
-        document.getElementById('imgHint').innerText = "صورة المنتج:";
     }
 
     async function uploadProduct() {
@@ -315,9 +358,7 @@
         const cat = document.getElementById('newPCat').value;
         const file = document.getElementById('newPImg').files[0];
         const editId = document.getElementById('editProdId').value;
-
         if(!title) return alert("اكتب اسم المنتج!");
-
         if(editId) {
             let updateData = { title, cat };
             if(file) {
@@ -333,7 +374,7 @@
                 resetProdForm();
             }
         } else {
-            if(!file) return alert("لازم تختار صورة للمنتج الجديد!");
+            if(!file) return alert("اختار صورة!");
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async (e) => {
